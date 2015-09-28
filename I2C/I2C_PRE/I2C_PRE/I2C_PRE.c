@@ -76,7 +76,8 @@ int main(void)
 		getchar();
 		DS3231_GetTime(&hours, &minutes,&seconds);
 		DS3231_GetDate(&months, &days, &years);
-       
+        printf("the time is %d:%d:%d", hours, minutes, seconds);
+		printf("the date is %d:%d:%d", months, days, years);
     }
 }
 
