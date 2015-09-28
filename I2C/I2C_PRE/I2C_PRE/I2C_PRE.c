@@ -8,6 +8,8 @@
  * Created: 9/27/2015 3:06:50 PM
  *  Author: Bruce E. Hall
 	Edits made by: Aaron Crump
+	EGR 326-903
+	Instructor: Dr. Bossmeyer
  */ 
 
 
@@ -66,7 +68,7 @@ int main(void)
 
 	DDRC &= _BV(4) & _BV(5);//sets SDA and SCL as inputs
 	
-	uint8_t hours, minutes, seconds, months, days, years;
+	uint8_t hours, minutes, seconds, months, days, years, temp;
 	I2C_Init();
 	if(I2C_Detect(DS3231));//checks to see if the RTC is there
 	else if(!I2C_Detect(DS3231)) printf("device not found!");//if it's not it spits an error
@@ -76,8 +78,10 @@ int main(void)
 		getchar();
 		DS3231_GetTime(&hours, &minutes,&seconds);
 		DS3231_GetDate(&months, &days, &years);
-        printf("the time is %d:%d:%d", hours, minutes, seconds);
-		printf("the date is %d:%d:%d", months, days, years);
+		temp = DS3231_GetTemp();
+        printf("the time is %d:%d:%d\n", hours, minutes, seconds);
+		printf("the date is %d:%d:%d\n", months, days, years);
+		printf("the temperature is %d\n", temp);
     }
 }
 
