@@ -1,5 +1,10 @@
 /*
  * I2C_PRE.c
+ 
+ Pre lab 5
+ Aaron Crump
+ EGR 326-903
+ 
  **********************************************************
  *		 CODE TAKEN FROM                                  *
  *		 Add a DS3231 RTC clock to yourAVR microcontroller*
@@ -14,13 +19,13 @@
 
 
 //includes
+#define F_CPU 16000000L // CPU clock speed 16 MHz
 #include <avr/io.h>
 #include <util/delay.h> // used for _delay_ms function
 #include <string.h> // string manipulation routines
 #include <stdlib.h>#include <stdio.h>#include "uart.h"//defining standard byte sized variablestypedef uint8_t byte; 
 typedef int8_t sbyte;
-
-#define F_CPU 16000000L // CPU clock speed 16 MHz
+//defines for program
 #define F_SCL 100000L // I2C clock speed 100 kHz
 #define BAUD 9600
 #define MYUBRR F_CPU/16/BAUD-1
@@ -180,8 +185,9 @@ void DS3231_GetDate(byte *months, byte *days, byte *years)
 	*years = I2C_ReadRegister(DS3231,YEARS_REGISTER);
 }
 void SetTimeDate()
-// simple, hard-coded way to set the date 8/13/21013 at 8:51 PM
+// simple, hard-coded way to set the date 09/28/2105
 {
+	//time and date must be set before using
 	I2C_WriteRegister(DS3231,MONTHS_REGISTER, 0x08);
 	I2C_WriteRegister(DS3231,DAYS_REGISTER, 0x31);
 	I2C_WriteRegister(DS3231,YEARS_REGISTER, 0x13);
@@ -196,6 +202,6 @@ uint16_t DS3231_GetTemp()
 	uint16_t temperature = 0;
 	high_temp = I2C_ReadRegister(DS3231,MSB_TEMP);
 	low_temp = I2C_ReadRegister(DS3231,LSB_TEMP);
-	temperature |= (high_temp<<2) | (low_temp>>6);
+	temperature |= (high_temp<<2) | (low_temp>>6);//puts the temp data in the bottom 10 bits of a 16 bit number
 	return temperature;
 }
