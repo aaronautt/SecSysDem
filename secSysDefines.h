@@ -33,10 +33,44 @@
 #define PIR_DDR       DDRC
 #define PIR_PORT_IN   PINC
 #define PIR_PIN       _BV(3)
-#define PIR_READ      ((PIR_PORT_IN & PIR_PIN) >> PIR_PIN)
 
 // ----- Hall Effect Sensors -----
+// Window Hall Effect
+#define HALL_EFF_WIN_PORT_OUT   PORTB
+#define HALL_EFF_WIN_PORT_IN    PINB
+#define HALL_EFF_WIN_DDR        DDRB
+#define HALL_EFF_WIN_PIN        _BV(0)
+// Door Hall Effect
+#define HALL_EFF_DOOR_PORT_OUT  PORTB
+#define HALL_EFF_DOOR_PORT_IN   PINB
+#define HALL_EFF_DOOR_DDR       DDRB
+#define HALL_EFF_DOOR_PIN       _BV(0)
 
+// ----- LCD ------
+// LCD Backlight
+#define LCD_BACKLIGHT_PORT_OUT  PORTD
+#define LCD_BACKLIGHT_PIN       _BV(6)
+// LCD Data/Command
+#define LCD_DC_PIN_IOEX         _BV(3)
+// LCD Reset
+#define LCD_RST_PIN_IOEX        _BV(4)
+// LCD Slave Select
+#define LCD_SS_PIN_IOEX         _BV(5)
 
+// ----- PUSH BUTTON -----
+#define PUSH_BTN_PORT_OUT       PORTD
+#define PUSH_BTN_PORT_IN        PIND
+#define PUSH_BTN_PIN            _BV(7)
+
+// ----- RGB LED -----
+#define RGB_RED_IOEX                 _BV(0)
+#define RGB_GRN_IOEX                 _BV(1)
+#define RGB_BLU_IOEX                 _BV(2)
+
+// ----- Doorlocking Solenoid -----
+#define DOORLOCK_PIN_IOEX            _BV(6)
+
+// ----- Bell Alarm -----
+#define BELL_ALARM_PIN_IOEX          _BV(7)
 
 #endif /* SECSYSDEFINES_H_ */
