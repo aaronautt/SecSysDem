@@ -53,13 +53,14 @@
 
 // ---------------------------------------------------------------------------
 // INCLUDES
+#include "secSysDefines.h"
 #include <avr/io.h> // deal with port registers
 // ---------------------------------------------------------------------------
 
-void I2C_Init(uint32_t f_cpu)
+void I2C_Init()
 {
 	TWSR = 0; // set prescalar to zero
-	TWBR = ((f_cpu/F_SCL)-16)/2; // set SCL frequency in TWI bit register
+	TWBR = ((F_CPU/F_SCL)-16)/2; // set SCL frequency in TWI bit register
 	
 	// at 16 MHz, the SCL frequency will be 16/(16+2(TWBR)), assuming 
 	// prescalar of 0. So for 100KHz SCL, TWBR = ((F_CPU/F_SCL)-16)/2 
