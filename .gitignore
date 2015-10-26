@@ -37,3 +37,6 @@
 *.srec
 *.map
 *.atsuo
+*.d
+*.MK
+*.eep
