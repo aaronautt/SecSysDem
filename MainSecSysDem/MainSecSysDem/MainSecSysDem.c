@@ -15,6 +15,7 @@
 #include "i2c_driver.h"
 #include "uart.h"
 #include "Hall_Sensors.h"
+#include "ioExpander.h"
 #include <string.h>
 
 
@@ -30,15 +31,19 @@ int main(void)
 	stdin  = &uart_input;
 
 	
-
+	I2C_Init();
+	printf("start ");
+	ioExpWriteReg(0xFF);
 	
+	printf("done\n");
+	printf("%x",ioExpReadReg());
 	
 	//HALL_init();
-    while(1)
-    {
+    while(1);
+    //{
 		/*
          if(!(Hall_Window_check())) printf("open!\n");
 		 else; //null//
 		 */
-    }
+    //}
 }
