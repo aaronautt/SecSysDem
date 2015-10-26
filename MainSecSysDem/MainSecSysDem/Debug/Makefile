@@ -39,6 +39,7 @@ SUBDIRS :=
 C_SRCS +=  \
 ../Hall_Sensors.c \
 ../i2c_driver.c \
+../ioExpander.c \
 ../MainSecSysDem.c \
 ../PIR_DRIVER.c \
 ../uart.c \
@@ -54,6 +55,7 @@ ASM_SRCS +=
 OBJS +=  \
 Hall_Sensors.o \
 i2c_driver.o \
+ioExpander.o \
 MainSecSysDem.o \
 PIR_DRIVER.o \
 uart.o \
@@ -62,6 +64,7 @@ WATCH_DOG.o
 OBJS_AS_ARGS +=  \
 Hall_Sensors.o \
 i2c_driver.o \
+ioExpander.o \
 MainSecSysDem.o \
 PIR_DRIVER.o \
 uart.o \
@@ -70,6 +73,7 @@ WATCH_DOG.o
 C_DEPS +=  \
 Hall_Sensors.d \
 i2c_driver.d \
+ioExpander.d \
 MainSecSysDem.d \
 PIR_DRIVER.d \
 uart.d \
@@ -78,6 +82,7 @@ WATCH_DOG.d
 C_DEPS_AS_ARGS +=  \
 Hall_Sensors.d \
 i2c_driver.d \
+ioExpander.d \
 MainSecSysDem.d \
 PIR_DRIVER.d \
 uart.d \
@@ -97,6 +102,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

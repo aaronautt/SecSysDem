@@ -6,6 +6,8 @@ Hall_Sensors.c
 
 i2c_driver.c
 
+ioExpander.c
+
 MainSecSysDem.c
 
 PIR_DRIVER.c

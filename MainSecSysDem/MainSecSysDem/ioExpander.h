@@ -9,7 +9,7 @@
 #ifndef IOEXPANDER_H_
 #define IOEXPANDER_H_
 
-
+#define IOEXPANDER_ADDR	0b01000000
 
 
 

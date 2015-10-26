@@ -28,25 +28,14 @@ int main(void)
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
 	stdin  = &uart_input;
+
 	
-	int i;
-	char word[6] = {"hello"}, out[6];
-	
-	for(i=0;i<6;i++)
-	{
-		I2C_WriteRegister(RTC_EEP_WRITE, i, word[i]);
-	}
-	
-	for(i=0;i<6;i++)
-	{
-		out[i]=I2C_ReadRegister(RTC_EEP_READ, i);
-	}
+
 	
 	
 	//HALL_init();
     while(1)
     {
-		printf("%c\n", &out);
 		/*
          if(!(Hall_Window_check())) printf("open!\n");
 		 else; //null//
