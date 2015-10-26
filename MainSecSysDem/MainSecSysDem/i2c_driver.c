@@ -13,7 +13,7 @@
  */ 
 
 // GLOBAL DEFINES
-//#define F_CPU 16000000L // run CPU at 16 MHz
+//#define F_CPU 8000000L // run CPU at 16 MHz
 
 // ----- I2C (TWI) ROUTINES -----
 // PC4 = SDA

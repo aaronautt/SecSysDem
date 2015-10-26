@@ -16,6 +16,7 @@
 #include "uart.h"
 #include "Hall_Sensors.h"
 #include <string.h>
+#include <util/delay.h>
 
 
 //DEFINES
@@ -28,24 +29,22 @@ int main(void)
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
 	stdin  = &uart_input;
+	I2C_Init();
 	
-	int i;
-	char word[6] = {"hello"}, out[6];
+	int i, out=0;
+	char word[6] = "hello";
 	
-	for(i=0;i<6;i++)
-	{
-		I2C_WriteRegister(RTC_EEP_WRITE, i, word[i]);
-	}
 	
-	for(i=0;i<6;i++)
-	{
-		out[i]=I2C_ReadRegister(RTC_EEP_READ, i);
-	}
+	I2C_WriteRegister(RTC_EEP_ADDR, 0, 1);
+	
+	out=I2C_ReadRegister(RTC_EEP_ADDR, 0);
+	printf("hello\n");
+	_delay_ms(1000);
 	
 	//HALL_init();
     while(1)
     {
-		printf("%c\n", &out);
+		
 		/*
          if(!(Hall_Window_check())) printf("open!\n");
 		 else; //null//
