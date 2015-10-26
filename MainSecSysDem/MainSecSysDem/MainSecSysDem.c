@@ -42,6 +42,7 @@ int main(void)
 		out[i]=I2C_ReadRegister(RTC_EEP_READ, i);
 	}
 	
+	
 	//HALL_init();
     while(1)
     {
