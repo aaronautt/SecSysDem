@@ -3,6 +3,9 @@
  *
  * Created: 10/25/2015 10:13:38 PM
  *  Author: Luke
+ *
+ * To set a pin as an input, set the pin as a logic 1. This will enable a
+ * weak pull-up resistor and allow a logic device to drive it low or high.
  */ 
 
 
