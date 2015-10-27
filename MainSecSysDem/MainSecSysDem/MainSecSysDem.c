@@ -30,51 +30,8 @@ int main(void)
 	stdout = &uart_output;
 	stdin  = &uart_input;
 
-	
-	I2C_Init();
-	printf("start ");
-	ioExpWriteReg(0xF0);
-	
-	printf("done\n");
-	printf("%x\n",ioExpReadReg());
-	printf("%d\n\n",ioExpReadPin(7));
-	
-	ioExpSetPin(1);
-	printf("%x\n",ioExpReadReg());
-	printf("%d\n\n",ioExpReadPin(7));
-	
-	ioExpSetPin(2);
-	printf("%x\n",ioExpReadReg());
-	printf("%d\n\n",ioExpReadPin(7));
-	
-	ioExpClrPin(7);
-	printf("%x\n",ioExpReadReg());
-	printf("%d\n\n",ioExpReadPin(7));
-	
-	ioExpClrPin(2);
-	printf("%x\n",ioExpReadReg());	
-	printf("%d\n",ioExpReadPin(2));
-	printf("%d\n\n",ioExpReadPin(7));
-	
-	ioExpClrPin(2);
-	printf("%x\n",ioExpReadReg());
-	printf("%d\n\n",ioExpReadPin(7));
-	
-	ioExpSetPin(6);
-	printf("%x\n",ioExpReadReg());
-	printf("%d\n\n",ioExpReadPin(7));
-	
-	ioExpSetPin(7);
-	printf("%x\n",ioExpReadReg());
-	printf("%d\n\n",ioExpReadPin(7));
-	
-	
-	//HALL_init();
-    while(1);
-    //{
-		/*
-         if(!(Hall_Window_check())) printf("open!\n");
-		 else; //null//
-		 */
-    //}
+    while(1)
+	{
+		
+	}
 }
