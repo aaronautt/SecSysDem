@@ -133,6 +133,15 @@ void I2C_WriteRegister(uint8_t busAddr, uint8_t deviceRegister, uint8_t data)
 	I2C_Stop();
 }
 
+uint8_t I2C_ReadByte(uint8_t busAddr)
+{
+	uint8_t data = 0;
+	I2C_Start(busAddr+READ); // send device address and read bit
+	data = I2C_ReadNACK(); // read the register data
+	I2C_Stop(); // stop
+	return data;
+}
+
 uint8_t I2C_ReadRegister(uint8_t busAddr, uint8_t deviceRegister)
 {
 	uint8_t data = 0;
