@@ -33,12 +33,10 @@ int main(void)
 	stdin  = &uart_input;
 	
 	I2C_Init();
-	
-	ioExpClrBit(BELL_ALARM_PIN_IOEX);
+
 
     while(1)
 	{
-		printf("Value: %u\t%u\n", keypadReadPins(), ioExpReadBit(BELL_ALARM_PIN_IOEX));
-		_delay_ms(1000);
+
 	}
 }
