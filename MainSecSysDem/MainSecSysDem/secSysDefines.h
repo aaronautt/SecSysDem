@@ -74,6 +74,6 @@
 #define BELL_ALARM_PIN_IOEX          _BV(7)
 
 //RTC nonsense//
-#define RTC_EEP_ADDR			0x10100000
+#define RTC_EEP_ADDR			0x10101110
 
 #endif /* SECSYSDEFINES_H_ */
