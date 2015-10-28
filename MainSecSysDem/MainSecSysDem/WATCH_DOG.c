@@ -8,14 +8,13 @@
  
  */ 
 
-#include "secSysDefines.h"
 #include <avr/io.h>
-#include <stdlib.h>
 #include "interrupt.h"
+#include "secSysDefines.h"
 
 
 //turns on WDT and sets it to one second
-WatchDog_on()
+void WatchDog_on()
 {
 	cli();//disable interrupts
 	WDTCSR |= (1<<WDCE) | (1<<WDE);// enable wdt and allow change	
@@ -24,7 +23,7 @@ WatchDog_on()
 }
 
 //This Function MUST be run at initialization to ensure normal functioning
-WatchDog_init()
+void WatchDog_init()
 {
 	MCUSR &= ~(1<<WDRF);//system is reset
 	WDTCSR |= (1<<WDE);//reset watchdog system

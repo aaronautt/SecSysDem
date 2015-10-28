@@ -152,3 +152,24 @@ uint8_t I2C_ReadRegister(uint8_t busAddr, uint8_t deviceRegister)
 	I2C_Stop(); // stop
 	return data;
 }
+
+void I2C_DoubleWriteRegister(uint8_t busAddr, uint16_t deviceRegister, uint8_t data)
+{
+	I2C_Start(busAddr); // send bus address
+	I2C_Write(((deviceRegister>>8)&0xff)); // set register pointer 1
+	I2C_Write((deviceRegister&0xff)); // set register pointer 2
+	I2C_Write(data); // second byte = data for device register
+	I2C_Stop();
+}
+
+uint8_t I2C_DoubleReadRegister(uint8_t busAddr, uint16_t deviceRegister)
+{
+	uint8_t data = 0;
+	I2C_Start(busAddr); // send device address
+	I2C_Write(((deviceRegister>>8)&0xff)); // set register pointer 1
+	I2C_Write((deviceRegister&0xff)); // set register pointer 2
+	I2C_Start(busAddr+READ); // restart as a read operation
+	data = I2C_ReadNACK(); // read the register data
+	I2C_Stop(); // stop
+	return data;
+}

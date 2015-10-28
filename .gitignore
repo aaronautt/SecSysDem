@@ -38,3 +38,9 @@ Debug/
 *.srec
 *.map
 *.atsuo
+<<<<<<< .merge_file_a06356
+=======
+*.d
+*.MK
+*.eep
+>>>>>>> .merge_file_a06044
