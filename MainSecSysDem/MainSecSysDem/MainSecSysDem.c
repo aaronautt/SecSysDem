@@ -17,6 +17,7 @@
 #include "Hall_Sensors.h"
 #include "ioExpander.h"
 #include "keypad.h"
+#include "rgbLed.h"
 #include <string.h>
 #include <util/delay.h>
 

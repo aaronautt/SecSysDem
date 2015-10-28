@@ -65,7 +65,7 @@
 
 // ----- RGB LED -----
 #define RGB_DDR					DDRC
-#define RGB_PORT				PORTC
+#define RGB_PORT_OUT			PORTC
 #define RGB_RED_PIN				_BV(0)
 #define RGB_GRN_PIN				_BV(1)
 #define RGB_BLU_PIN				_BV(2)
