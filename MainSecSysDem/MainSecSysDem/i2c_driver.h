@@ -7,13 +7,14 @@
 
 
 #ifndef I2C_DRIVER_H_
-#define I2C_DRIVER_H_
-// PC4 = SDA
+#define I2C_DRIVER_H_// PC4 = SDA
 // PC5 = SCL
 
 // Function Prototypes
 void I2C_Init();
 void I2C_WriteRegister(uint8_t busAddr, uint8_t deviceRegister, uint8_t data);
 uint8_t I2C_ReadRegister(uint8_t busAddr, uint8_t deviceRegister);
+void I2C_DoubleWriteRegister(uint8_t busAddr, uint16_t deviceRegister, uint8_t data);
+uint8_t I2C_DoubleReadRegister(uint8_t busAddr, uint16_t deviceRegister);
 
 #endif /* I2C_DRIVER_H_ */
