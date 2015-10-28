@@ -12,6 +12,8 @@
 #ifndef IOEXPANDER_H_
 #define IOEXPANDER_H_
 
+#include <avr/io.h>
+
 #define IOEXPANDER_ADDR	0b01001110
 
 uint8_t ioExpReadPin(uint8_t pinNumber);

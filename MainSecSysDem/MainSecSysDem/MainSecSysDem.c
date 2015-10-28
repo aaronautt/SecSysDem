@@ -26,14 +26,6 @@
 
 int main(void)
 {
-<<<<<<< HEAD
-	
-    while(1)
-    {
-		
-		
-    }
-=======
 	// Initialize the UART
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
@@ -43,5 +35,4 @@ int main(void)
 	{
 		
 	}
->>>>>>> 35cada19e91a0bf5f91e01a25468a1d3fb118b2e
 }
