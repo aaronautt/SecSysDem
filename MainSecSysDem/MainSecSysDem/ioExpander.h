@@ -14,12 +14,10 @@
 
 #include <avr/io.h>
 
-#define IOEXPANDER_ADDR	0b01001110
-
-uint8_t ioExpReadPin(uint8_t pinNumber);
-void ioExpClrPin(uint8_t pinNumber);
-void ioExpSetPin(uint8_t pinNumber);
 uint8_t ioExpReadReg();
 void ioExpWriteReg(uint8_t data);
+uint8_t ioExpReadBit(uint8_t bitValue);
+void ioExpClrBit(uint8_t bitValue);
+void ioExpSetBit(uint8_t bitValue);
 
 #endif /* IOEXPANDER_H_ */

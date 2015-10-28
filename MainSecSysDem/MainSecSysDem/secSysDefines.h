@@ -81,4 +81,7 @@
 //RTC nonsense//
 #define RTC_EEP_ADDR			0x10101110
 
+// IO Expander
+#define IOEXPANDER_ADDR	0b01000000
+
 #endif /* SECSYSDEFINES_H_ */
