@@ -9,7 +9,7 @@
 #ifndef KEYPAD_H_
 #define KEYPAD_H_
 
-void keypadReset();
+//void keypadReset();
 uint8_t keypadReadPins();
 
 

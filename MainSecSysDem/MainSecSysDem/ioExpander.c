@@ -12,16 +12,24 @@
 
 static uint8_t portValues = 0xFF;
 
+
 void ioExpWriteReg(uint8_t data)
 {
 	I2C_WriteByte(IOEXPANDER_ADDR, data);
 }
+
 
 uint8_t ioExpReadReg()
 {
 	return(I2C_ReadByte(IOEXPANDER_ADDR));
 }
 
+
+// This function will set the select bits while leaving other pins unaffected
+//		Ex. bitValue = 0b0010
+//			Bit 1 will be set
+//		Ex.	bitValue = 0b1101
+//			Bits 3, 2, and 0 will be set
 void ioExpSetBit(uint8_t bitValue)
 {
 	// Read the current state of the IO Expander
@@ -32,23 +40,32 @@ void ioExpSetBit(uint8_t bitValue)
 	ioExpWriteReg(portValues);
 }
 
+
+// This function will clear the select bits while leaving other pins unaffected
+//		Ex. bitValue = 0b0010
+//			Bit 1 will be cleared
+//		Ex.	bitValue = 0b1101
+//			Bits 3, 2, and 0 will be cleared
 void ioExpClrBit(uint8_t bitValue)
 {
-	// Read the current state of the IO Expander
-	//uint8_t portData = ioExpReadReg();
-	// Change the data to set the pin
+	// Change the data to clear the select pin
 	portValues &= ~(bitValue);
 	// Write the new data back to the IO Expander
 	ioExpWriteReg(portValues);
 }
 
+
+// This function will read the selected bit
+//		Ex. bitValue = 0b0100
+//			Bit 2 will be read and a 1 will be returned if it is high
 uint8_t ioExpReadBit(uint8_t bitValue)
 {
-	// Read the io expander 
-	uint8_t portData = ((ioExpReadReg()) & bitValue) ? 1 : 0;
-	// Return a 1 for high and a 0 for low
-	return portData;
+	// Read the io expander
+	// If the selected bit is on, return 1, else return 0
+	return (((ioExpReadReg()) & bitValue) ? 1 : 0);
 }
+
+
 
 // void ioExpSetPin(uint8_t pinNumber)
 // {
