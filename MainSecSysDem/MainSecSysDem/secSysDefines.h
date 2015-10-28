@@ -13,21 +13,14 @@
 #define F_CPU	8000000L
 
 // ----- Keypad -----
-// Keypad Column Pins
-#define KEYPAD_COL_PORT_OUT   PORTC
-#define KEYPAD_COL_PORT_IN    PINC
-#define KEYPAD_COL_DDR        DDRC
-#define KEYPAD_COL_1          _BV(0)
-#define KEYPAD_COL_2          _BV(1)
-#define KEYPAD_COL_3          _BV(2)
-// Keypad Row Pins
-#define KEYPAD_ROW_PORT_OUT   PORTD
-#define KEYPAD_ROW_PORT_IN    PIND
-#define KEYPAD_ROW_DDR        DDRD
-#define KEYPAD_ROW_1          _BV(5)
-#define KEYPAD_ROW_2          _BV(4)
-#define KEYPAD_ROW_3          _BV(3)
-#define KEYPAD_ROW_4          _BV(2)
+// Keypad Pins on the IO Expander
+#define KEYPAD_1_PIN			_BV(1)
+#define KEYPAD_2_PIN			_BV(2)
+#define KEYPAD_3_PIN			_BV(3)
+#define KEYPAD_4_PIN			_BV(4)
+#define KEYPAD_5_PIN			_BV(5)
+#define KEYPAD_6_PIN			_BV(6)
+#define KEYPAD_7_PIN			_BV(7)
 
 // ----- Proximity Sensor -----
 #define PIR_DDR       DDRC
@@ -47,31 +40,43 @@
 #define HALL_EFF_DOOR_PIN       PINB1
 
 // ----- LCD ------
+// LCD Data/Command
+#define LCD_DC_DDR				DDRD
+#define LCD_DC_PORT_OUT			PORTD
+#define LCD_DC_PIN_IO			_BV(2)
+// LCD Reset
+#define LCD_RST_DDR				DDRD
+#define LCD_RST_PORT_OUT		PORTD
+#define LCD_RST_PIN_IO			_BV(3)
+// LCD Slave Select
+#define LCD_SS_DDR				DDRD
+#define LCD_SS_PORT_OUT			PORTD
+#define LCD_SS_PIN				_BV(4)
 // LCD Backlight
+#define LCD_DC_DDR				DDRD
 #define LCD_BACKLIGHT_PORT_OUT  PORTD
 #define LCD_BACKLIGHT_PIN       _BV(6)
-// LCD Data/Command
-#define LCD_DC_PIN_IOEX         _BV(3)
-// LCD Reset
-#define LCD_RST_PIN_IOEX        _BV(4)
-// LCD Slave Select
-#define LCD_SS_PIN_IOEX         _BV(5)
 
 // ----- PUSH BUTTON -----
-#define PUSH_BTN_PORT_OUT       PORTD
+#define PUSH_BTN_DDR			DDRD
 #define PUSH_BTN_PORT_IN        PIND
+#define PUSH_BTN_PORT_OUT		PORTD
 #define PUSH_BTN_PIN            _BV(7)
 
 // ----- RGB LED -----
-#define RGB_RED_IOEX                 _BV(0)
-#define RGB_GRN_IOEX                 _BV(1)
-#define RGB_BLU_IOEX                 _BV(2)
+#define RGB_DDR					DDRC
+#define RGB_PORT				PORTC
+#define RGB_RED_PIN				_BV(0)
+#define RGB_GRN_PIN				_BV(1)
+#define RGB_BLU_PIN				_BV(2)
 
 // ----- Doorlocking Solenoid -----
-#define DOORLOCK_PIN_IOEX            _BV(6)
+#define DOORLOCK_PORT			PORTD
+#define DOORLOCK_DDR			DDRD
+#define DOORLOCK_PIN			_BV(5)
 
 // ----- Bell Alarm -----
-#define BELL_ALARM_PIN_IOEX          _BV(7)
+#define BELL_ALARM_PIN_IOEX		_BV(0)
 
 //RTC nonsense//
 #define RTC_EEP_READ			0x10100001

@@ -117,6 +117,12 @@
     <Compile Include="ioExpander.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="keypad.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="keypad.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="MainSecSysDem.c">
       <SubType>compile</SubType>
     </Compile>
