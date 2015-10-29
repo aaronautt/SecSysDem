@@ -38,7 +38,6 @@ int main(void)
 
     while(1)
 	{
-		printf("%d\n",keypadReadPins());
-		_delay_ms(500);
+
 	}
 }
