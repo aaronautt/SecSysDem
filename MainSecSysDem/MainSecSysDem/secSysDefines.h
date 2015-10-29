@@ -12,6 +12,7 @@
 
 #define F_CPU	8000000L
 
+
 // ----- Keypad -----
 // Keypad Column Pins
 #define KEYPAD_COL_PORT_OUT   PORTC
@@ -73,7 +74,7 @@
 // ----- Bell Alarm -----
 #define BELL_ALARM_PIN_IOEX          _BV(7)
 
-//RTC nonsense//
-#define RTC_EEP_ADDR			0x10101110
+//---RTC EEPROM---
+#define RTC_EEP_ADD					0b10101110
 
 #endif /* SECSYSDEFINES_H_ */
