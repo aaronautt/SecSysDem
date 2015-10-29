@@ -18,6 +18,7 @@
 #include "ioExpander.h"
 #include "keypad.h"
 #include "rgbLed.h"
+#include "bell.h"
 #include <string.h>
 #include <util/delay.h>
 
