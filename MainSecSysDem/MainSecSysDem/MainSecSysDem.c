@@ -19,6 +19,7 @@
 #include "keypad.h"
 #include "rgbLed.h"
 #include "bell.h"
+#include "pushButton.h"
 #include <string.h>
 #include <util/delay.h>
 
