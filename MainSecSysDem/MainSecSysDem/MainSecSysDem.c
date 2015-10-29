@@ -17,8 +17,19 @@
 #include "i2c_driver.h"
 #include "uart.h"
 #include "Hall_Sensors.h"
+<<<<<<< HEAD
 #include "RTC_eeprom.h"
 #include <inttypes.h>
+=======
+#include "ioExpander.h"
+#include "keypad.h"
+#include "rgbLed.h"
+#include "bell.h"
+#include "pushButton.h"
+#include <string.h>
+#include <util/delay.h>
+
+>>>>>>> origin
 
 //DEFINES
 #define BAUD 9600
@@ -26,7 +37,12 @@
 
 int main(void)
 {
+	// Initialize the UART
+	USART_Init(MYUBRR);
+	stdout = &uart_output;
+	stdin  = &uart_input;
 	
+<<<<<<< HEAD
 	// Initialize the UART
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
@@ -47,4 +63,12 @@ while(1)
 {
 }
     
+=======
+	I2C_Init();
+
+    while(1)
+	{
+
+	}
+>>>>>>> origin
 }

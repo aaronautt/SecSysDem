@@ -96,6 +96,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bell.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="bell.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Hall_Sensors.c">
       <SubType>compile</SubType>
     </Compile>
@@ -111,6 +117,18 @@
     <Compile Include="interrupt.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="ioExpander.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ioExpander.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="keypad.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="keypad.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="MainSecSysDem.c">
       <SubType>compile</SubType>
     </Compile>
@@ -120,10 +138,23 @@
     <Compile Include="PIR_DRIVER.h">
       <SubType>compile</SubType>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="RTC_eeprom.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="RTC_eeprom.h">
+=======
+    <Compile Include="pushButton.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pushButton.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="rgbLed.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="rgbLed.h">
+>>>>>>> origin
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="secSysDefines.h">

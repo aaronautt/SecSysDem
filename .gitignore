@@ -30,6 +30,7 @@
 
 # Debug files
 *.dSYM/
+Debug/
 
 #Amel studio files
 *.atsln
@@ -37,6 +38,9 @@
 *.srec
 *.map
 *.atsuo
+<<<<<<< .merge_file_a06356
+=======
 *.d
 *.MK
 *.eep
+>>>>>>> .merge_file_a06044
