@@ -36,9 +36,9 @@ int main(void)
 	
 	I2C_Init();
 
-
     while(1)
 	{
-
+		printf("%d\n",keypadReadPins());
+		_delay_ms(500);
 	}
 }
