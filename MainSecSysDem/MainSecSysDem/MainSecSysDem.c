@@ -20,6 +20,7 @@
 #include "rgbLed.h"
 #include "bell.h"
 #include "pushButton.h"
+#include "timers.h"
 #include <string.h>
 #include <util/delay.h>
 
