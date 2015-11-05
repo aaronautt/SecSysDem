@@ -7,31 +7,17 @@
 
 
 #ifndef I2C_DRIVER_H_
-<<<<<<< HEAD
 #define I2C_DRIVER_H_#include <avr/io.h>
 // PC4 = SDA
-=======
-
-#define I2C_DRIVER_H_#include <avr/io.h>
-// PC4 = SDA
->>>>>>> origin
 // PC5 = SCL
 
 // Function Prototypes
 void I2C_Init();
 void I2C_WriteRegister(uint8_t busAddr, uint8_t deviceRegister, uint8_t data);
 uint8_t I2C_ReadRegister(uint8_t busAddr, uint8_t deviceRegister);
-<<<<<<< HEAD
 void I2C_DoubleWriteRegister(uint8_t busAddr, uint16_t deviceRegister, char data);
-char I2C_DoubleReadRegister(uint8_t busAddr, uint16_t deviceRegister);
-void I2C_DoubleReadRegister_S(uint8_t busAddr, uint16_t deviceRegister, uint16_t last_place, uint8_t data[]);
-=======
-
-void I2C_DoubleWriteRegister(uint8_t busAddr, uint16_t deviceRegister, uint8_t data);
 uint8_t I2C_DoubleReadRegister(uint8_t busAddr, uint16_t deviceRegister);
-
-void I2C_WriteByte(uint8_t busAddr, uint8_t data);
-uint8_t I2C_ReadByte(uint8_t busAddr);
->>>>>>> origin
+void I2C_DoubleReadRegister_S(uint8_t busAddr, uint16_t start_address, uint16_t num_bytes, uint8_t data[]);
+void I2C_DoubleWriteRegister_S(uint8_t busAddr, uint16_t deviceRegister, uint16_t num_bytes, uint8_t data[]);
 
 #endif /* I2C_DRIVER_H_ */

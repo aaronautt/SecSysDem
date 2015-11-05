@@ -17,19 +17,10 @@
 #include "i2c_driver.h"
 #include "uart.h"
 #include "Hall_Sensors.h"
-<<<<<<< HEAD
 #include "RTC_eeprom.h"
 #include <inttypes.h>
-=======
-#include "ioExpander.h"
-#include "keypad.h"
-#include "rgbLed.h"
-#include "bell.h"
-#include "pushButton.h"
-#include <string.h>
-#include <util/delay.h>
+#include <avr/eeprom.h>
 
->>>>>>> origin
 
 //DEFINES
 #define BAUD 9600
@@ -37,38 +28,16 @@
 
 int main(void)
 {
-	// Initialize the UART
-	USART_Init(MYUBRR);
-	stdout = &uart_output;
-	stdin  = &uart_input;
 	
-<<<<<<< HEAD
 	// Initialize the UART
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
 	stdin  = &uart_input;
 	I2C_Init();
-	
-	uint16_t i;
-	uint8_t date[] = "05 230 45 55 2015", action[]= "03 25 01 56 2222";
-	char  wank[1000] = "10", blue[60];
 
-	RTC_Write_Alarm_Time(&date[0], RTC_Get_Place_In_Line());
-	RTC_Write_Action_Time(&action[0], RTC_Get_Place_In_Line(), 1);
-	printf("wank 1 = %s\n", &wank[0]);
-	RTC_Last_Five(&wank[0]);
-	printf("wank 2 = %s\n", &wank[0]);
-	readsomeshit(&blue[0]);
-while(1)
+	
+	while(1)
 {
 }
     
-=======
-	I2C_Init();
-
-    while(1)
-	{
-
-	}
->>>>>>> origin
 }
