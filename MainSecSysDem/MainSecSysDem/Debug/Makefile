@@ -38,6 +38,7 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../bell.c \
+../eeprom328p.c \
 ../Hall_Sensors.c \
 ../i2c_driver.c \
 ../ioExpander.c \
@@ -46,7 +47,7 @@ C_SRCS +=  \
 ../PIR_DRIVER.c \
 ../pushButton.c \
 ../rgbLed.c \
-../timers.c \
+../rtcDriver.c \
 ../uart.c \
 ../WATCH_DOG.c
 
@@ -59,6 +60,7 @@ ASM_SRCS +=
 
 OBJS +=  \
 bell.o \
+eeprom328p.o \
 Hall_Sensors.o \
 i2c_driver.o \
 ioExpander.o \
@@ -67,12 +69,13 @@ MainSecSysDem.o \
 PIR_DRIVER.o \
 pushButton.o \
 rgbLed.o \
-timers.o \
+rtcDriver.o \
 uart.o \
 WATCH_DOG.o
 
 OBJS_AS_ARGS +=  \
 bell.o \
+eeprom328p.o \
 Hall_Sensors.o \
 i2c_driver.o \
 ioExpander.o \
@@ -81,12 +84,13 @@ MainSecSysDem.o \
 PIR_DRIVER.o \
 pushButton.o \
 rgbLed.o \
-timers.o \
+rtcDriver.o \
 uart.o \
 WATCH_DOG.o
 
 C_DEPS +=  \
 bell.d \
+eeprom328p.d \
 Hall_Sensors.d \
 i2c_driver.d \
 ioExpander.d \
@@ -95,12 +99,13 @@ MainSecSysDem.d \
 PIR_DRIVER.d \
 pushButton.d \
 rgbLed.d \
-timers.d \
+rtcDriver.d \
 uart.d \
 WATCH_DOG.d
 
 C_DEPS_AS_ARGS +=  \
 bell.d \
+eeprom328p.d \
 Hall_Sensors.d \
 i2c_driver.d \
 ioExpander.d \
@@ -109,7 +114,7 @@ MainSecSysDem.d \
 PIR_DRIVER.d \
 pushButton.d \
 rgbLed.d \
-timers.d \
+rtcDriver.d \
 uart.d \
 WATCH_DOG.d
 
@@ -127,6 +132,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

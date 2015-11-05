@@ -4,6 +4,8 @@
 
 bell.c
 
+eeprom328p.c
+
 Hall_Sensors.c
 
 i2c_driver.c
@@ -20,7 +22,7 @@ pushButton.c
 
 rgbLed.c
 
-timers.c
+rtcDriver.c
 
 uart.c
 
