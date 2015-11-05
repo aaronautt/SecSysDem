@@ -200,7 +200,6 @@ void getStandardTimeStampStr(char timeStamp[])
 	
 	// Get the time stamp from the RTC
 	getTimeStampChar(hour, min, sec, date, dayOfWk, month, year);
-	//getTimeStampChar(&hour[0], &min[0], &sec[0], &date[0], &dayOfWk[0], &month[0], &year[0]);
 	
 	// Create string
 	sprintf(timeStamp,"%c%c/%c%c/%c%c %c%c:%c%c:%c%c",month[0],month[1],date[0],
@@ -221,14 +220,14 @@ void SetTimeDate()
 void saveTimeToEeprom()
 {
 	char stampStr[20];
+	uint8_t stampNum;
+	
 	// Figure out which time was set last
-	uint8_t stampNum;// = 
 	eeprom_read_block(&stampNum,&alarmCtn,1);
-	printf("\n%d\n",stampNum);
+	
 	// Increment the counter
 	stampNum = (stampNum >= 4) ? 0 : stampNum+1;
 	
-	printf("%d\n",stampNum);
 	//Get the current time stamp
 	getStandardTimeStampStr(stampStr);
 	
@@ -236,40 +235,27 @@ void saveTimeToEeprom()
 	eeprom_update_block(stampStr,(void*)&alarm[stampNum][0],20);
 	
 	// Write the new time stamp to the eeprom
-	printf("num %d\n",stampNum);
 	eeprom_write_byte(&alarmCtn, stampNum);
-	_delay_ms(100);
-	//stampNum = eeprom_read_byte(alarmCtn);
-	printf("\n%d\n",eeprom_read_byte(&alarmCtn));
-	//eeprom_update_byte(alarmCtn, stampNum);
 }
 
 void getFiveAlarmTimes(char timeStamps[5][20])
 {
-	int i, iTotal;
+	uint8_t stampNum, rowNum;
 	
-	// Figure out which time was set last and read it first
-	_delay_ms(100);
-	uint8_t stampNum = eeprom_read_byte(&alarmCtn);
-	_delay_ms(100);
-	printf("in %d\n",stampNum);
-	for(i=stampNum+1,iTotal=0; iTotal<5;iTotal++, i++)
+	// Figure out which time was set last
+	uint8_t lastStampNum = eeprom_read_byte(&alarmCtn);
+
+	for(stampNum=lastStampNum+1,rowNum=4; rowNum>=0;rowNum--, stampNum++)
 	{
-// 		if((i+stampNum)>=5)
-// 		{
-// 			i -= 5;
-// 		}
-// 		
-// 		printf("%d,%d\n",i,(i+stampNum));
-// 		eeprom_read_block(&timeStamps[i][0],&alarm[i][0],20);
-		if( i>= 5)
+		// If stampNum is greater than 5, reset it to read the 1st time stamp
+		if( stampNum>= 5)
 		{
-			i = 0;
+			stampNum = 0;
 		}
 		
-		printf("%d,%d\n",i,(i+stampNum));
-		eeprom_read_block(&timeStamps[iTotal][0],&alarm[i][0],20);
+		// Read the time stamp and store it in the next row.
+		// Since rowNum is decreasing, the temeStamps maxtrix will read
+		// the arrays from newest to oldest.
+		eeprom_read_block(&timeStamps[rowNum][0],&alarm[stampNum][0],20);
 	}
-	printf("out\n");
-
 }

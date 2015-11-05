@@ -70,29 +70,20 @@ int main(void)
 	
 	I2C_Init();
 	
-
-// 	printf("start\n");
-// 	printf("%d\n",eeprom_read_byte(alarm1));
-// 	printf("%d\n",eeprom_read_byte(alarm2));
-// 	printf("%d\n",eeprom_read_byte(alarm3));
-// 	printf("%d\n",eeprom_read_byte(alarm4));
-// 	printf("%d\n\n-----",eeprom_read_byte(alarm5));
-	
 	while(1)
 	{
 		printf("Enter a command: ");
 		fflush(stdin);
 		scanf("%c",&a);
+		printf("\n");
 		if(a == 's')
 		{
-			printf("\ns was entered\n");
 			getFiveAlarmTimes(timeStamps);
-			printf("\nI got them!\n");
+			
 			for(i=0; i<5; i++)
 			{
 				puts(&timeStamps[i][0]);				
 			}
-			printf("\nprinted!\n");
 		}
 		else
 		{
