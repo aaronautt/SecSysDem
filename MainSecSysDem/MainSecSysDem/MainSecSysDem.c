@@ -30,13 +30,6 @@
 #define BAUD 9600
 #define MYUBRR F_CPU/8/BAUD-1
 
-#include <avr/eeprom.h>
-// uint8_t EEMEM alarm1[20];
-// uint8_t EEMEM alarm2[20];
-// uint8_t EEMEM alarm3[20];
-// uint8_t EEMEM alarm4[20];
-// uint8_t EEMEM alarm5[20];
-
 // int main(void)
 // {
 // 	// Initialize the UART
