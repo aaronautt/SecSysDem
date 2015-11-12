@@ -30,52 +30,17 @@
 #define BAUD 9600
 #define MYUBRR F_CPU/8/BAUD-1
 
-// int main(void)
-// {
-// 	// Initialize the UART
-// 	USART_Init(MYUBRR);
-// 	stdout = &uart_output;
-// 	stdin  = &uart_input;
-// 	
-// 	I2C_Init();
-// 
-//     while(1)
-// 	{
-// 
-// 	}
-// }
-
 int main(void)
 {
-	uint8_t i;
-	char a;
-	char timeStamps[5][20];
-	
 	// Initialize the UART
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
 	stdin  = &uart_input;
 	
 	I2C_Init();
-	
-	while(1)
+
+    while(1)
 	{
-		printf("Enter a command: \n");
-		fflush(stdin);
-		scanf("%c",&a);
-		printf("\n");
-		if(a == 's')
-		{
-			getFiveAlarmTimes(timeStamps);
-			for(i=0; i<5; i++)
-			{
-				puts(&timeStamps[i][0]);		
-	
-			}
-		}
-		else
-		{
-			saveTimeToEeprom();
-		}
+
 	}
 }
