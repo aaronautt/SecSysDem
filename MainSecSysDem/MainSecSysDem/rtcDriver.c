@@ -245,7 +245,7 @@ void getFiveAlarmTimes(char timeStamps[5][20])
 	// Figure out which time was set last
 	uint8_t lastStampNum = eeprom_read_byte(&alarmCtn);
 
-	for(stampNum=lastStampNum+1,rowNum=4; rowNum>=0;rowNum--, stampNum++)
+	for(stampNum=lastStampNum+1,rowNum=4; rowNum<5;rowNum--, stampNum++)
 	{
 		// If stampNum is greater than 5, reset it to read the 1st time stamp
 		if( stampNum>= 5)
@@ -257,5 +257,5 @@ void getFiveAlarmTimes(char timeStamps[5][20])
 		// Since rowNum is decreasing, the temeStamps maxtrix will read
 		// the arrays from newest to oldest.
 		eeprom_read_block(&timeStamps[rowNum][0],&alarm[stampNum][0],20);
-	}
+	}	
 }

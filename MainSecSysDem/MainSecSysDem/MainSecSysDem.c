@@ -54,13 +54,8 @@
 
 int main(void)
 {
-	//uint8_t* alarm = alarm1;
-	//uint8_t counter=0, 
 	uint8_t i;
 	char a;
-	//char hour[5],min[5],sec[5],date[5],dayOfWk[5],month[5],year[5];
-	//char timeStamp[20];
-	//char temp[20];
 	char timeStamps[5][20];
 	
 	// Initialize the UART
@@ -72,17 +67,17 @@ int main(void)
 	
 	while(1)
 	{
-		printf("Enter a command: ");
+		printf("Enter a command: \n");
 		fflush(stdin);
 		scanf("%c",&a);
 		printf("\n");
 		if(a == 's')
 		{
 			getFiveAlarmTimes(timeStamps);
-			
 			for(i=0; i<5; i++)
 			{
-				puts(&timeStamps[i][0]);				
+				puts(&timeStamps[i][0]);		
+	
 			}
 		}
 		else
