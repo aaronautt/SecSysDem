@@ -22,27 +22,27 @@ void rgb_init()
 void rgb_red()
 {
 	// Turn on red LED
-	RGB_DDR &= ~(RGB_RED_PIN);
+	RGB_PORT_OUT &= ~(RGB_RED_PIN);
 	// Turn off other LEDs
-	RGB_DDR |= (RGB_GRN_PIN | RGB_BLU_PIN);
+	RGB_PORT_OUT |= (RGB_GRN_PIN | RGB_BLU_PIN);
 }
 
 // Turns on the RGB led to red
 void rgb_green()
 {
 	// Turn on green LED
-	RGB_DDR &= ~(RGB_GRN_PIN);
+	RGB_PORT_OUT &= ~(RGB_GRN_PIN);
 	// Turn off other LEDs
-	RGB_DDR |= (RGB_RED_PIN | RGB_BLU_PIN);
+	RGB_PORT_OUT |= (RGB_RED_PIN | RGB_BLU_PIN);
 }
 
 // Turns on the RGB led to red
 void rgb_blue()
 {
 	// Turn on blue LED
-	RGB_DDR &= ~(RGB_BLU_PIN);
+	RGB_PORT_OUT &= ~(RGB_BLU_PIN);
 	// Turn off other LEDs
-	RGB_DDR |= (RGB_RED_PIN | RGB_GRN_PIN);
+	RGB_PORT_OUT |= (RGB_RED_PIN | RGB_GRN_PIN);
 }
 
 // Turns off the RGB led

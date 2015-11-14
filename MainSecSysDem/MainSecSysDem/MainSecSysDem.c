@@ -22,6 +22,7 @@
 #include "pushButton.h"
 #include "rtcDriver.h"
 #include "eeprom328p.h"
+#include "Dac.h"
 #include <string.h>
 #include <util/delay.h>
 
@@ -37,10 +38,28 @@ int main(void)
 	stdout = &uart_output;
 	stdin  = &uart_input;
 	
-	I2C_Init();
-
+	// ----- Init Functions -----
+	rgb_init();
+	pushButton_init();
+	//I2C_Init();
+	
+	rgb_blue();
+	DAC_spi_init();
+	DAC_write_byte(100);	
+	rgb_green();
+	//DAC_spi_init();
+	//DAC_write_byte(100);
+	
+	
     while(1)
 	{
-
+		_delay_ms(1500);
+		DAC_write_byte(0);
+		_delay_ms(1500);
+		DAC_write_byte(100);
+		_delay_ms(1500);
+		DAC_write_byte(200);
+		_delay_ms(1500);
+		DAC_write_byte(255);
 	}
 }
