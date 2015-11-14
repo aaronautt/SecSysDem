@@ -18,26 +18,42 @@
 #include "uart.h"
 #include "Hall_Sensors.h"
 #include "RTC_eeprom.h"
+#include "LCD_spi.h"
+#include "Dac.h"
+#include "lcd_moving.h"
 #include <inttypes.h>
 #include <avr/eeprom.h>
+#include <math.h>
 
 
 //DEFINES
 #define BAUD 9600
 #define MYUBRR F_CPU/8/BAUD-1
 
+//text array
+uint8_t LCD_bytes[84];
+
 int main(void)
-{
-	
+{	
+	int i, j, scrollPosition = -10;
 	// Initialize the UART
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
 	stdin  = &uart_input;
 	I2C_Init();
-
+	DAC_spi_init();
+	LCD_init();
+	LCD_light_init();
+	
+	char message[25] = {"hello"};
 	
 	while(1)
-{
-}
-    
+	{
+		
+		for(i=0;i<15;i++)
+		{
+			display_temp(50);
+			Scrolling_Text_single(&message[0], i);
+		}
+	}
 }

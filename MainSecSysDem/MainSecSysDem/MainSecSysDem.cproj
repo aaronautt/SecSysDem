@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectVersion>7.0</ProjectVersion>
+    <ProjectVersion>6.2</ProjectVersion>
     <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
     <ProjectGuid>{20582d0d-6bc0-4cac-9b30-71466a3a24ed}</ProjectGuid>
     <avrdevice>ATmega328P</avrdevice>
@@ -20,12 +20,12 @@
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
-    <RamSnippetAddress />
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
     <preserveEEPROM>true</preserveEEPROM>
-    <OverrideVtorValue />
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <BootSegment>2</BootSegment>
-    <eraseonlaunchrule>1</eraseonlaunchrule>
+    <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
       <framework-data xmlns="">
         <options />
@@ -38,7 +38,6 @@
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
-    <ExternalProgrammingToolCommand />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -97,6 +96,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Dac.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Dac.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Hall_Sensors.c">
       <SubType>compile</SubType>
     </Compile>
@@ -110,6 +115,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="interrupt.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lcd_moving.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lcd_moving.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="LCD_spi.c">

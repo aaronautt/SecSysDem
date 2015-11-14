@@ -23,6 +23,7 @@
 #include <avr/io.h>
 
 #include "LCD_spi.h"
+#include "secSysDefines.h"
 //#include "splash-temp.h"
 
 //global variable for remembering where to start writing the next text string on 3310 LCD
@@ -1223,6 +1224,8 @@ void spi_init(void)
 --------------------------------------------------------------------------------------------------*/
 void LCD_init ( void )
 {
+	DDRD |= LCD_BACKLIGHT_PIN | LCD_SS_PIN | LCD_DC_PIN_IO | LCD_RST_PIN_IO;//sets LCD pins as outputs
+	
 	delay_ms(100);
 			  
 	CLEAR_SCE_PIN;    //Enable LCD
