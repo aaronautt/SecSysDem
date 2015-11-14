@@ -6,10 +6,12 @@
  */ 
 
 //INCLUDES
+#include "secSysDefines.h"
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "secSysDefines.h"
+#include <util/delay.h>
+#include "interrupt.h"
 #include "WATCH_DOG.h"
 #include "PIR_DRIVER.h"
 #include "i2c_driver.h"
@@ -24,6 +26,13 @@
 #include "eeprom328p.h"
 #include <string.h>
 #include <util/delay.h>
+#include "RTC_eeprom.h"
+#include "LCD_spi.h"
+#include "Dac.h"
+#include "lcd_moving.h"
+#include <inttypes.h>
+#include <avr/eeprom.h>
+#include <math.h>
 
 
 //DEFINES
@@ -31,16 +40,20 @@
 #define MYUBRR F_CPU/8/BAUD-1
 
 int main(void)
-{
+{	
+	int i, j, scrollPosition = -10;
 	// Initialize the UART
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
 	stdin  = &uart_input;
-	
 	I2C_Init();
-
-    while(1)
+	DAC_spi_init();
+	LCD_init();
+	LCD_light_init();
+	
+	
+	while(1)
 	{
-
+		
 	}
 }

@@ -20,12 +20,12 @@
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
-    <RamSnippetAddress>0x20000000</RamSnippetAddress>
+    <RamSnippetAddress />
     <UncachedRange />
     <preserveEEPROM>true</preserveEEPROM>
-    <OverrideVtorValue>exception_table</OverrideVtorValue>
+    <OverrideVtorValue />
     <BootSegment>2</BootSegment>
-    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <eraseonlaunchrule>1</eraseonlaunchrule>
     <AsfFrameworkConfig>
       <framework-data xmlns="">
         <options />
@@ -96,18 +96,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Dac.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Dac.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="eeprom328p.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="eeprom328p.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Hall_Sensors.c">
       <SubType>compile</SubType>
     </Compile>
@@ -121,12 +109,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="interrupt.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="lcd_moving.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="lcd_moving.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="LCD_spi.c">
@@ -148,12 +130,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="RTC_eeprom.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="rtcDriver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="rtcDriver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="secSysDefines.h">

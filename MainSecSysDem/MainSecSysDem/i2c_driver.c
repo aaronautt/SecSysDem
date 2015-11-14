@@ -55,6 +55,9 @@
 // INCLUDES
 #include "secSysDefines.h"
 #include <avr/io.h> // deal with port registers
+#include <stdio.h>
+#include <util/delay.h>
+#include "RTC_eeprom.h"
 // ---------------------------------------------------------------------------
 
 void I2C_Init()
@@ -133,15 +136,6 @@ void I2C_WriteRegister(uint8_t busAddr, uint8_t deviceRegister, uint8_t data)
 	I2C_Stop();
 }
 
-uint8_t I2C_ReadByte(uint8_t busAddr)
-{
-	uint8_t data = 0;
-	I2C_Start(busAddr+READ); // send device address and read bit
-	data = I2C_ReadNACK(); // read the register data
-	I2C_Stop(); // stop
-	return data;
-}
-
 uint8_t I2C_ReadRegister(uint8_t busAddr, uint8_t deviceRegister)
 {
 	uint8_t data = 0;
@@ -153,23 +147,63 @@ uint8_t I2C_ReadRegister(uint8_t busAddr, uint8_t deviceRegister)
 	return data;
 }
 
-void I2C_DoubleWriteRegister(uint8_t busAddr, uint16_t deviceRegister, uint8_t data)
+
+
+void I2C_DoubleWriteRegister(uint8_t busAddr, uint16_t deviceRegister, char data)
 {
+	uint8_t HiByte=(deviceRegister>>8)&0x00ff, LoByte=deviceRegister&0x00ff;
+	_delay_ms(2);
 	I2C_Start(busAddr); // send bus address
-	I2C_Write(((deviceRegister>>8)&0xff)); // set register pointer 1
-	I2C_Write((deviceRegister&0xff)); // set register pointer 2
+	I2C_Write(HiByte); // set register pointer 1
+	I2C_Write(LoByte); // set register pointer 2
 	I2C_Write(data); // second byte = data for device register
 	I2C_Stop();
 }
 
 uint8_t I2C_DoubleReadRegister(uint8_t busAddr, uint16_t deviceRegister)
 {
-	uint8_t data = 0;
+	uint8_t HiByte=(deviceRegister>>8)&0x00ff, LoByte=deviceRegister&0x00ff;
+	char data = 0;
+	_delay_ms(2);
 	I2C_Start(busAddr); // send device address
-	I2C_Write(((deviceRegister>>8)&0xff)); // set register pointer 1
-	I2C_Write((deviceRegister&0xff)); // set register pointer 2
+	I2C_Write(HiByte); // set register pointer 1
+	I2C_Write(LoByte); // set register pointer 2
 	I2C_Start(busAddr+READ); // restart as a read operation
 	data = I2C_ReadNACK(); // read the register data
 	I2C_Stop(); // stop
 	return data;
 }
+
+void I2C_DoubleWriteRegister_S(uint8_t busAddr, uint16_t deviceRegister, uint16_t num_bytes, uint8_t data[])
+{
+	uint8_t HiByte=(deviceRegister>>8)&0x00ff, LoByte=deviceRegister&0x00ff;
+	uint8_t i;
+	_delay_ms(2);
+	I2C_Start(busAddr); // send bus address
+	I2C_Write(HiByte); // set register pointer 1
+	I2C_Write(LoByte); // set register pointer 2
+	for(i=0;i<num_bytes;i++)
+	{
+		I2C_Write(data[i]);
+	}
+	I2C_Write(data[i]); // second byte = data for device register
+	I2C_Stop();
+}
+
+void I2C_DoubleReadRegister_S(uint8_t busAddr, uint16_t start_address, uint16_t num_bytes, uint8_t data[])
+{
+	int i;
+	uint8_t HiByte=(start_address>>8)&0x00ff, LoByte=start_address&0x00ff;
+	_delay_ms(2);
+	I2C_Start(busAddr); // send device address
+	I2C_Write(HiByte); // set register pointer 1
+	I2C_Write(LoByte); // set register pointer 2
+	I2C_Start(busAddr+READ); // restart as a read operation
+	for(i=0;i<num_bytes;i++)
+	{
+		data[i] = I2C_ReadACK();
+	}
+	data[i] = I2C_ReadNACK(); // read the register data
+	I2C_Stop(); // stop
+}
+

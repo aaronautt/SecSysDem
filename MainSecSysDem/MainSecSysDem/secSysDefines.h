@@ -1,4 +1,4 @@
-/*
+/*/*
  * secSysDefines.h
  *
  * Created: 10/18/2015 10:16:40 PM
@@ -84,5 +84,12 @@
 
 // IO Expander
 #define IOEXPANDER_ADDR	0b01000000
+
+
+//dac
+#define DAC_PORT_OUT			PORTB
+#define DAC_CLK					_BV(5)
+#define DAC_IN					_BV(3)
+#define DAC_CS					_BV(2)
 
 #endif /* SECSYSDEFINES_H_ */
