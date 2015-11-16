@@ -102,6 +102,12 @@
     <Compile Include="Dac.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="eeprom328p.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="eeprom328p.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Hall_Sensors.c">
       <SubType>compile</SubType>
     </Compile>
@@ -142,6 +148,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="RTC_eeprom.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="rtcDriver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="rtcDriver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="secSysDefines.h">

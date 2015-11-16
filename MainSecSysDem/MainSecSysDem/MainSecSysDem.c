@@ -17,6 +17,15 @@
 #include "i2c_driver.h"
 #include "uart.h"
 #include "Hall_Sensors.h"
+#include "ioExpander.h"
+#include "keypad.h"
+#include "rgbLed.h"
+#include "bell.h"
+#include "pushButton.h"
+#include "rtcDriver.h"
+#include "eeprom328p.h"
+#include <string.h>
+#include <util/delay.h>
 #include "RTC_eeprom.h"
 #include "LCD_spi.h"
 #include "Dac.h"
@@ -30,9 +39,6 @@
 #define BAUD 9600
 #define MYUBRR F_CPU/8/BAUD-1
 
-//text array
-uint8_t LCD_bytes[84];
-
 int main(void)
 {	
 	int i, j, scrollPosition = -10;
@@ -45,15 +51,9 @@ int main(void)
 	LCD_init();
 	LCD_light_init();
 	
-	char message[25] = {"hello"};
 	
 	while(1)
 	{
 		
-		for(i=0;i<15;i++)
-		{
-			display_temp(50);
-			Scrolling_Text_single(&message[0], i);
-		}
 	}
 }
