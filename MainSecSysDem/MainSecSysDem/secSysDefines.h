@@ -79,12 +79,21 @@
 #define BELL_ALARM_PIN_IOEX		_BV(0)
 
 //RTC nonsense//
-#define RTC_EEP_ADDR			0x10101110 // EEPROM address on RTC Module
+#define RTC_EEP_ADDR			0b10101110 // EEPROM address on RTC Module
 #define RTC_ADDR				0b11010000 // I2C bus address of DS1307 RTC
 
 // IO Expander
 #define IOEXPANDER_ADDR	0b01000000
 
+//status defines
+#define ARMED					1
+#define UNARMED					0
+#define ALARMED					2
+
+//location of alarm defines
+#define DOOR					1
+#define WINDOW					2
+#define MOTION					3
 
 //dac
 #define DAC_PORT_OUT			PORTB

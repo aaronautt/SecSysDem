@@ -42,6 +42,7 @@
 int main(void)
 {	
 	int i, j, scrollPosition = -10;
+	char time[25];
 	// Initialize the UART
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
@@ -50,10 +51,16 @@ int main(void)
 	DAC_spi_init();
 	LCD_init();
 	LCD_light_init();
-	
+	pushButton_init();
+	display_status(UNARMED, 0);
 	
 	while(1)
 	{
+		for(i=0;i<23;i++)
+		{
+			getStandardTimeStampStr(&time[0]);
+			Scrolling_Text_single(&time[0], i);
+		}
 		
 	}
 }
