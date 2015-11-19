@@ -25,18 +25,12 @@
 #include "rtcDriver.h"
 #include "eeprom328p.h"
 #include <string.h>
-<<<<<<< HEAD
-=======
 #include <util/delay.h>
->>>>>>> f277d19085617462f42e2a000e692b983721c235
 #include "RTC_eeprom.h"
 #include "LCD_spi.h"
 #include "Dac.h"
 #include "lcd_moving.h"
-<<<<<<< HEAD
 #include "timers.h"
-=======
->>>>>>> f277d19085617462f42e2a000e692b983721c235
 #include <inttypes.h>
 #include <avr/eeprom.h>
 #include <math.h>
@@ -53,13 +47,11 @@ uint16_t idle_timer = 0;
 
 int main(void)
 {	
-<<<<<<< HEAD
 	uint8_t keyRead = 22, push_press = 0, fire = 0, hall_window = 0, hall_door = 0, movement = 0;
 	uint8_t i, scroll_postion = 0, dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 0, new_code = 0, code_position = 0, armed_state = 0;
 	char time[25], code[4] = "$$$$", master_code[4] = "1234";
 	// Initialize the UART
-	
 	while(1)
 	{
 		//this start block checks all the sensors and updates their flags
@@ -343,21 +335,6 @@ ISR(TIMER2_COMPA_vect)
 	else if(idle_timer > 1875)
 	{
 		idle = 1;
-=======
-	int i, j, scrollPosition = -10;
-	// Initialize the UART
-	USART_Init(MYUBRR);
-	stdout = &uart_output;
-	stdin  = &uart_input;
-	I2C_Init();
-	DAC_spi_init();
-	LCD_init();
-	LCD_light_init();
-	
-	
-	while(1)
-	{
-		
->>>>>>> f277d19085617462f42e2a000e692b983721c235
+		idle_timer = 0;
 	}
 }
