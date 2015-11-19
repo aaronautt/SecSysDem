@@ -45,21 +45,23 @@ int main(void)
 	
 	rgb_blue();
 	DAC_spi_init();
-	DAC_write_byte(100);	
+	DAC_write_byte(0);	
 	rgb_green();
 	//DAC_spi_init();
 	//DAC_write_byte(100);
-	
+	DDRD |= _BV(5);
 	
     while(1)
 	{
-		_delay_ms(1500);
-		DAC_write_byte(0);
-		_delay_ms(1500);
-		DAC_write_byte(100);
-		_delay_ms(1500);
-		DAC_write_byte(200);
-		_delay_ms(1500);
-		DAC_write_byte(255);
+		if(pushButtonRead())
+		{
+			PORTD |= _BV(5);
+			rgb_red();
+		}
+		else
+		{
+			PORTD &= ~_BV(5);
+			rgb_off();
+		}
 	}
 }
