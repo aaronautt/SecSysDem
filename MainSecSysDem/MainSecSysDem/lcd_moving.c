@@ -134,7 +134,7 @@ void display_temp(uint8_t temp)
 	}
 }
 
-void 
+
 /*****************************************
 
 	This function just shifts an array, it's unused but I didn't want to delete it.
