@@ -54,6 +54,7 @@ int main(void)
 	
 	while(1)
 	{
+		//this start block checks all the sensors and updates their flags
 		keyRead = keypadReadPins();
 		if(keyRead != 0) new_code = 1;
 		else if(keyRead == 0) new_code = 0;
@@ -87,7 +88,7 @@ int main(void)
 				sei(); 
 				state = UNARMED;
 			break;
-			
+			//basic unarmed state, displays status, scrolling time and temp, exits to menu_unarmed when button is pressed or alarm if fire is detected 
 			case UNARMED:
 				armed_state = 0;
 				rgb_red();
@@ -100,7 +101,11 @@ int main(void)
 				else if(int_temp > 43) state = ALARMED_FIRE;//43 C is 110F
 				else state = UNARMED;
 			break;
-			
+			//unarmed menu, displays the menu and exits to the three menu options on keypad press, returns to unarmed if one minute idle counter is reached
+			//	1. arm
+			//	2. last five events
+			//	3. set time
+			//
 			case MENU_UNARMED:
 				rgb_red();
 				display_main_menu();
@@ -111,9 +116,14 @@ int main(void)
 					{
 						state = UNARMED;
 						idle = 0;
+						idle_timer = 0;
 					}
 			break;
-			
+			//armed menu, displays the menu and exits to the three menu options on keypad press, returns to unarmed if one minute idle counter is reached
+			//	1. disarm
+			//	2. last five events
+			//	3. set time
+			//
 			case MENU_ARMED:
 				rgb_green();
 				display_main_menu();
@@ -124,9 +134,11 @@ int main(void)
 				{
 					state = ARMED;
 					idle = 0;
+					idle_timer = 0;
 				}
 			break;
-			
+			//armed state displays status, temp. and scrolling time. exits to menu on button press.
+			//exits to any of the four alarm states on sensor trip, fire, motion, door, window
 			case ARMED:
 				armed_state = 1;
 				rgb_green();
@@ -142,7 +154,8 @@ int main(void)
 				else if(hall_effect_window) state = ALARMED_HALL_W*/
 				else state = ARMED;
 			break;
-			
+			//to disarm system, reads the keypad presses, stores them in the array code[], exits to check_code_un
+			//to check the inputted code to master after four digits have been collected
 			case READ_MENU_DISARM:
 				rgb_green();
 				display_get_armcode(&code[0]);
@@ -160,9 +173,12 @@ int main(void)
 				{
 					state = ARMED;
 					idle = 0;
+					idle_timer = 0;
+					code_position = 0;
 				}
 			break;
-			
+			//to arm system, reads the keypad presses, stores them in the array code[], exits to check_code_ar
+			//to check the inputted code to master after four digits have been collected
 			case READ_MENU_ARM:
 				rgb_red();
 				display_get_armcode(&code[0]);
@@ -180,9 +196,12 @@ int main(void)
 				{
 					state = UNARMED;
 					idle = 0;
+					idle_timer = 0;
+					code_position = 0;
 				}
 			break;
-			
+			//to disarm system when in alarm state, reads the keypad presses, stores them in the array code[], exits to check_code_al
+			//to check the inputted code to master after four digits have been collected
 			case READ_ALARM_CODE:
 				//rgb_alarm();
 				//bell();
@@ -201,9 +220,11 @@ int main(void)
 				{
 					state = ALARM_SOUND;
 					idle = 0;
+					idle_timer = 0;
+					code_position = 0;
 				}
 			break;
-			
+			//checks code[] input from read_alarm_code, if it matches it returns to armed state, if it doesn't it stays in alarm_sound state
 			case CHECK_CODE_AL:
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				 && code[3] == master_code[3])
@@ -215,7 +236,7 @@ int main(void)
 					state = ALARM_SOUND;
 				}
 			break;
-			
+			//checks code[] input from read_menu_disarm, if it matches it returns to unarmed state, if it doesn't it stays in armed state
 			case CHECK_CODE_UN:
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				&& code[3] == master_code[3])
@@ -227,7 +248,7 @@ int main(void)
 					state = ARMED;
 				}
 			break;
-			
+			//checks code[] input from read_menu_arm, if it matches it returns to armed state, if it doesn't it stays in unarmed state
 			case CHECK_CODE_AR:
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				&& code[3] == master_code[3])
@@ -239,17 +260,20 @@ int main(void)
 					state = UNARMED;
 				}
 			break;
-			
+			//entered from armed menu or unarmed menu, exited if any alarm is tripped or the push button is pressed to enter the menu again
+			//if the idle flag is set 
 			case LAST_FIVE:
 				//display_last_five(); complete this function
 				if(idle && armed_state == 0)
 				{
 					state = UNARMED;
+					idle_timer = 0;
 					idle = 0;
 				}
 				else if(idle && armed_state == 1)
 				{
-					state == ARMED;
+					state = ARMED;
+					idle_timer = 0;
 					idle = 0;
 				}
 				else if(push_press && armed_state == 0) state = MENU_UNARMED;
@@ -259,31 +283,31 @@ int main(void)
 				else if(hall_effect_door) state = ALARMED_HALL_D
 				else if(hall_effect_window) state = ALARMED_HALL_W*/
 			break;
-			
+			//this sets the time, Luke's job to write this state
 			case SET_TIME:
 				
 			break;
-			
+			//alarmed_motion is entered when the PIR is tripped, exits to alarm_sound after setting location
 			case ALARMED_MOTION:
 				location = MOTION;
 				state = ALARM_SOUND;
 			break;
-			
+			//alarmed_hall_d is entered when the door hall effect sensor is tripped, exits to alarm_sound after setting location
 			case ALARMED_HALL_D:
 				location = DOOR;
 				state = ALARM_SOUND;
 			break;
-			
+			//alarmed_hall_w is entered when the window hall effect sensor is tripped, exits to alarm_sound after setting location
 			case ALARMED_HALL_W:
 				location = WINDOW;
 				state = ALARM_SOUND;
 			break;
-			
+			//alarmed_fire is entered when the fire alarm is tripped, it exits to alarm_sound after location is set for status function
 			case ALARMED_FIRE:
 				location = FIRE;
 				state = ALARM_SOUND;
 			break;
-			
+			//alarm sound state sounds the bell and the flashing LED, it exits only upon push button press to read_alarm_state
 			case ALARM_SOUND:
 				//rgb_alarm();
 				//bell();
@@ -294,6 +318,7 @@ int main(void)
 		
 	}
 }
+
 
 ISR(TIMER2_COMPA_vect)
 {
@@ -306,6 +331,7 @@ ISR(TIMER2_COMPA_vect)
 		next_scroll = 1;
 		timer = 0;
 	}
+	//once the idle time reaches a minute it sets the idle flag and resets the menuing state
 	else if(idle_timer > 1875)
 	{
 		idle = 1;
