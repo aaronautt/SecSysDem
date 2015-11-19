@@ -56,12 +56,10 @@
 #include <util/delay.h>
 
 uint8_t EEMEM alarmCtn;
+uint8_t EEMEM armDisCtn;
 const uint8_t EEMEM alarm[5][20];
-const uint8_t EEMEM alarm1[20];
-const uint8_t EEMEM alarm2[20];
-const uint8_t EEMEM alarm3[20];
-const uint8_t EEMEM alarm4[20];
-const uint8_t EEMEM alarm5[20];
+const uint8_t EEMEM armDis[5][20];
+
 
 // ---------------------------------------------------------------------------
 //							DS3231 RTC ROUTINES
@@ -217,7 +215,7 @@ void SetTimeDate()
 	I2C_WriteRegister(RTC_ADDR, SECONDS_REGISTER, 0x00);
 }
 
-void saveTimeToEeprom()
+void saveAlarmTimeToEeprom()
 {
 	char stampStr[20];
 	uint8_t stampNum;
@@ -236,6 +234,27 @@ void saveTimeToEeprom()
 	
 	// Write the new time stamp to the eeprom
 	eeprom_write_byte(&alarmCtn, stampNum);
+}
+
+void saveArmDisarmTimeToEeprom()
+{
+	char stampStr[20];
+	uint8_t stampNum;
+	
+	// Figure out which time was set last
+	eeprom_read_block(&stampNum,&armDisCtn,1);
+	
+	// Increment the counter
+	stampNum = (stampNum >= 4) ? 0 : stampNum+1;
+	
+	//Get the current time stamp
+	getStandardTimeStampStr(stampStr);
+	
+	// Write the new time to the EEPROM
+	eeprom_update_block(stampStr,(void*)&armDis[stampNum][0],20);
+	
+	// Write the new time stamp to the eeprom
+	eeprom_write_byte(&armDisCtn, stampNum);
 }
 
 void getFiveAlarmTimes(char timeStamps[5][20])
@@ -258,4 +277,26 @@ void getFiveAlarmTimes(char timeStamps[5][20])
 		// the arrays from newest to oldest.
 		eeprom_read_block(&timeStamps[rowNum][0],&alarm[stampNum][0],20);
 	}	
+}
+
+void getFiveArmDisarmTimes(char timeStamps[5][20])
+{
+	uint8_t stampNum, rowNum;
+	
+	// Figure out which time was set last
+	uint8_t lastStampNum = eeprom_read_byte(&armDisCtn);
+
+	for(stampNum=lastStampNum+1,rowNum=4; rowNum<5;rowNum--, stampNum++)
+	{
+		// If stampNum is greater than 5, reset it to read the 1st time stamp
+		if( stampNum>= 5)
+		{
+			stampNum = 0;
+		}
+		
+		// Read the time stamp and store it in the next row.
+		// Since rowNum is decreasing, the temeStamps maxtrix will read
+		// the arrays from newest to oldest.
+		eeprom_read_block(&timeStamps[rowNum][0],&armDis[stampNum][0],20);
+	}
 }
