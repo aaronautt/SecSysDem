@@ -90,7 +90,7 @@
 #define UNARMED					1
 #define STATUS					2
 #define ARMED					3
-#define READ_MENU_ARMED			4
+#define READ_MENU_ARM			4
 #define READ_ALARM_CODE			5
 #define LAST_FIVE				6
 #define SET_TIME				7
@@ -98,15 +98,19 @@
 #define ALARMED_FIRE			9	
 #define MENU_UNARMED			10
 #define MENU_ARMED				11			
-#define READ_MENU_UNARMED		12	
+#define READ_MENU_DISARM		12	
 #define ALARMED_HALL_D			13
 #define ALARMED_HALL_W			14
-
+#define CHECK_CODE_AL			15
+#define CHECK_CODE_AR			16
+#define CHECK_CODE_UN			17
+#define ALARM_SOUND				18
 
 //location of alarm defines
 #define DOOR					1
 #define WINDOW					2
 #define MOTION					3
+#define FIRE					4
 
 //dac
 #define DAC_PORT_OUT			PORTB

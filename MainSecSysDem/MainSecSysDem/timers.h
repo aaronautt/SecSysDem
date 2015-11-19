@@ -14,7 +14,4 @@
 void timerTwo_init(void);
 
 
-
-
-
 #endif /* TIMERS_H_ */

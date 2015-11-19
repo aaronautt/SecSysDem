@@ -140,13 +140,13 @@ void Scrolling_Text_single(char input[], uint8_t position)
 	
 ***********************************/
 
-void display_temp(uint8_t temp)
+void display_temp(uint8_t int_temp, uint8_t dec_temp)
 {
 	int j;
 	char message[100];
-	if(temp <= 9) sprintf(message, "Temp : %u    ", temp);
-	else if(temp <= 99) sprintf(message, "Temp : %u   ", temp);
-	else if(temp >99) sprintf(message, "Temp : %u  ", temp);
+	if(int_temp <= 9) sprintf(message, "Temp: %u.%u  ", int_temp, dec_temp);
+	else if(int_temp <= 99) sprintf(message, "Temp: %u.%u ", int_temp, dec_temp);
+	else if(int_temp >99) sprintf(message, "Temp: %u.%u", int_temp, dec_temp);
 	LCD_clear_row(1);
 	LCD_gotoXY(0,1);
 	for(j=0;j<12;j++)
@@ -171,27 +171,47 @@ void display_status(uint8_t status, uint8_t location)
 	if(location == 1) sprintf(place, "    %s      ", "Door");
 	else if(location == 2) sprintf(place, "    %s    ", "Window");
 	else if(location == 3) sprintf(place, "    %s    ", "Motion");
-	if(status == 3) sprintf(message, "%s       ", state1);
-	else if(status == 1) sprintf(message, "%s       ", state2);
+	else if(location == 4) sprintf(place, "    %s      ", "FIRE");
+	if(status == 3)
+	{
+		sprintf(message, "%s       ", state1);
+		LCD_clear_row(2);
+		LCD_gotoXY(0,2);
+		for(j=0;j<12;j++)
+		{
+			LCD_writeChar(message[j]);
+		}
+	}
+	else if(status == 1)
+	{
+		sprintf(message, "%s       ", state2);
+		LCD_clear_row(2);
+		LCD_gotoXY(0,2);
+		for(j=0;j<12;j++)
+		{
+			LCD_writeChar(message[j]);
+		}
+	}
 	else if(status == 8 || status == 9 || status == 13 || status == 14)
 	{
 		sprintf(message, "%s       ", state3);
-		LCD_clear_row(3);
-		LCD_gotoXY(0,3);
+		LCD_clear_row(0);
+		LCD_gotoXY(0,0);
+		for(j=0;j<12;j++)
+		{
+			LCD_writeChar(message[j]);
+		}
+		LCD_clear_row(1);
+		LCD_gotoXY(0,1);
 		LCD_writeString_F("Location:");
-		LCD_clear_row(4);
-		LCD_gotoXY(0,4);
+		LCD_clear_row(2);
+		LCD_gotoXY(0,2);
 		for(i=0;i<12;i++)
 		{
 			LCD_writeChar(place[i]);
 		}
 	}
-	LCD_clear_row(2);
-	LCD_gotoXY(0,2);
-	for(j=0;j<12;j++)
-	{
-		LCD_writeChar(message[j]);
-	}
+		
 }
  
 /*****************************************
@@ -211,6 +231,23 @@ void display_main_menu(void)
 	LCD_writeString_F("2. Last 5");
 	LCD_gotoXY(0,4);
 	LCD_writeString_F("3. Set Time");
+}
+
+void display_get_armcode(char code[])
+{
+	uint8_t i;
+	char message[10] = "Enter Code";
+	LCD_clear();
+	LCD_gotoXY(0, 2);
+	LCD_writeString_F(&message[0]);
+	for(i=0; i<5;i++)
+	{
+		if(code[i] == 11) code[i] = 0;
+	}
+	LCD_clear_row(3);
+	LCD_gotoXY(0, 3);
+	LCD_writeString_F(&code[0]);
+	
 }
 
 /****************************************
