@@ -136,7 +136,8 @@ void Scrolling_Text_single(char input[], uint8_t position)
 
 	displays the temperature
 	arguments
-	temp: the temperature reading from the rtc
+	int_temp: the temperature reading from the rtc in whole numbers
+	dec_temp: the temperature reading form the rtc that is less than 1
 	
 ***********************************/
 
@@ -252,11 +253,32 @@ void display_get_armcode(char code[])
 
 /****************************************
 
-	displays last five events, this function reads the onboard eeprom and gets the last five dates
+	displays last five alarm events, this function reads the onboard eeprom and gets the last five dates
 	
 ****************************************/
 
-void display_last_five(void)
+void display_last_five_alarms(void)
+{
+	
+	//read onboard eeprom
+	LCD_clear();
+	LCD_gotoXY(0,1);
+	LCD_writeString_F("");// eeprom 
+	LCD_gotoXY(0,2);
+	LCD_writeString_F("");
+	LCD_gotoXY(0,3);
+	LCD_writeString_F("");
+	LCD_gotoXY(0,4);
+	LCD_writeString_F("");
+}
+
+/****************************************
+
+	displays last five arm/disarm events, this function reads the onboard eeprom and gets the last five dates
+	
+****************************************/
+
+void display_last_five_arm(void)
 {
 	
 	//read onboard eeprom

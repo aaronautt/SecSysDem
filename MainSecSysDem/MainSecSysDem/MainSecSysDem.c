@@ -103,15 +103,17 @@ int main(void)
 			break;
 			//unarmed menu, displays the menu and exits to the three menu options on keypad press, returns to unarmed if one minute idle counter is reached
 			//	1. arm
-			//	2. last five events
-			//	3. set time
+			//	2. last five alarms
+			//	3. last five dis/arm
+			//	4. set time
 			//
 			case MENU_UNARMED:
 				rgb_red();
 				display_main_menu();
 				if(keyRead == 1) state = READ_MENU_ARM;
-				else if(keyRead == 2) state = LAST_FIVE;
-				else if(keyRead == 3) state = SET_TIME;
+				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
+				else if(keyRead == 3) state = LAST_FIVE_ARM;
+				else if(keyRead == 4) state = SET_TIME;
 				else if(idle)
 					{
 						state = UNARMED;
@@ -121,15 +123,17 @@ int main(void)
 			break;
 			//armed menu, displays the menu and exits to the three menu options on keypad press, returns to unarmed if one minute idle counter is reached
 			//	1. disarm
-			//	2. last five events
-			//	3. set time
+			//	2. last five alarms
+			//	3. last five dis/arm
+			//	4. set time
 			//
 			case MENU_ARMED:
 				rgb_green();
 				display_main_menu();
 				if(keyRead == 1) state = READ_MENU_DISARM;
-				else if(keyRead == 2) state = LAST_FIVE;
-				else if(keyRead == 3) state = SET_TIME;
+				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
+				else if(keyRead == 3) state = LAST_FIVE_ARM;
+				else if(keyRead == 4) state = SET_TIME;
 				else if(idle)
 				{
 					state = ARMED;
@@ -262,8 +266,32 @@ int main(void)
 			break;
 			//entered from armed menu or unarmed menu, exited if any alarm is tripped or the push button is pressed to enter the menu again
 			//if the idle flag is set 
-			case LAST_FIVE:
-				//display_last_five(); complete this function
+			case LAST_FIVE_ALARMS:
+				//display_last_five_disarms(); complete this function
+				if(idle && armed_state == 0)
+				{
+					state = UNARMED;
+					idle_timer = 0;
+					idle = 0;
+				}
+				else if(idle && armed_state == 1)
+				{
+					state = ARMED;
+					idle_timer = 0;
+					idle = 0;
+				}
+				else if(push_press && armed_state == 0) state = MENU_UNARMED;
+				else if(push_press && armed_state == 1) state = MENU_ARMED;
+				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
+				/*else if(motion) state = ALARMED_MOTION 
+				else if(hall_effect_door) state = ALARMED_HALL_D
+				else if(hall_effect_window) state = ALARMED_HALL_W*/
+			break;
+			
+			//entered from armed menu or unarmed menu, exited if any alarm is tripped or the push button is pressed to enter the menu again
+			//if the idle flag is set 
+			case LAST_FIVE_ARM:
+				//display_last_five_arm(); complete this function
 				if(idle && armed_state == 0)
 				{
 					state = UNARMED;

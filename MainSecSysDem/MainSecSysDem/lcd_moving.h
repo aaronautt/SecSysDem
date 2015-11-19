@@ -18,7 +18,8 @@ void Scrolling_Text_single(char input[], uint8_t position);
 void display_temp(uint8_t int_temp, uint8_t dec_temp);
 void display_status(uint8_t status, uint8_t location);
 void display_main_menu(void);
-void display_last_five(void);
+void display_last_five_alarms(void);
+void display_last_five_arm(void);
 void display_get_armcode(char code[]);
 void array_shift(char message[]);
 
