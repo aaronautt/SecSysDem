@@ -171,9 +171,9 @@ void display_status(uint8_t status, uint8_t location)
 	if(location == 1) sprintf(place, "    %s      ", "Door");
 	else if(location == 2) sprintf(place, "    %s    ", "Window");
 	else if(location == 3) sprintf(place, "    %s    ", "Motion");
-	if(status == 1) sprintf(message, "%s       ", state1);
-	else if(status == 0) sprintf(message, "%s       ", state2);
-	else if(status == 2)
+	if(status == 3) sprintf(message, "%s       ", state1);
+	else if(status == 1) sprintf(message, "%s       ", state2);
+	else if(status == 8 || status == 9 || status == 13 || status == 14)
 	{
 		sprintf(message, "%s       ", state3);
 		LCD_clear_row(3);
@@ -221,6 +221,7 @@ void display_main_menu(void)
 
 void display_last_five(void)
 {
+	
 	//read onboard eeprom
 	LCD_clear();
 	LCD_gotoXY(0,1);

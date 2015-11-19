@@ -83,12 +83,25 @@
 #define RTC_ADDR				0b11010000 // I2C bus address of DS1307 RTC
 
 // IO Expander
-#define IOEXPANDER_ADDR	0b01000000
+#define IOEXPANDER_ADDR			0b01000000
 
-//status defines
-#define ARMED					1
-#define UNARMED					0
-#define ALARMED					2
+//status/state defines
+#define STARTUP					0
+#define UNARMED					1
+#define STATUS					2
+#define ARMED					3
+#define READ_MENU_ARMED			4
+#define READ_ALARM_CODE			5
+#define LAST_FIVE				6
+#define SET_TIME				7
+#define ALARMED_MOTION			8
+#define ALARMED_FIRE			9	
+#define MENU_UNARMED			10
+#define MENU_ARMED				11			
+#define READ_MENU_UNARMED		12	
+#define ALARMED_HALL_D			13
+#define ALARMED_HALL_W			14
+
 
 //location of alarm defines
 #define DOOR					1
