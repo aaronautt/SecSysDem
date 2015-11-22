@@ -74,7 +74,7 @@ int main(void)
 		switch(state)
 		{
 			case STARTUP:
-				//check WDT basically just here for initializations
+				//check WDT, basically just here for initializations
 				USART_Init(MYUBRR);
 				stdout = &uart_output;
 				stdin  = &uart_input;
@@ -86,6 +86,7 @@ int main(void)
 				timerTwo_init();
 				rgb_init();
 				PIR_init();
+				HALL_init();
 				sei(); 
 				state = UNARMED;
 			break;
@@ -340,13 +341,23 @@ int main(void)
 				location = FIRE;
 				state = ALARM_SOUND;
 			break;
-			//alarm sound state sounds the bell and the flashing LED, it exits only upon push button press to read_alarm_state
+			//alarm sound state sounds the bell and the flashing LED, it exits only upon push button press to read_alarm state
 			case ALARM_SOUND:
 				idle_timer = 0; //keep idle timer at 0 if not in a menu
 				//rgb_alarm();
 				//bell();
 				display_status(2, location);
 				if(push_press) state = READ_ALARM_CODE;
+			break;
+			//this state speaks the current time when the corresponding menu selection is made, exits to the previous menu state
+			case SPEAK_TIME:
+				getStandardTimeStampStr(&time[0]);
+				//speak_time_stamp();    !!!! TODO write this function
+				if(armed_state = 1)
+				{
+					state = ARMED;
+				}
+				else state = UNARMED;
 			break;
 		}
 		
