@@ -106,6 +106,7 @@
 #define CHECK_CODE_UN			17
 #define ALARM_SOUND				18
 #define LAST_FIVE_ARM			19
+#define SPEAK_TIME				20
 
 //location of alarm defines
 #define DOOR					1

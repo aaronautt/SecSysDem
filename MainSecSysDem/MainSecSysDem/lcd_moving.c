@@ -224,29 +224,36 @@ void display_status(uint8_t status, uint8_t location)
 void display_main_menu(void)
 {
 	LCD_clear();
-	LCD_gotoXY(0,1);
+	LCD_gotoXY(0,0);
 	LCD_writeString_F("MENU");
-	LCD_gotoXY(0,2);
+	LCD_gotoXY(0,1);
 	LCD_writeString_F("1. Dis/Arm");
+	LCD_gotoXY(0,2);
+	LCD_writeString_F("2. Last 5 AL");
 	LCD_gotoXY(0,3);
-	LCD_writeString_F("2. Last 5");
+	LCD_writeString_F("3. Last 5 DA");
 	LCD_gotoXY(0,4);
-	LCD_writeString_F("3. Set Time");
+	LCD_writeString_F("4. Set Time");
+	LCD_gotoXY(0,5);
+	LCD_writeString_F("5. Speak Time");
 }
 
 void display_get_armcode(char code[])
 {
 	uint8_t i;
 	char message[10] = "Enter Code";
+	char message_2[6] = "then #";
 	LCD_clear();
 	LCD_gotoXY(0, 2);
 	LCD_writeString_F(&message[0]);
+	LCD_gotoXY(0, 3);
+	LCD_writeString_F(&message_2[0]);
 	for(i=0; i<5;i++)
 	{
 		if(code[i] == 11) code[i] = 0;
 	}
-	LCD_clear_row(3);
-	LCD_gotoXY(0, 3);
+	LCD_clear_row(4);
+	LCD_gotoXY(0, 4);
 	LCD_writeString_F(&code[0]);
 	
 }

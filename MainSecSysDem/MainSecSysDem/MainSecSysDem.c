@@ -8,6 +8,7 @@
 //INCLUDES
 #include "secSysDefines.h"
 #include <avr/io.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <util/delay.h>
@@ -91,10 +92,11 @@ int main(void)
 			//basic unarmed state, displays status, scrolling time and temp, exits to menu_unarmed when button is pressed or alarm if fire is detected 
 			case UNARMED:
 				armed_state = 0;
+				idle_timer = 0;//keep idle timer at 0 unless accessing a menu
 				rgb_red();
 				display_status(UNARMED, 0);
 				getTemp(&int_temp, &dec_temp);
-				display_temp(int_temp, dec_temp);//needs temp read
+				display_temp(int_temp, dec_temp);
 				getStandardTimeStampStr(time);
 				Scrolling_Text_single(&time[0], scroll_postion);//need to figure out how to check stuff while scrolling
 				if(push_press) state = MENU_UNARMED;
@@ -106,7 +108,7 @@ int main(void)
 			//	2. last five alarms
 			//	3. last five dis/arm
 			//	4. set time
-			//
+			//	5. speak time
 			case MENU_UNARMED:
 				rgb_red();
 				display_main_menu();
@@ -114,6 +116,7 @@ int main(void)
 				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
 				else if(keyRead == 3) state = LAST_FIVE_ARM;
 				else if(keyRead == 4) state = SET_TIME;
+				else if(keyRead == 5) state = SPEAK_TIME;
 				else if(idle)
 					{
 						state = UNARMED;
@@ -126,7 +129,7 @@ int main(void)
 			//	2. last five alarms
 			//	3. last five dis/arm
 			//	4. set time
-			//
+			//	5. speak time
 			case MENU_ARMED:
 				rgb_green();
 				display_main_menu();
@@ -134,6 +137,7 @@ int main(void)
 				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
 				else if(keyRead == 3) state = LAST_FIVE_ARM;
 				else if(keyRead == 4) state = SET_TIME;
+				else if(keyRead == 5) state = SPEAK_TIME;
 				else if(idle)
 				{
 					state = ARMED;
@@ -145,6 +149,7 @@ int main(void)
 			//exits to any of the four alarm states on sensor trip, fire, motion, door, window
 			case ARMED:
 				armed_state = 1;
+				idle_timer = 0; //keep idle timer at 0 unless accessing a menu
 				rgb_green();
 				display_status(ARMED, 0);
 				getTemp(&int_temp, &dec_temp);
@@ -168,7 +173,7 @@ int main(void)
 					code[code_position] = keyRead;	
 					code_position++;
 				}
-				else if(code_position >= 4)
+				else if(keyRead == 12)
 				{
 					state = CHECK_CODE_UN;
 					code_position = 0;
@@ -191,7 +196,7 @@ int main(void)
 					code[code_position] = keyRead;
 					code_position++;
 				}
-				else if(code_position >= 4)
+				else if(keyRead == 12)
 				{
 					state = CHECK_CODE_AR;
 					code_position = 0;
@@ -215,7 +220,7 @@ int main(void)
 					code[code_position] = keyRead;
 					code_position++;
 				}
-				else if(code_position >= 4)
+				else if(keyRead == 12)
 				{
 					state = CHECK_CODE_AL;
 					code_position = 0;
@@ -337,6 +342,7 @@ int main(void)
 			break;
 			//alarm sound state sounds the bell and the flashing LED, it exits only upon push button press to read_alarm_state
 			case ALARM_SOUND:
+				idle_timer = 0; //keep idle timer at 0 if not in a menu
 				//rgb_alarm();
 				//bell();
 				display_status(2, location);
