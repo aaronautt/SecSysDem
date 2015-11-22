@@ -35,6 +35,7 @@
 #include <inttypes.h>
 #include <avr/eeprom.h>
 #include <math.h>
+#include "doorlock.h"
 
 
 //DEFINES
@@ -74,32 +75,53 @@ int main(void)
 	DAC_spi_init();
 	LCD_init();
 	LCD_light_init();
-
-	DDRD |= (_BV(5) | _BV(6));
+	pushButton_init();
+	doorlockAndLcdBacklight_init();
+	rgb_init();
 
 	// ----- 5ms Timer -----
 	// Reset timer0
-	TCNT0 = 0;
+	TCNT2 = 0;
 	// set timer 0 to CTC mode
-	TCCR0A |= ((1<<COM0A1) | (1<<COM0B1));
-	//
-	TCCR0A |= (1<<WGM00);
+	TCCR2A |= (1<<WGM21);
 	// set 5 ms interval, 78 cycles
-	OCR0A = 100;
-	OCR0B = 255;
-	
+	OCR2A = 255;
 	//set prescaler to 1024
-	TCCR0B |= (1<<CS00);
+	TCCR2B |= (1<<CS22) | (1<<CS21) | (1<<CS20);
 	//set the timer output compare 0A to on
-	//TIMSK0 |= (1<<OCIE0A);
-	
-	_delay_ms(32);
-	OCR0B = 30;
+	TIMSK2 |= (1<<OCIE2A);
+	// Enable global interrupts
+	sei();
 	
 	while(1)
-	{
-		_delay_ms(5);
-		i++;
-		OCR0A = i;
+	{	
+		i = OCR0B;
+		if(i == 255)
+		{
+			rgb_red();
+		}
+		else if(i == 30)
+		{
+			rgb_blue();
+		}
+		else if(i == 0)
+		{
+			rgb_green();
+		}
+		else
+		{
+			rgb_off();
+		}
+		
+
+		if(pushButtonRead())
+		{
+			doorlockUnlock();
+		}
 	}
+}
+
+ISR(TIMER2_COMPA_vect)
+{
+	doorlockInterruptFuction();
 }
