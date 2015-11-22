@@ -49,7 +49,6 @@ uint8_t keypadReadPins()
 	// If a keypad button is pressed...
 	if((regData & ROW_PINS) != ROW_PINS)
 	{
-		printf("in\n");
 		for(col=0; col<3; col++)
 		{
 			// Set the appropriate column pin low
@@ -77,7 +76,6 @@ uint8_t keypadReadPins()
 			
 			// Read the need pin values with the updated columns
 			regData = ioExpReadReg();
-			printf("%x\n",regData);
 			
 			// If any of the row pins are not high... find which row is low
 			if((ROW_PINS & regData) != ROW_PINS)

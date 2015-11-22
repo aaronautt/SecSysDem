@@ -1,4 +1,4 @@
-/*
+/*/*
  * secSysDefines.h
  *
  * Created: 10/18/2015 10:16:40 PM
@@ -79,9 +79,17 @@
 #define BELL_ALARM_PIN_IOEX		_BV(0)
 
 //RTC nonsense//
-#define RTC_EEP_ADDR			0x10101110
+#define RTC_EEP_ADDR			0x10101110 // EEPROM address on RTC Module
+#define RTC_ADDR				0b11010000 // I2C bus address of DS1307 RTC
 
 // IO Expander
 #define IOEXPANDER_ADDR	0b01000000
+
+
+//dac
+#define DAC_PORT_OUT			PORTB
+#define DAC_CLK					_BV(5)
+#define DAC_IN					_BV(3)
+#define DAC_CS					_BV(2)
 
 #endif /* SECSYSDEFINES_H_ */
