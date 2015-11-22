@@ -42,9 +42,30 @@
 #define MYUBRR F_CPU/8/BAUD-1
 
 
+// int main(void)
+// {	
+// 	int i, j, scrollPosition = -10;
+// 	// Initialize the UART
+// 	USART_Init(MYUBRR);
+// 	stdout = &uart_output;
+// 	stdin  = &uart_input;
+// 	I2C_Init();
+// 	DAC_spi_init();
+// 	LCD_init();
+// 	LCD_light_init();
+// 	
+// 	
+// 	while(1)
+// 	{
+// 		
+// 	}
+// }
+
+
+
 int main(void)
-{	
-	int i, j, scrollPosition = -10;
+{
+	uint8_t i=0, j, scrollPosition = -10;
 	// Initialize the UART
 	USART_Init(MYUBRR);
 	stdout = &uart_output;
@@ -53,10 +74,32 @@ int main(void)
 	DAC_spi_init();
 	LCD_init();
 	LCD_light_init();
+
+	DDRD |= (_BV(5) | _BV(6));
+
+	// ----- 5ms Timer -----
+	// Reset timer0
+	TCNT0 = 0;
+	// set timer 0 to CTC mode
+	TCCR0A |= ((1<<COM0A1) | (1<<COM0B1));
+	//
+	TCCR0A |= (1<<WGM00);
+	// set 5 ms interval, 78 cycles
+	OCR0A = 100;
+	OCR0B = 255;
 	
+	//set prescaler to 1024
+	TCCR0B |= (1<<CS00);
+	//set the timer output compare 0A to on
+	//TIMSK0 |= (1<<OCIE0A);
+	
+	_delay_ms(32);
+	OCR0B = 30;
 	
 	while(1)
 	{
-		
+		_delay_ms(5);
+		i++;
+		OCR0A = i;
 	}
 }
