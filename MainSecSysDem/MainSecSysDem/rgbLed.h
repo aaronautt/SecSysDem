@@ -24,5 +24,12 @@ void rgb_blue();
 // Turns off the RGB led
 void rgb_off();
 
+void rgb_flash_start();
+
+void rgb_flash_stop();
+
+void rgb_flash_check();
+
+void rgb_flash_32msInterrupt();
 
 #endif /* RGBLED_H_ */
