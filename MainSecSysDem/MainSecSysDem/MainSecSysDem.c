@@ -62,11 +62,6 @@ int main(void)
 	
 	while(1)
 	{
-		bell_off();
-		rgb_green();
-		_delay_ms(10);
-		bell_on();
-		rgb_blue();
-		_delay_ms(500);
+		
 	}
 }
