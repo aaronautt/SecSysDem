@@ -20,6 +20,8 @@
 #include "ioExpander.h"
 #include "keypad.h"
 #include "rgbLed.h"
+#include "pushButton.h"
+#include <avr/interrupt.h>
 #include "bell.h"
 #include "pushButton.h"
 #include "rtcDriver.h"
@@ -34,11 +36,14 @@
 #include <inttypes.h>
 #include <avr/eeprom.h>
 #include <math.h>
+#include "doorlock.h"
 
 
 //DEFINES
 #define BAUD 9600
 #define MYUBRR F_CPU/8/BAUD-1
+
+
 
 //globals for interrupts
 
@@ -46,7 +51,12 @@ uint8_t next_scroll = 0, timer = 0, idle = 0;
 uint16_t idle_timer = 0; 
 
 int main(void)
-{	
+
+{
+	
+	
+
+	
 	uint8_t keyRead = 22, push_press = 0, fire = 0, hall_window = 0, hall_door = 0, movement = 0;
 	uint8_t i, scroll_postion = 0, dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 0, new_code = 0, code_position = 0, armed_state = 0;
@@ -56,14 +66,14 @@ int main(void)
 	{
 		//this start block checks all the sensors and updates their flags
 		keyRead = keypadReadPins();
-		if(keyRead != 0) new_code = 1;
-		else if(keyRead == 0) new_code = 0;
-		else if(keyRead != 0 || push_press) idle_timer = 0;
 		push_press = pushButtonRead();
 		hall_window = Hall_Window_check();
 		hall_door = Hall_Door_check();
 		movement = PIR_check();
 		scroll_postion = scroll_postion + next_scroll;
+		if(keyRead != 0) new_code = 1;
+		else if(keyRead == 0) new_code = 0;
+		else if(keyRead != 0 || push_press) idle_timer = 0;
 		//next_scroll = 0;
 		if(scroll_postion > 23)
 		{
@@ -80,7 +90,7 @@ int main(void)
 				I2C_Init();
 				DAC_spi_init();
 				LCD_init();
-				LCD_light_init();
+				//LCD_light_init();
 				pushButton_init();
 				timerTwo_init();
 				rgb_init();
@@ -93,6 +103,7 @@ int main(void)
 			case UNARMED:
 				armed_state = 0;
 				idle_timer = 0;//keep idle timer at 0 unless accessing a menu
+				LCD_clear();
 				rgb_red();
 				display_status(UNARMED, 0);
 				getTemp(&int_temp, &dec_temp);
@@ -110,19 +121,24 @@ int main(void)
 			//	4. set time
 			//	5. speak time
 			case MENU_UNARMED:
-				rgb_red();
+				rgb_blue();
+				LCD_clear();
 				display_main_menu();
 				if(keyRead == 1) state = READ_MENU_ARM;
+				/*
 				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
 				else if(keyRead == 3) state = LAST_FIVE_ARM;
 				else if(keyRead == 4) state = SET_TIME;
 				else if(keyRead == 5) state = SPEAK_TIME;
-				else if(idle)
+				*/
+				else if(idle == 1)
 					{
 						state = UNARMED;
 						idle = 0;
 						idle_timer = 0;
 					}
+					
+				else state = MENU_UNARMED;
 			break;
 			//armed menu, displays the menu and exits to the three menu options on keypad press, returns to unarmed if one minute idle counter is reached
 			//	1. disarm
@@ -131,25 +147,30 @@ int main(void)
 			//	4. set time
 			//	5. speak time
 			case MENU_ARMED:
-				rgb_green();
+				rgb_blue();
+				LCD_clear();
 				display_main_menu();
 				if(keyRead == 1) state = READ_MENU_DISARM;
+				/*
 				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
 				else if(keyRead == 3) state = LAST_FIVE_ARM;
 				else if(keyRead == 4) state = SET_TIME;
 				else if(keyRead == 5) state = SPEAK_TIME;
+				*/
 				else if(idle)
 				{
 					state = ARMED;
 					idle = 0;
 					idle_timer = 0;
 				}
+				else state = MENU_ARMED;
 			break;
 			//armed state displays status, temp. and scrolling time. exits to menu on button press.
 			//exits to any of the four alarm states on sensor trip, fire, motion, door, window
 			case ARMED:
 				armed_state = 1;
 				idle_timer = 0; //keep idle timer at 0 unless accessing a menu
+				LCD_clear();
 				rgb_green();
 				display_status(ARMED, 0);
 				getTemp(&int_temp, &dec_temp);
@@ -158,11 +179,12 @@ int main(void)
 				Scrolling_Text_single(&time[0], scroll_postion);
 				if(push_press) state = MENU_ARMED;
 				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
-				/*else if(motion) state = ALARMED_MOTION 
-				else if(hall_effect_door) state = ALARMED_HALL_D
-				else if(hall_effect_window) state = ALARMED_HALL_W*/
+				else if(movement) state = ALARMED_MOTION; 
+				else if(hall_door) state = ALARMED_HALL_D;
+				else if(hall_window) state = ALARMED_HALL_W;
 				else state = ARMED;
 			break;
+			
 			//to disarm system, reads the keypad presses, stores them in the array code[], exits to check_code_un
 			//to check the inputted code to master after four digits have been collected
 			case READ_MENU_DISARM:
@@ -185,6 +207,7 @@ int main(void)
 					idle_timer = 0;
 					code_position = 0;
 				}
+				else state = READ_MENU_DISARM;
 			break;
 			//to arm system, reads the keypad presses, stores them in the array code[], exits to check_code_ar
 			//to check the inputted code to master after four digits have been collected
@@ -208,6 +231,7 @@ int main(void)
 					idle_timer = 0;
 					code_position = 0;
 				}
+				else state = READ_MENU_ARM;
 			break;
 			//to disarm system when in alarm state, reads the keypad presses, stores them in the array code[], exits to check_code_al
 			//to check the inputted code to master after four digits have been collected
@@ -232,6 +256,7 @@ int main(void)
 					idle_timer = 0;
 					code_position = 0;
 				}
+				else state = READ_ALARM_CODE;
 			break;
 			//checks code[] input from read_alarm_code, if it matches it returns to armed state, if it doesn't it stays in alarm_sound state
 			case CHECK_CODE_AL:
@@ -288,9 +313,10 @@ int main(void)
 				else if(push_press && armed_state == 0) state = MENU_UNARMED;
 				else if(push_press && armed_state == 1) state = MENU_ARMED;
 				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
-				/*else if(motion) state = ALARMED_MOTION 
-				else if(hall_effect_door) state = ALARMED_HALL_D
-				else if(hall_effect_window) state = ALARMED_HALL_W*/
+				else if(movement) state = ALARMED_MOTION; 
+				else if(hall_door) state = ALARMED_HALL_D;
+				else if(hall_window) state = ALARMED_HALL_W;
+				else state = LAST_FIVE_ALARMS;
 			break;
 			
 			//entered from armed menu or unarmed menu, exited if any alarm is tripped or the push button is pressed to enter the menu again
@@ -312,13 +338,14 @@ int main(void)
 				else if(push_press && armed_state == 0) state = MENU_UNARMED;
 				else if(push_press && armed_state == 1) state = MENU_ARMED;
 				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
-				/*else if(motion) state = ALARMED_MOTION 
-				else if(hall_effect_door) state = ALARMED_HALL_D
-				else if(hall_effect_window) state = ALARMED_HALL_W*/
+				else if(movement) state = ALARMED_MOTION; 
+				else if(hall_door) state = ALARMED_HALL_D;
+				else if(hall_window) state = ALARMED_HALL_W;
+				else state = LAST_FIVE_ARM;
 			break;
 			//this sets the time, Luke's job to write this state
 			case SET_TIME:
-				
+				state = UNARMED;
 			break;
 			//alarmed_motion is entered when the PIR is tripped, exits to alarm_sound after setting location
 			case ALARMED_MOTION:
@@ -347,17 +374,19 @@ int main(void)
 				//bell();
 				display_status(2, location);
 				if(push_press) state = READ_ALARM_CODE;
+				else state = ALARM_SOUND;
 			break;
 			//this state speaks the current time when the corresponding menu selection is made, exits to the previous menu state
 			case SPEAK_TIME:
 				getStandardTimeStampStr(&time[0]);
 				//speak_time_stamp();    !!!! TODO write this function
-				if(armed_state = 1)
+				if((armed_state = 1))
 				{
 					state = ARMED;
 				}
 				else state = UNARMED;
 			break;
+			
 		}
 		
 	}
@@ -370,13 +399,13 @@ ISR(TIMER2_COMPA_vect)
 	timer++;
 	idle_timer++;
 	//once the timer counts up to 12 32 ms interrupts it scrolls the text once (400msec)
-	if(timer > 12)
+	if(timer > 2)
 	{
 		next_scroll = 1;
 		timer = 0;
 	}
 	//once the idle time reaches a minute it sets the idle flag and resets the menuing state
-	else if(idle_timer > 1875)
+	if(idle_timer > 1875)
 	{
 		idle = 1;
 		idle_timer = 0;

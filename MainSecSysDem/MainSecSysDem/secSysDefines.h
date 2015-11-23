@@ -14,13 +14,13 @@
 
 // ----- Keypad -----
 // Keypad Pins on the IO Expander
-#define KEYPAD_1_PIN			_BV(1)
-#define KEYPAD_2_PIN			_BV(2)
-#define KEYPAD_3_PIN			_BV(3)
+#define KEYPAD_1_PIN			_BV(7)
+#define KEYPAD_2_PIN			_BV(6)
+#define KEYPAD_3_PIN			_BV(5)
 #define KEYPAD_4_PIN			_BV(4)
-#define KEYPAD_5_PIN			_BV(5)
-#define KEYPAD_6_PIN			_BV(6)
-#define KEYPAD_7_PIN			_BV(7)
+#define KEYPAD_5_PIN			_BV(3)
+#define KEYPAD_6_PIN			_BV(2)
+#define KEYPAD_7_PIN			_BV(1)
 
 // ----- Proximity Sensor -----
 #define PIR_DDR       DDRC
@@ -53,9 +53,10 @@
 #define LCD_SS_PORT_OUT			PORTD
 #define LCD_SS_PIN				_BV(4)
 // LCD Backlight
-#define LCD_DC_DDR				DDRD
+#define LCD_BACKLIGHT_DDR		DDRD
 #define LCD_BACKLIGHT_PORT_OUT  PORTD
 #define LCD_BACKLIGHT_PIN       _BV(6)
+#define LCD_BACKLIGHT_OCR		OCR0A
 
 // ----- PUSH BUTTON -----
 #define PUSH_BTN_DDR			DDRD
@@ -74,6 +75,7 @@
 #define DOORLOCK_PORT			PORTD
 #define DOORLOCK_DDR			DDRD
 #define DOORLOCK_PIN			_BV(5)
+#define DOORLOCK_OCR			OCR0B
 
 // ----- Bell Alarm -----
 #define BELL_ALARM_PIN_IOEX		_BV(0)

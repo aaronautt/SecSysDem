@@ -22,7 +22,7 @@ void timerTwo_init(void)
 {
 	TCNT2 = 0;
 	TCCR2A = 0x02;//sets timer 0 to CTC mode
-	TCCR2B = 0x07;//sets prescaler to 1024
+	TCCR2B |= (CS22<<1) | (CS21<<1) | (CS20<<1);//sets prescaler to 1024
 	OCR2A = 255;// sets timer to 32msec
 	TIMSK2 = 0x02;//OCR2A compare interrupt enabled
 	TIFR2 = 0x07;//clearing the interrupt flags

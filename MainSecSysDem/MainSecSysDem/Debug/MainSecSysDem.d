@@ -20,13 +20,14 @@ MainSecSysDem.d MainSecSysDem.o: .././MainSecSysDem.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\math.h \
  .././interrupt.h .././WATCH_DOG.h .././PIR_DRIVER.h .././i2c_driver.h \
  .././uart.h .././Hall_Sensors.h .././ioExpander.h .././keypad.h \
- .././rgbLed.h .././bell.h .././pushButton.h .././rtcDriver.h \
- .././eeprom328p.h \
+ .././rgbLed.h .././pushButton.h \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
+ .././bell.h .././rtcDriver.h .././eeprom328p.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\avr\eeprom.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\string.h \
  .././RTC_eeprom.h .././LCD_spi.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
- .././Dac.h .././lcd_moving.h .././timers.h
+ .././Dac.h .././lcd_moving.h .././timers.h .././doorlock.h
 
 .././secSysDefines.h:
 
@@ -84,9 +85,11 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-g
 
 .././rgbLed.h:
 
-.././bell.h:
-
 .././pushButton.h:
+
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
+
+.././bell.h:
 
 .././rtcDriver.h:
 
@@ -107,3 +110,5 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-g
 .././lcd_moving.h:
 
 .././timers.h:
+
+.././doorlock.h:
