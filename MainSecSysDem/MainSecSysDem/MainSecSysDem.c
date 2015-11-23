@@ -8,7 +8,6 @@
 //INCLUDES
 #include "secSysDefines.h"
 #include <avr/io.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <util/delay.h>
