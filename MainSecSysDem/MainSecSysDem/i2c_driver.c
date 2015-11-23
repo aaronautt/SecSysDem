@@ -216,4 +216,3 @@ void I2C_DoubleReadRegister_S(uint8_t busAddr, uint16_t start_address, uint16_t 
 	data[i] = I2C_ReadNACK(); // read the register data
 	I2C_Stop(); // stop
 }
-

@@ -7,7 +7,9 @@
 
 
 #ifndef I2C_DRIVER_H_
-#define I2C_DRIVER_H_#include <avr/io.h>
+#define I2C_DRIVER_H_
+#include <avr/io.h>
+
 // PC4 = SDA
 // PC5 = SCL
 

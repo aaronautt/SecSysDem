@@ -24,16 +24,20 @@ These functions will control lcd output and backlight output
 	sets up timer for PWM with a frequency of 200Hz
 	
 *************************/
-/*
-void LCD_light_init(void)
-{
-	TCNT1 = 0;
-	TCCR1A |= (1<<COM1B1) | (1<<WGM11) | (1<<WGM10);
-	TCCR1B |= (1<<CS12) | (1<<WGM13); //sets prescaler to 256
-	OCR1A = 156/2;//sets period to 2*OCR1A 0.005 seconds, 200Hz
-	OCR1B = 78; //sets duty cycle to 50% initially
-}
-*/
+
+
+// void LCD_light_init(void)
+// {
+// 	TCNT1 = 0;
+// 	TCCR1A |= (1<<COM1B1) | (1<<WGM11) | (1<<WGM10);
+// 	TCCR1B |= (1<<CS12) | (1<<WGM13); //sets prescaler to 256
+// 	OCR1A = 156/2;//sets period to 2*OCR1A 0.005 seconds, 200Hz
+// 	OCR1B = 78; //sets duty cycle to 50% initially
+// }
+
+
+// Note the brightness is set in the doorlock.c file because of convenience
+// with timer 2 being used by the doorlock.
 /************************************
 
 this function changes the PWM for the LCD backlight 
@@ -42,10 +46,10 @@ this function changes the PWM for the LCD backlight
 
 ************************************/
 
-void Lcd_Light_bright(uint8_t brigtness)
-{
-				
-}
+// void Lcd_Light_bright(uint8_t brigtness)
+// {
+// 				
+// }
 
 /**********************************
 
@@ -156,6 +160,7 @@ void display_temp(uint8_t int_temp, uint8_t dec_temp)
 		LCD_writeChar(message[j]);
 	}
 }
+
 
 /**********************************
 

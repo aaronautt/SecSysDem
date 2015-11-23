@@ -97,10 +97,22 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bell.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="bell.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Dac.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Dac.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="doorlock.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="doorlock.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="eeprom328p.c">
@@ -124,6 +136,12 @@
     <Compile Include="interrupt.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="ioExpander.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ioExpander.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="lcd_moving.c">
       <SubType>compile</SubType>
     </Compile>
@@ -143,6 +161,18 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="PIR_DRIVER.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pushButton.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pushButton.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="rgbLed.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="rgbLed.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="RTC_eeprom.c">

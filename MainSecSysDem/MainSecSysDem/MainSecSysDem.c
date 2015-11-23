@@ -20,6 +20,8 @@
 #include "ioExpander.h"
 #include "keypad.h"
 #include "rgbLed.h"
+#include "pushButton.h"
+#include <avr/interrupt.h>
 #include "bell.h"
 #include "pushButton.h"
 #include "rtcDriver.h"
@@ -34,11 +36,14 @@
 #include <inttypes.h>
 #include <avr/eeprom.h>
 #include <math.h>
+#include "doorlock.h"
 
 
 //DEFINES
 #define BAUD 9600
 #define MYUBRR F_CPU/8/BAUD-1
+
+
 
 //globals for interrupts
 
@@ -46,7 +51,12 @@ uint8_t next_scroll = 0, timer = 0, idle = 0;
 uint16_t idle_timer = 0; 
 
 int main(void)
-{	
+
+{
+	
+	
+
+	
 	uint8_t keyRead = 22, push_press = 0, fire = 0, hall_window = 0, hall_door = 0, movement = 0;
 	uint8_t i, scroll_postion = 0, dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 0, new_code = 0, code_position = 0, armed_state = 0;
@@ -174,7 +184,7 @@ int main(void)
 				else if(hall_window) state = ALARMED_HALL_W;
 				else state = ARMED;
 			break;
-			/*
+			
 			//to disarm system, reads the keypad presses, stores them in the array code[], exits to check_code_un
 			//to check the inputted code to master after four digits have been collected
 			case READ_MENU_DISARM:
@@ -376,7 +386,7 @@ int main(void)
 				}
 				else state = UNARMED;
 			break;
-			*/
+			
 		}
 		
 	}
