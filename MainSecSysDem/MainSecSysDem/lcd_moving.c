@@ -143,6 +143,7 @@ void Scrolling_Text_single(char input[], uint8_t position)
 
 void display_temp(uint8_t int_temp, uint8_t dec_temp)
 {
+	
 	int j;
 	char message[100];
 	if(int_temp <= 9) sprintf(message, "Temp: %u.%u  ", int_temp, dec_temp);
@@ -166,6 +167,7 @@ void display_temp(uint8_t int_temp, uint8_t dec_temp)
 
 void display_status(uint8_t status, uint8_t location)
 {
+	
 	int j, i;
 	char message[100], state1[] = "ARMED  ", state2[] = "UNARMED", state3[] = "ALARM!!!";
 	char place[15];
