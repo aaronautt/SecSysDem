@@ -24,7 +24,7 @@ These functions will control lcd output and backlight output
 	sets up timer for PWM with a frequency of 200Hz
 	
 *************************/
-
+/*
 void LCD_light_init(void)
 {
 	TCNT1 = 0;
@@ -33,7 +33,7 @@ void LCD_light_init(void)
 	OCR1A = 156/2;//sets period to 2*OCR1A 0.005 seconds, 200Hz
 	OCR1B = 78; //sets duty cycle to 50% initially
 }
-
+*/
 /************************************
 
 this function changes the PWM for the LCD backlight 

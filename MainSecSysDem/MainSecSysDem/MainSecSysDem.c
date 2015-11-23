@@ -8,7 +8,6 @@
 //INCLUDES
 #include "secSysDefines.h"
 #include <avr/io.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <util/delay.h>
@@ -47,11 +46,7 @@ uint8_t next_scroll = 0, timer = 0, idle = 0;
 uint16_t idle_timer = 0; 
 
 int main(void)
-{
-	return 0;	
-}
-	/*
-	
+{	
 	uint8_t keyRead = 22, push_press = 0, fire = 0, hall_window = 0, hall_door = 0, movement = 0;
 	uint8_t i, scroll_postion = 0, dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 0, new_code = 0, code_position = 0, armed_state = 0;
@@ -61,14 +56,14 @@ int main(void)
 	{
 		//this start block checks all the sensors and updates their flags
 		keyRead = keypadReadPins();
-		if(keyRead != 0) new_code = 1;
-		else if(keyRead == 0) new_code = 0;
-		else if(keyRead != 0 || push_press) idle_timer = 0;
 		push_press = pushButtonRead();
 		hall_window = Hall_Window_check();
 		hall_door = Hall_Door_check();
 		movement = PIR_check();
 		scroll_postion = scroll_postion + next_scroll;
+		if(keyRead != 0) new_code = 1;
+		else if(keyRead == 0) new_code = 0;
+		else if(keyRead != 0 || push_press) idle_timer = 0;
 		//next_scroll = 0;
 		if(scroll_postion > 23)
 		{
@@ -85,7 +80,7 @@ int main(void)
 				I2C_Init();
 				DAC_spi_init();
 				LCD_init();
-				LCD_light_init();
+				//LCD_light_init();
 				pushButton_init();
 				timerTwo_init();
 				rgb_init();
@@ -116,20 +111,23 @@ int main(void)
 			//	4. set time
 			//	5. speak time
 			case MENU_UNARMED:
-				rgb_red();
+				rgb_blue();
 				LCD_clear();
 				display_main_menu();
 				if(keyRead == 1) state = READ_MENU_ARM;
+				/*
 				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
 				else if(keyRead == 3) state = LAST_FIVE_ARM;
 				else if(keyRead == 4) state = SET_TIME;
 				else if(keyRead == 5) state = SPEAK_TIME;
-				else if(idle)
+				*/
+				else if(idle == 1)
 					{
 						state = UNARMED;
 						idle = 0;
 						idle_timer = 0;
 					}
+					
 				else state = MENU_UNARMED;
 			break;
 			//armed menu, displays the menu and exits to the three menu options on keypad press, returns to unarmed if one minute idle counter is reached
@@ -139,14 +137,16 @@ int main(void)
 			//	4. set time
 			//	5. speak time
 			case MENU_ARMED:
-				rgb_green();
+				rgb_blue();
 				LCD_clear();
 				display_main_menu();
 				if(keyRead == 1) state = READ_MENU_DISARM;
+				/*
 				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
 				else if(keyRead == 3) state = LAST_FIVE_ARM;
 				else if(keyRead == 4) state = SET_TIME;
 				else if(keyRead == 5) state = SPEAK_TIME;
+				*/
 				else if(idle)
 				{
 					state = ARMED;
@@ -174,6 +174,7 @@ int main(void)
 				else if(hall_window) state = ALARMED_HALL_W;
 				else state = ARMED;
 			break;
+			/*
 			//to disarm system, reads the keypad presses, stores them in the array code[], exits to check_code_un
 			//to check the inputted code to master after four digits have been collected
 			case READ_MENU_DISARM:
@@ -375,6 +376,7 @@ int main(void)
 				}
 				else state = UNARMED;
 			break;
+			*/
 		}
 		
 	}
@@ -393,10 +395,9 @@ ISR(TIMER2_COMPA_vect)
 		timer = 0;
 	}
 	//once the idle time reaches a minute it sets the idle flag and resets the menuing state
-	else if(idle_timer > 1875)
+	if(idle_timer > 1875)
 	{
 		idle = 1;
 		idle_timer = 0;
 	}
 }
-*/
