@@ -57,10 +57,16 @@ int main(void)
 	pushButton_init();
 	doorlockAndLcdBacklight_init();
 	rgb_init();
+	bell_init();
 	
 	
 	while(1)
 	{
-		
+		bell_off();
+		rgb_green();
+		_delay_ms(500);
+		bell_on();
+		rgb_blue();
+		_delay_ms(3000);
 	}
 }

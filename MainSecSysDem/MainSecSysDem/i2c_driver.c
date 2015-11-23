@@ -121,6 +121,16 @@ uint8_t I2C_ReadNACK () // reads a data byte from slave
 	//return (TW_STATUS!=0x28);
 }
 
+uint8_t I2C_ReadByte(uint8_t busAddr)
+{
+	uint8_t data = 0;
+ 	I2C_Start(busAddr+READ); // send device address and read bit
+ 	data = I2C_ReadNACK(); // read the register data
+ 	I2C_Stop(); // stop
+ 	return data;
+}
+
+
 void I2C_WriteByte(uint8_t busAddr, uint8_t data)
 {
 	I2C_Start(busAddr); // send bus address
@@ -206,4 +216,3 @@ void I2C_DoubleReadRegister_S(uint8_t busAddr, uint16_t start_address, uint16_t 
 	data[i] = I2C_ReadNACK(); // read the register data
 	I2C_Stop(); // stop
 }
-
