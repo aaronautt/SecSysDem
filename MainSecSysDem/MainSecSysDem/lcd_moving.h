@@ -11,8 +11,12 @@ Author: Aaron crump
 
 //function prototypes
 
-void LCD_light_init(void);
-void Lcd_Light_bright(uint8_t brigtness);
+// Note the brightness is set in the doorlock.c file because of convenience
+// with timer 2 being used by the doorlock.
+//void LCD_light_init(void);
+//void Lcd_Light_bright(uint8_t brigtness);
+
+
 void Scrolling_Text(char message[]);
 void Scrolling_Text_single(char input[], uint8_t position);
 void display_temp(uint8_t temp);
