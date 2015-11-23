@@ -64,9 +64,7 @@ void Scrolling_Text(char input[])
 	int i, j, k, length;
 	char message[100], swap;
 	sprintf(message, "%s              ",&input[0]);
-	//if(strlen(message) < 14) strcat(message, endings);
 	length = strlen(message)-1;
-	//printf("%d\n",length);
 	for(i=0;i<19;i++)
 	{
 		swap = message[0];
@@ -75,13 +73,10 @@ void Scrolling_Text(char input[])
 			message[k] = message[k+1];
 		}
 		message[length] = swap;
-		//message[length] = '/0';
 		LCD_gotoXY(0,2);
 		for(j=0;j<12;j++)
 		{
 			LCD_writeChar(message[j]);
-			//_delay_ms(5);
-			//printf("%c", message[j]);
 		}
 		_delay_ms(500);
 		LCD_clear();
@@ -95,18 +90,33 @@ void Scrolling_Text(char input[])
 	this fuction scrolls the array one character to the left
 	scrolls one position to the left starting with the last shifted character
 	
-	position : how many shifts have already taken place, if position = 1 the array will be shifted once
+	arguments
+	input: the array to be displayed
+	position : if position = 1 the array will be shifted once
+	
+	!!!NOTE!!! to get it to scroll smoothly, the for loop for printing should be 23 iterations long i.e.
+	
+	for(i=0;i<23;i++)
+	{
+		Scrolling_Text_single(&message[0], i);
+	}
+	
 	
 ***********************************/
 
 void Scrolling_Text_single(char input[], uint8_t position)
 {
-	int i, j, k, length;
-	char message[25], swap;
-	sprintf(message, "%s              ",&input[0]);
-	//if(strlen(message) < 14) strcat(message, endings);
+	int i, j, k, l, length;
+	char message[35], swap;
+	sprintf(message, "%s ",&input[0]);
+	if(strlen(input) < 23);
+	{
+		for(l=0;l<(23-strlen(input)-1);l++)
+		{
+			sprintf(message, "%s ",&message[0]);
+		}
+	}
 	length = strlen(message)-1;
-	//printf("%d\n",length);
 	for(i=0;i<position;i++)
 	{
 		swap = message[0];
@@ -122,20 +132,188 @@ void Scrolling_Text_single(char input[], uint8_t position)
 			LCD_writeChar(message[j]);
 		}
 		_delay_ms(500);
-		LCD_clear();
+		LCD_clear_row(0);
 }
 
-void display_temp(uint8_t temp)
+/**********************************
+
+	displays the temperature
+	arguments
+	int_temp: the temperature reading from the rtc in whole numbers
+	dec_temp: the temperature reading form the rtc that is less than 1
+	
+***********************************/
+
+void display_temp(uint8_t int_temp, uint8_t dec_temp)
 {
+	
 	int j;
 	char message[100];
-	sprintf(message, "Temp : %u", temp);
+	if(int_temp <= 9) sprintf(message, "Temp: %u.%u  ", int_temp, dec_temp);
+	else if(int_temp <= 99) sprintf(message, "Temp: %u.%u ", int_temp, dec_temp);
+	else if(int_temp >99) sprintf(message, "Temp: %u.%u", int_temp, dec_temp);
+	LCD_clear_row(1);
 	LCD_gotoXY(0,1);
 	for(j=0;j<12;j++)
 	{
 		LCD_writeChar(message[j]);
 	}
 }
+
+
+/**********************************
+
+	displays whether or not the system is armed or unarmed
+	argument: status: armed=1, unarmed=0, alarm=2
+	argument: location: none=0, door=1, window=2, motion=3 
+	
+***********************************/
+
+void display_status(uint8_t status, uint8_t location)
+{
+	
+	int j, i;
+	char message[100], state1[] = "ARMED  ", state2[] = "UNARMED", state3[] = "ALARM!!!";
+	char place[15];
+	if(location == 1) sprintf(place, "    %s      ", "Door");
+	else if(location == 2) sprintf(place, "    %s    ", "Window");
+	else if(location == 3) sprintf(place, "    %s    ", "Motion");
+	else if(location == 4) sprintf(place, "    %s      ", "FIRE");
+	if(status == 3)
+	{
+		sprintf(message, "%s       ", state1);
+		LCD_clear_row(2);
+		LCD_gotoXY(0,2);
+		for(j=0;j<12;j++)
+		{
+			LCD_writeChar(message[j]);
+		}
+	}
+	else if(status == 1)
+	{
+		sprintf(message, "%s       ", state2);
+		LCD_clear_row(2);
+		LCD_gotoXY(0,2);
+		for(j=0;j<12;j++)
+		{
+			LCD_writeChar(message[j]);
+		}
+	}
+	else if(status == 8 || status == 9 || status == 13 || status == 14)
+	{
+		sprintf(message, "%s       ", state3);
+		LCD_clear_row(0);
+		LCD_gotoXY(0,0);
+		for(j=0;j<12;j++)
+		{
+			LCD_writeChar(message[j]);
+		}
+		LCD_clear_row(1);
+		LCD_gotoXY(0,1);
+		LCD_writeString_F("Location:");
+		LCD_clear_row(2);
+		LCD_gotoXY(0,2);
+		for(i=0;i<12;i++)
+		{
+			LCD_writeChar(place[i]);
+		}
+	}
+		
+}
+ 
+/*****************************************
+
+	Menuing function display keypad needs to be read to switch
+	
+*****************************************/
+ 
+void display_main_menu(void)
+{
+	LCD_clear();
+	LCD_gotoXY(0,0);
+	LCD_writeString_F("MENU");
+	LCD_gotoXY(0,1);
+	LCD_writeString_F("1. Dis/Arm");
+	LCD_gotoXY(0,2);
+	LCD_writeString_F("2. Last 5 AL");
+	LCD_gotoXY(0,3);
+	LCD_writeString_F("3. Last 5 DA");
+	LCD_gotoXY(0,4);
+	LCD_writeString_F("4. Set Time");
+	LCD_gotoXY(0,5);
+	LCD_writeString_F("5. Speak Time");
+}
+
+void display_get_armcode(char code[])
+{
+	uint8_t i;
+	char message[10] = "Enter Code";
+	char message_2[6] = "then #";
+	LCD_clear();
+	LCD_gotoXY(0, 2);
+	LCD_writeString_F(&message[0]);
+	LCD_gotoXY(0, 3);
+	LCD_writeString_F(&message_2[0]);
+	for(i=0; i<5;i++)
+	{
+		if(code[i] == 11) code[i] = 0;
+	}
+	LCD_clear_row(4);
+	LCD_gotoXY(0, 4);
+	LCD_writeString_F(&code[0]);
+	
+}
+
+/****************************************
+
+	displays last five alarm events, this function reads the onboard eeprom and gets the last five dates
+	
+****************************************/
+
+void display_last_five_alarms(void)
+{
+	
+	//read onboard eeprom
+	LCD_clear();
+	LCD_gotoXY(0,1);
+	LCD_writeString_F("");// eeprom 
+	LCD_gotoXY(0,2);
+	LCD_writeString_F("");
+	LCD_gotoXY(0,3);
+	LCD_writeString_F("");
+	LCD_gotoXY(0,4);
+	LCD_writeString_F("");
+}
+
+/****************************************
+
+	displays last five arm/disarm events, this function reads the onboard eeprom and gets the last five dates
+	
+****************************************/
+
+void display_last_five_arm(void)
+{
+	
+	//read onboard eeprom
+	LCD_clear();
+	LCD_gotoXY(0,1);
+	LCD_writeString_F("");// eeprom 
+	LCD_gotoXY(0,2);
+	LCD_writeString_F("");
+	LCD_gotoXY(0,3);
+	LCD_writeString_F("");
+	LCD_gotoXY(0,4);
+	LCD_writeString_F("");
+}
+
+/*****************************************
+
+	 function
+	
+*****************************************/
+
+
+
 
 
 /*****************************************

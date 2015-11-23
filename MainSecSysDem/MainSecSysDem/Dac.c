@@ -4,11 +4,11 @@
  * Created: 10/25/2015 1:50:24 PM
  *  Author: Aaron
  */ 
-
+#include <avr/io.h>
 #include "secSysDefines.h"
 #include "Dac.h"
 #include <inttypes.h>
-#include <avr/io.h>
+
 
 /********************************************
 This initializes the SPI for use with the DAC at it's highest speed

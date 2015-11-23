@@ -1314,6 +1314,29 @@ void LCD_clear ( void )
       
 }
 
+/*--------------------------------------------------------------------------------------------------
+  Name         :  LCD_clear_row
+  Description  :  Clears the display row
+  Argument(s)  :  row, 1-6, the row to be cleared
+  Return value :  None.
+--------------------------------------------------------------------------------------------------*/
+void LCD_clear_row (uint8_t row)
+{
+	int j;
+	
+	LCD_gotoXY (0,row);  	//start with (0,row) position
+
+		for(j=0; j<84; j++)
+		{
+			LCD_writeData( 0x00 );
+			if ((row < 6) && (j < 84))
+				lcd_buffer[row][j] = 0x00;
+		}
+   
+    LCD_gotoXY (0,0);	//bring the XY position back to (0,0)
+      
+}
+
 void LCD_update( void )
 {
 	int i,j;

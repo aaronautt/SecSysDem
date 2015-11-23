@@ -41,6 +41,7 @@
 --------------------------------------------------------------------------------------------------*/
 void LCD_init ( void );
 void LCD_clear ( void );
+void LCD_clear_row (uint8_t row);
 void LCD_update ( void );
 void LCD_gotoXY ( unsigned char x, unsigned char y );
 void LCD_writeChar ( unsigned char character );

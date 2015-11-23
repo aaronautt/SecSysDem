@@ -14,13 +14,13 @@
 
 // ----- Keypad -----
 // Keypad Pins on the IO Expander
-#define KEYPAD_1_PIN			_BV(1)
-#define KEYPAD_2_PIN			_BV(2)
-#define KEYPAD_3_PIN			_BV(3)
+#define KEYPAD_1_PIN			_BV(7)
+#define KEYPAD_2_PIN			_BV(6)
+#define KEYPAD_3_PIN			_BV(5)
 #define KEYPAD_4_PIN			_BV(4)
-#define KEYPAD_5_PIN			_BV(5)
-#define KEYPAD_6_PIN			_BV(6)
-#define KEYPAD_7_PIN			_BV(7)
+#define KEYPAD_5_PIN			_BV(3)
+#define KEYPAD_6_PIN			_BV(2)
+#define KEYPAD_7_PIN			_BV(1)
 
 // ----- Proximity Sensor -----
 #define PIR_DDR       DDRC
@@ -81,12 +81,40 @@
 #define BELL_ALARM_PIN_IOEX		_BV(0)
 
 //RTC nonsense//
-#define RTC_EEP_ADDR			0x10101110 // EEPROM address on RTC Module
+#define RTC_EEP_ADDR			0b10101110 // EEPROM address on RTC Module
 #define RTC_ADDR				0b11010000 // I2C bus address of DS1307 RTC
 
 // IO Expander
-#define IOEXPANDER_ADDR	0b01000000
+#define IOEXPANDER_ADDR			0b01000000
 
+//status/state defines
+#define STARTUP					0
+#define UNARMED					1
+#define STATUS					2
+#define ARMED					3
+#define READ_MENU_ARM			4
+#define READ_ALARM_CODE			5
+#define LAST_FIVE_ALARMS		6
+#define SET_TIME				7
+#define ALARMED_MOTION			8
+#define ALARMED_FIRE			9	
+#define MENU_UNARMED			10
+#define MENU_ARMED				11			
+#define READ_MENU_DISARM		12	
+#define ALARMED_HALL_D			13
+#define ALARMED_HALL_W			14
+#define CHECK_CODE_AL			15
+#define CHECK_CODE_AR			16
+#define CHECK_CODE_UN			17
+#define ALARM_SOUND				18
+#define LAST_FIVE_ARM			19
+#define SPEAK_TIME				20
+
+//location of alarm defines
+#define DOOR					1
+#define WINDOW					2
+#define MOTION					3
+#define FIRE					4
 
 //dac
 #define DAC_PORT_OUT			PORTB
