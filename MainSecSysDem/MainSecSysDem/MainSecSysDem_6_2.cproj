@@ -102,6 +102,12 @@
     <Compile Include="Dac.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="doorlock.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="doorlock.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="eeprom328p.c">
       <SubType>compile</SubType>
     </Compile>
@@ -181,6 +187,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="secSysDefines.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="speaker.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="timers.c">

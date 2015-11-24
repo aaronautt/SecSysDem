@@ -27,7 +27,8 @@ MainSecSysDem.d MainSecSysDem.o: .././MainSecSysDem.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\string.h \
  .././RTC_eeprom.h .././LCD_spi.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
- .././Dac.h .././lcd_moving.h .././timers.h .././doorlock.h
+ .././Dac.h .././lcd_moving.h .././timers.h .././doorlock.h \
+ .././speaker.h
 
 .././secSysDefines.h:
 
@@ -112,3 +113,5 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-g
 .././timers.h:
 
 .././doorlock.h:
+
+.././speaker.h:

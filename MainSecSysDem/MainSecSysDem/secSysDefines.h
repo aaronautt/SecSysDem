@@ -88,27 +88,53 @@
 #define IOEXPANDER_ADDR			0b01000000
 
 //status/state defines
-#define STARTUP					0
-#define UNARMED					1
-#define STATUS					2
-#define ARMED					3
-#define READ_MENU_ARM			4
-#define READ_ALARM_CODE			5
-#define LAST_FIVE_ALARMS		6
-#define SET_TIME				7
-#define ALARMED_MOTION			8
-#define ALARMED_FIRE			9	
-#define MENU_UNARMED			10
-#define MENU_ARMED				11			
-#define READ_MENU_DISARM		12	
-#define ALARMED_HALL_D			13
-#define ALARMED_HALL_W			14
-#define CHECK_CODE_AL			15
-#define CHECK_CODE_AR			16
-#define CHECK_CODE_UN			17
-#define ALARM_SOUND				18
-#define LAST_FIVE_ARM			19
-#define SPEAK_TIME				20
+// #define STARTUP					0
+// #define UNARMED					1
+// #define STATUS					2
+// #define ARMED					3
+// #define READ_MENU_ARM			4
+// #define READ_ALARM_CODE			5
+// #define LAST_FIVE_ALARMS		6
+// #define SET_TIME				7
+// #define ALARMED_MOTION			8
+// #define ALARMED_FIRE			9	
+// #define MENU_UNARMED			10
+// #define MENU_ARMED				11			
+// #define READ_MENU_DISARM		12	
+// #define ALARMED_HALL_D			13
+// #define ALARMED_HALL_W			14
+// #define CHECK_CODE_AL			15
+// #define CHECK_CODE_AR			16
+// #define CHECK_CODE_UN			17
+// #define ALARM_SOUND				18
+// #define LAST_FIVE_ARM			19
+// #define SPEAK_TIME				20
+
+enum uint8_t
+{
+	NOTHING_STATE_FOR_TESTING,
+	STARTUP,
+	UNARMED,
+	STATUS,
+	ARMED,
+	READ_MENU_ARM,
+	READ_ALARM_CODE,
+	LAST_FIVE_ALARMS,
+	SET_TIME,
+	ALARMED_MOTION,
+	ALARMED_FIRE,
+	MENU_UNARMED,
+	MENU_ARMED,
+	READ_MENU_DISARM,
+	ALARMED_HALL_D,
+	ALARMED_HALL_W,
+	CHECK_CODE_AL,
+	CHECK_CODE_AR,
+	CHECK_CODE_UN,
+	ALARM_SOUND,
+	LAST_FIVE_ARM,
+	SPEAK_TIME			
+};
 
 //location of alarm defines
 #define DOOR					1

@@ -38,6 +38,7 @@
 #include <avr/eeprom.h>
 #include <math.h>
 #include "doorlock.h"
+#include "speaker.h"
 
 
 //DEFINES
@@ -48,16 +49,12 @@
 
 //globals for interrupts
 
-uint8_t next_scroll = 0, timer = 0, idle = 0;
-uint16_t idle_timer = 0; 
+volatile uint8_t next_scroll = 0, timer = 0, idle = 0;
+static uint8_t updateDAC = 0, playingSounds = 0;
+volatile uint16_t idle_timer = 0; 
 
-int main(void)
-{
-	return 0;	
-}
-	/*
-
-	
+int main()
+{	
 	uint8_t keyRead = 22, push_press = 0, fire = 0, hall_window = 0, hall_door = 0, movement = 0;
 	uint8_t i, scroll_postion = 0, dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 0, new_code = 0, code_position = 0, armed_state = 0;
@@ -83,6 +80,14 @@ int main(void)
 		}
 		switch(state)
 		{
+			case NOTHING_STATE_FOR_TESTING:
+				playingSounds = 1;
+				if(updateDAC)
+				{
+					updateDAC=0;
+					
+				}
+			break;
 			case STARTUP:
 				//check WDT, basically just here for initializations
 				USART_Init(MYUBRR);
@@ -91,14 +96,15 @@ int main(void)
 				I2C_Init();
 				DAC_spi_init();
 				LCD_init();
-				LCD_light_init();
+				//LCD_light_init();
 				pushButton_init();
 				timerTwo_init();
 				rgb_init();
 				PIR_init();
 				HALL_init();
-				sei(); 
+				sei();
 				state = UNARMED;
+				state = NOTHING_STATE_FOR_TESTING;
 			break;
 			//basic unarmed state, displays status, scrolling time and temp, exits to menu_unarmed when button is pressed or alarm if fire is detected 
 			case UNARMED:
@@ -405,4 +411,19 @@ ISR(TIMER2_COMPA_vect)
 		idle_timer = 0;
 	}
 }
-*/
+
+ISR(TIMER0_OVF_vect)
+{
+	static uint8_t i=0;
+	
+	if(playingSounds)
+	{
+		i++;
+		
+		if(i>=2)
+		{
+			i=0;
+			updateDAC = 1;
+		}
+	}
+}	

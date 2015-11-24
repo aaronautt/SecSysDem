@@ -34,6 +34,8 @@ void doorlockAndLcdBacklight_init()
 	LCD_BACKLIGHT_OCR = 0;
 	// Turn off the doorlock solenoid initially (lock)
 	DOORLOCK_OCR = 0;
+	// Set the timer one to interrupt on a timer overflow (every 63.75us)
+	TIMSK0 |= (1<<TOIE0);
 	//set prescaler to 1
 	TCCR0B |= (1<<CS00);
 }
