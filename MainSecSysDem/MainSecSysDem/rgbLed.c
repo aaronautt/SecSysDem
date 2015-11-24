@@ -28,7 +28,7 @@ void rgb_red()
 	RGB_PORT_OUT |= (RGB_GRN_PIN | RGB_BLU_PIN);
 }
 
-// Turns on the RGB led to red
+// Turns on the RGB led to green
 void rgb_green()
 {
 	// Turn on green LED
@@ -37,13 +37,20 @@ void rgb_green()
 	RGB_PORT_OUT |= (RGB_RED_PIN | RGB_BLU_PIN);
 }
 
-// Turns on the RGB led to red
+// Turns on the RGB led to blue
 void rgb_blue()
 {
 	// Turn on blue LED
 	RGB_PORT_OUT &= ~(RGB_BLU_PIN);
 	// Turn off other LEDs
 	RGB_PORT_OUT |= (RGB_RED_PIN | RGB_GRN_PIN);
+}
+
+// Turns on the RGB led to white
+void rgb_white()
+{
+	// Turn on all LEDs
+	RGB_PORT_OUT &= ~(RGB_BLU_PIN | RGB_RED_PIN | RGB_GRN_PIN);
 }
 
 // Turns off the RGB led

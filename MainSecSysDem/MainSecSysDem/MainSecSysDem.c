@@ -393,7 +393,7 @@ int main(void)
 }
 
 
-ISR(TIMER2_COMPA_vect)
+ISR(TIMER2_OVF_vect)
 {
 	next_scroll = 0;
 	timer++;
