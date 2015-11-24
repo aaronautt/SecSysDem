@@ -232,9 +232,9 @@ void display_main_menu(void)
 {
 	LCD_clear();
 	LCD_gotoXY(0,0);
-	LCD_writeString_F("MENU");
+	LCD_writeString_F("MENU        ");
 	LCD_gotoXY(0,1);
-	LCD_writeString_F("1. Dis/Arm");
+	LCD_writeString_F("1. Dis/Arm ");
 	LCD_gotoXY(0,2);
 	LCD_writeString_F("2. Last 5 AL");
 	LCD_gotoXY(0,3);
@@ -245,24 +245,32 @@ void display_main_menu(void)
 	LCD_writeString_F("5. Speak Time");
 }
 
-void display_get_armcode(char code[])
+void display_get_armcode(void)
 {
 	uint8_t i;
-	char message[10] = "Enter Code";
-	char message_2[6] = "then #";
+	char message[12] = "Enter Code  ";
+	char message_2[12] = "then #      ";
 	LCD_clear();
 	LCD_gotoXY(0, 2);
 	LCD_writeString_F(&message[0]);
 	LCD_gotoXY(0, 3);
 	LCD_writeString_F(&message_2[0]);
-	for(i=0; i<5;i++)
+	LCD_clear_row(4);
+	LCD_clear_row(5);
+}
+
+void display_armcode(uint8_t code[])
+{
+	uint8_t i;
+	char codeout[12];
+	sprintf(codeout, "%s        ", code);
+	for(i=0;i<5;i++)
 	{
 		if(code[i] == 11) code[i] = 0;
 	}
 	LCD_clear_row(4);
-	LCD_gotoXY(0, 4);
-	LCD_writeString_F(&code[0]);
-	
+	LCD_gotoXY(0,4);
+	LCD_writeString_F(&codeout[0]);
 }
 
 /****************************************

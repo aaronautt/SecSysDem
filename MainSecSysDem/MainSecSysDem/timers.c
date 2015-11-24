@@ -17,14 +17,28 @@ this sets up the timers to read all the flags and run through the system
 
 #include <avr/io.h>
 #include "timers.h"
+#include "interrupt.h"
 
 void timerTwo_init(void)
 {
-	//TCNT2 = 0;
+	TCNT2 = 0;
 	//TCCR2A = 0;//sets timer 0 to CTC mode
-	TCCR2B |= (1<<CS22) | (1<<CS21) | (1<<CS20);//sets prescaler to 1024
+	TCCR2B |= _BV(CS22) | _BV(CS21) | _BV(CS20);//sets prescaler to 1024
 	//OCR2A = 255;// sets timer to 32msec
-	TIMSK2 |= (1<<TOIE2);//OCR2A compare interrupt enabled
-	TIFR2 |= (1<<TOV2);//clearing the interrupt flags
+	TIMSK2 |= _BV(TOIE2);//OCR2A compare interrupt enabled
+	//ASSR = 0x00;
+	//TIFR2 |= _BV(TOV2);//clearing the interrupt flags
+	sei();
+}
+
+void timerOne_init(void)
+{
+	TCNT1 = 0;
+	TCCR1A = 0;
+	TCCR1B |= _BV(WGM12) | _BV(CS12) | _BV(CS20);//set to CTC mode with 1024 prescaler
+	OCR1A = 255; //32msec
+	TIMSK1 |= _BV(OCIE1A);//interrupt on compare with ocr1a
+	//TIFR1 |= _BV(OCF1A);//clear interrupt flag
+	//sei();
 }
 

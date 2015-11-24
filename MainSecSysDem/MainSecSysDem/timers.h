@@ -12,6 +12,7 @@
 
 
 void timerTwo_init(void);
+void timerOne_init(void);
 
 
 #endif /* TIMERS_H_ */

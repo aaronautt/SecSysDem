@@ -24,7 +24,8 @@ void display_status(uint8_t status, uint8_t location);
 void display_main_menu(void);
 void display_last_five_alarms(void);
 void display_last_five_arm(void);
-void display_get_armcode(char code[]);
+void display_get_armcode(void);
+void display_armcode(uint8_t code[]);
 void array_shift(char message[]);
 
 #endif /* lcd_moving_H_ */

@@ -109,6 +109,11 @@
 #define ALARM_SOUND				18
 #define LAST_FIVE_ARM			19
 #define SPEAK_TIME				20
+#define DISPLAY_MENU_ARMED		21
+#define DISPLAY_MENU_UNARMED	22
+#define DISPLAY_READ_MENU_DISARM	23
+#define DISPLAY_READ_MENU_ARM		24
+
 
 //location of alarm defines
 #define DOOR					1
