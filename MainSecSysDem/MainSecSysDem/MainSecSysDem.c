@@ -34,155 +34,21 @@
 #include <inttypes.h>
 #include <avr/eeprom.h>
 #include "doorlock.h"
+#include "setTime.h"
 
 
 //DEFINES
 #define BAUD 9600
 #define MYUBRR F_CPU/8/BAUD-1
 
-enum uint8_t{
-	TO_YEAR,
-	SET_YEAR,
-	TO_MONTH,
-	SET_MONTH,
-	TO_DAY,
-	SET_DAY,
-	TO_DAY_OF_WEEK,
-	SET_DAY_OF_WEEK,
-	TO_HOUR,
-	SET_HOUR,
-	TO_MIN,
-	SET_MIN,
-	TO_SEC,
-	SET_SEC,
-	EXIT
-};
+
 
 //globals for interrupts
 
 static uint8_t next_scroll = 0, timer = 0, idle = 0;
 static uint16_t idle_timer = 0; 
 
-void setTimeStateMach(uint8_t keyRead, uint8_t pushBtn)
-{
-	static uint8_t setTimeState = TO_YEAR;
-	static uint8_t numEntered[2], numPointer=0;
-	static uint8_t hour, min, sec, date, dayOfWk, month, year;
-	
-	if(pushBtn)
-	{
-		setTimeState = EXIT;
-	}
-	
-	
-	switch(setTimeState)
-	{
-		case TO_YEAR:
-			LCD_clear();
-			LCD_writeString_F("ENTER YEAR  ");
-			LCD_gotoXY(0,1);
-			LCD_writeString_F("(YY)");
-			LCD_gotoXY(0,2);
-			LCD_writeString_F("# - Enter   ");
-			LCD_gotoXY(0,3);
-			LCD_writeString_F("* - Clear   ");
-			LCD_gotoXY(0,4);
-			numPointer=0;
-			setTimeState = SET_YEAR;
-			break;
-		case SET_YEAR:
-			if(keyRead == 10) //*
-			{
-				LCD_clear_row(4);
-				numPointer = 0;
-			}
-			else if(keyRead == 12) //#
-			{
-				if(numPointer == 2)
-				{
-					year = (numEntered[0]*10+numEntered[1]);
-					setTimeState = TO_MONTH;
-				}
-			}
-			else if(keyRead && numPointer<2)
-			{
-				// Determine the pressed key
-				if(keyRead==11) numEntered[numPointer] = 0;
-				else numEntered[numPointer] = keyRead;
-				// print the number
-				LCD_gotoXY((numPointer*7),4);
-				// Convert the number to ascii and write it.
-				LCD_writeChar((numEntered[numPointer] + 0x030));
-				numPointer++;
-			}
-			break;
-		case TO_MONTH:
-			//LCD_clear();
-			LCD_gotoXY(0,0);
-			LCD_writeString_F("ENTER MONTH ");
-			LCD_gotoXY(0,1);
-			LCD_writeString_F("(MM)        ");
-			//LCD_gotoXY(0,2);
-			//LCD_writeString_F("# - Enter   ");
-			//LCD_gotoXY(0,3);
-			//LCD_writeString_F("* - Clear   ");
-			LCD_gotoXY(0,4);
-			numPointer=0;
-			setTimeState = SET_MONTH;
-			break;
-		case SET_MONTH:
-			if(keyRead == 10) //*
-			{
-				LCD_clear_row(4);
-				numPointer = 0;
-			}
-			else if(keyRead == 12) //#
-			{
-				if(numPointer == 2)
-				{
-					month = (numEntered[0]*10+numEntered[1]);
-					setTimeState = TO_DAY;
-				}
-			}
-			else if(keyRead && numPointer<2)
-			{
-				// Determine the pressed key
-				if(keyRead==11) numEntered[numPointer] = 0;
-				else numEntered[numPointer] = keyRead;
-				// print the number
-				LCD_gotoXY((numPointer*7),4);
-				// Convert the number to ascii and write it.
-				LCD_writeChar((numEntered[numPointer] + 0x030));
-				numPointer++;
-			}		
-			break;
-		case TO_DAY:
-			break;
-		case SET_DAY:
-			break;
-		case TO_DAY_OF_WEEK:
-			break;
-		case SET_DAY_OF_WEEK:
-			break;
-		case TO_HOUR:
-			break;
-		case SET_HOUR:
-			break;
-		case TO_MIN:
-			break;
-		case SET_MIN:
-			break;
-		case TO_SEC:
-			break;
-		case SET_SEC:
-			break;
-		case EXIT:
-		default:
-			setTimeState = TO_YEAR;
-			numPointer = 0;
-			break;
-	}
-}
+
 
 int main(void)
 {
@@ -533,7 +399,10 @@ int main(void)
 			//this sets the time, Luke's job to write this state
 			case SET_TIME:
 				//rgb_white();
-				 setTimeStateMach(keyRead, push_press);
+				 if(setTimeStateMach(keyRead, push_press))
+				 {
+					 state = (armed_state) ? DISPLAY_MENU_ARMED : DISPLAY_MENU_UNARMED;
+				 }
 				//state = UNARMED;
 			break;
 			//alarmed_motion is entered when the PIR is tripped, exits to alarm_sound after setting location
