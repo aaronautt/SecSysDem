@@ -50,10 +50,10 @@ static uint16_t idle_timer = 0;
 int main(void)
 
 {
-	uint8_t keyRead = 22, push_press = 0, fire = 0, hall_window = 0, hall_door = 0, movement = 0;
-	uint8_t i, scroll_postion = 0, dec_temp = 0, int_temp = 0, location = 10, color = 0;
+	uint8_t keyRead = 22, push_press = 0, hall_window = 0, hall_door = 0, movement = 0;
+	uint8_t i, dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0;
-	char time[25];
+	char time[25], time_array[5][30];
 	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
 	// Initialize the UART
 	USART_Init(MYUBRR);
@@ -75,42 +75,18 @@ int main(void)
 		//this start block checks all the sensors and updates their flags
 		keyRead = keypadReadPins();
 		push_press = pushButtonRead();
-		//hall_window = Hall_Window_check();
-		//hall_door = Hall_Door_check();
-		//movement = PIR_check();
-		scroll_postion = scroll_postion + next_scroll;
+		hall_window = Hall_Window_check();
+		hall_door = Hall_Door_check();
+		movement = PIR_check();
 		if(keyRead != 0) new_code = 1;
 		else if(keyRead == 0) new_code = 0;
 		if(keyRead != 0 || push_press) idle_timer = 0;
 		//next_scroll = 0;
-		if(scroll_postion > 23)
-		{
-			 scroll_postion = 0;
-			 next_scroll = 0;
-		}
+		
 		switch(state)
 		{
-			/*
-			case STARTUP:
-				//check WDT, basically just here for initializations
-				USART_Init(MYUBRR);
-				stdout = &uart_output;
-				stdin  = &uart_input;
-				I2C_Init();
-				DAC_spi_init();
-				LCD_init();
-				//LCD_light_init();
-				pushButton_init();
-				timerTwo_init();
-				timerOne_init();
-				rgb_init();
-				PIR_init();
-				HALL_init();
-				sei(); 
-				state = UNARMED;
-			break;
-			*/
 			//basic unarmed state, displays status, scrolling time and temp, exits to menu_unarmed when button is pressed or alarm if fire is detected 
+			
 			case UNARMED:
 				armed_state = 0;
 				idle_timer = 0;//keep idle timer at 0 unless accessing a menu
@@ -120,7 +96,7 @@ int main(void)
 				getTemp(&int_temp, &dec_temp);
 				display_temp(int_temp, dec_temp);
 				getStandardTimeStampStr(time);
-				Scrolling_Text_single(&time[0], scroll_postion);//need to figure out how to check stuff while scrolling
+				Scrolling_Text_single(&time[0], next_scroll);//need to figure out how to check stuff while scrolling
 				if(push_press) 
 				{
 					state = DISPLAY_MENU_UNARMED;
@@ -132,8 +108,6 @@ int main(void)
 			//just displays the menu
 			case DISPLAY_MENU_UNARMED:
 			rgb_blue();
-			LCD_clear();
-			LCD_gotoXY(0,0);
 			display_main_menu();
 			state = MENU_UNARMED;
 			break;
@@ -142,15 +116,15 @@ int main(void)
 			//	2. last five alarms
 			//	3. last five dis/arm
 			//	4. set time
-			//	5. speak time
+			//	5. Exit
 			case MENU_UNARMED:
 				rgb_blue();
 				if(keyRead == 1) state = DISPLAY_READ_MENU_ARM;
-				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
-				else if(keyRead == 3) state = LAST_FIVE_ARM;
+				else if(keyRead == 2) state = DISPLAY_LAST_FIVE_ALARMS;
+				else if(keyRead == 3) state = DISPLAY_LAST_FIVE_ARMS;
 				else if(keyRead == 4) state = SET_TIME;
-				else if(keyRead == 5) state = SPEAK_TIME;
-				if(idle_timer > 1875)
+				else if(keyRead == 5) state = UNARMED;
+				if(idle)
 					{
 						state = UNARMED;
 						idle = 0;
@@ -170,7 +144,7 @@ int main(void)
 				getTemp(&int_temp, &dec_temp);
 				display_temp(dec_temp, int_temp);// to do read temp
 				getStandardTimeStampStr(time);
-				Scrolling_Text_single(&time[0], scroll_postion);
+				Scrolling_Text_single(&time[0], next_scroll);
 				if(push_press) state = DISPLAY_MENU_ARMED;
 				/*
 				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
@@ -191,17 +165,17 @@ int main(void)
 			//	2. last five alarms
 			//	3. last five dis/arm
 			//	4. set time
-			//	5. speak time
+			//	5. Exit
 			case MENU_ARMED:
 				rgb_blue();
 				if(keyRead == 1) state = DISPLAY_READ_MENU_DISARM;
 				
-				else if(keyRead == 2) state = LAST_FIVE_ALARMS;
-				else if(keyRead == 3) state = LAST_FIVE_ARM;
+				else if(keyRead == 2) state = DISPLAY_LAST_FIVE_ALARMS;
+				else if(keyRead == 3) state = DISPLAY_LAST_FIVE_ARMS;
 				else if(keyRead == 4) state = SET_TIME;
-				else if(keyRead == 5) state = SPEAK_TIME;
+				else if(keyRead == 5) state = ARMED;
 				
-				if(idle_timer > 1875)
+				if(idle)
 				{
 					state = ARMED;
 					idle = 0;
@@ -235,7 +209,7 @@ int main(void)
 					state = CHECK_CODE_UN;
 					code_position = 0;
 				}
-				if(idle_timer>1875)
+				if(idle)
 				{
 					state = ARMED;
 					idle = 0;
@@ -267,7 +241,7 @@ int main(void)
 					state = CHECK_CODE_AR;
 					code_position = 0;
 				}
-				if(idle_timer>1875)
+				if(idle)
 				{
 					state = UNARMED;
 					idle = 0;
@@ -287,7 +261,7 @@ int main(void)
 				{
 					code[code_position] = keyRead;
 					code_position++;
-					display_armcode(&code[0]);
+					//display_armcode(&code[0]);
 				}
 				if(keyRead == 12)
 				{
@@ -323,6 +297,7 @@ int main(void)
 				&& code[3] == master_code[3])
 				{
 					state = UNARMED;
+					saveArmDisarmTimeToEeprom(B_UNARMED);
 				}
 				else
 				{
@@ -335,6 +310,7 @@ int main(void)
 				&& code[3] == master_code[3])
 				{
 					state = ARMED;
+					saveArmDisarmTimeToEeprom(B_ARMED);
 				}
 				else
 				{
@@ -343,8 +319,17 @@ int main(void)
 			break;
 			//entered from armed menu or unarmed menu, exited if any alarm is tripped or the push button is pressed to enter the menu again
 			//if the idle flag is set 
+			
+			case DISPLAY_LAST_FIVE_ALARMS:
+				display_last_five_alarms();
+				state = LAST_FIVE_ALARMS;
+			break;
 			case LAST_FIVE_ALARMS:
-				//display_last_five_disarms(); complete this function
+				if(keyRead == 1) state = DISPLAY_ALARM_ONE;
+				else if(keyRead == 2) state = DISPLAY_ALARM_TWO;
+				else if(keyRead == 3) state = DISPLAY_ALARM_THREE;
+				else if(keyRead == 4) state = DISPLAY_ALARM_FOUR;
+				else if(keyRead == 5) state = DISPLAY_ALARM_FIVE;
 				if(idle && armed_state == 0)
 				{
 					state = UNARMED;
@@ -357,19 +342,28 @@ int main(void)
 					idle_timer = 0;
 					idle = 0;
 				}
-				if(push_press && armed_state == 0) state = MENU_UNARMED;
-				if(push_press && armed_state == 1) state = MENU_ARMED;
+				if(push_press && armed_state == 0) state = DISPLAY_MENU_UNARMED;
+				if(push_press && armed_state == 1) state = DISPLAY_MENU_ARMED;
 				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
 				else if(movement) state = ALARMED_MOTION; 
 				else if(hall_door) state = ALARMED_HALL_D;
 				else if(hall_window) state = ALARMED_HALL_W;
-				else state = LAST_FIVE_ALARMS;
+				//else state = LAST_FIVE_ALARMS;
+			break;
+			
+			case DISPLAY_LAST_FIVE_ARMS:
+				display_last_five_arm();
+				state = LAST_FIVE_ARM;
 			break;
 			
 			//entered from armed menu or unarmed menu, exited if any alarm is tripped or the push button is pressed to enter the menu again
 			//if the idle flag is set 
 			case LAST_FIVE_ARM:
-				//display_last_five_arm(); complete this function
+				if(keyRead == 1) state = DISPLAY_ARM_ONE;
+				else if(keyRead == 2) state = DISPLAY_ARM_TWO;
+				else if(keyRead == 3) state = DISPLAY_ARM_THREE;
+				else if(keyRead == 4) state = DISPLAY_ARM_FOUR;
+				else if(keyRead == 5) state = DISPLAY_ARM_FIVE;
 				if(idle && armed_state == 0)
 				{
 					state = UNARMED;
@@ -382,13 +376,133 @@ int main(void)
 					idle_timer = 0;
 					idle = 0;
 				}
-				if(push_press && armed_state == 0) state = MENU_UNARMED;
-				else if(push_press && armed_state == 1) state = MENU_ARMED;
+				if(push_press && armed_state == 0) state = DISPLAY_MENU_UNARMED;
+				else if(push_press && armed_state == 1) state = DISPLAY_MENU_ARMED;
 				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
 				else if(movement) state = ALARMED_MOTION; 
 				else if(hall_door) state = ALARMED_HALL_D;
 				else if(hall_window) state = ALARMED_HALL_W;
 				else state = LAST_FIVE_ARM;
+			break;
+			
+			case DISPLAY_ARM_ONE:
+				getFiveArmDisarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[0][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[0][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[0][i+16]);
+				state = LAST_FIVE_ARM;
+			break;
+			
+			case DISPLAY_ARM_TWO:
+				getFiveArmDisarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[1][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[1][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[1][i+16]);
+				state = LAST_FIVE_ARM;
+			break;
+			
+			case DISPLAY_ARM_THREE:
+				getFiveArmDisarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[2][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[2][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[2][i+16]);
+				state = LAST_FIVE_ARM;
+			break;
+			
+			case DISPLAY_ARM_FOUR:
+				getFiveArmDisarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[3][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[3][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[3][i+16]);
+				state = LAST_FIVE_ARM;
+			break;
+			
+			case DISPLAY_ARM_FIVE:
+				getFiveArmDisarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[4][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[4][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[4][i+16]);
+				state = LAST_FIVE_ARM;
+			break;
+			
+			case DISPLAY_ALARM_ONE:
+				getFiveAlarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[0][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[0][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[0][i+16]);
+				state = LAST_FIVE_ALARMS;
+			break;
+			
+			case DISPLAY_ALARM_TWO:
+				getFiveAlarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[1][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[1][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[1][i+16]);
+				state = LAST_FIVE_ALARMS;
+			break;
+			
+			case DISPLAY_ALARM_THREE:
+				getFiveAlarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[2][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[2][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[2][i+16]);
+				state = LAST_FIVE_ALARMS;
+			break;
+			
+			case DISPLAY_ALARM_FOUR:
+				getFiveAlarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[3][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[3][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[3][i+16]);
+				state = LAST_FIVE_ALARMS;
+			break;
+			
+			case DISPLAY_ALARM_FIVE:
+				getFiveAlarmTimes(time_array);
+				LCD_clear();
+				LCD_gotoXY(0,0);
+				for(i=0;i<7;i++) LCD_writeChar(time_array[4][i]);
+				LCD_gotoXY(0,1);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[4][i+7]);
+				LCD_gotoXY(0,2);
+				for(i=0;i<6;i++) LCD_writeChar(time_array[4][i+16]);
+				state = LAST_FIVE_ALARMS;
 			break;
 			//this sets the time, Luke's job to write this state
 			case SET_TIME:
@@ -419,19 +533,9 @@ int main(void)
 				idle_timer = 0; //keep idle timer at 0 if not in a menu
 				//rgb_alarm();
 				//bell();
-				display_status(2, location);
+				display_status(B_ALARM, location);
 				if(push_press) state = READ_ALARM_CODE;
 				else state = ALARM_SOUND;
-			break;
-			//this state speaks the current time when the corresponding menu selection is made, exits to the previous menu state
-			case SPEAK_TIME:
-				getStandardTimeStampStr(&time[0]);
-				//speak_time_stamp();    !!!! TODO write this function
-				if((armed_state = 1))
-				{
-					state = ARMED;
-				}
-				else state = UNARMED;
 			break;
 			
 		}
@@ -442,24 +546,23 @@ int main(void)
 
 ISR(TIMER1_COMPA_vect)
 {	
-	
-	next_scroll = 0;
 	timer = timer + 1;
 	idle_timer = idle_timer + 1;
 	//once the timer counts up to 12 32 ms interrupts it scrolls the text once (400msec)
-	if(timer > 2)
+	if(timer > 12)
 	{
-		next_scroll = 1;
+		next_scroll = next_scroll + 1;
 		timer = 0;
-	}
-	//once the idle time reaches a minute it sets the idle flag and resets the menuing state
-	/*
-	if(idle_timer > 1875)
+	}	
+	if(idle_timer > TWENTY_SEC)
 	{
-		idle = 10;
+		idle = 1;
 		idle_timer = 0;
 	}
-	*/
+	if(next_scroll > 23)
+	{
+		next_scroll = 0;
+	}
 }
 
 

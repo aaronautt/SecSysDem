@@ -25,8 +25,8 @@ void getAndSetTimeStamp();
 //		char times[5][20];
 //		//Getting the last 5 times that were saved to the EEPROM
 //		getFiveAlarmTimes(&times[0]);
-void getFiveAlarmTimes(char timeStamps[5][20]);
-void getFiveArmDisarmTimes(char timeStamps[5][20]);
+void getFiveAlarmTimes(char timeStamps[5][30]);
+void getFiveArmDisarmTimes(char timeStamps[5][30]);
 
 
 //------------- saveTimeToEeprom ---------------

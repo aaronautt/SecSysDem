@@ -242,7 +242,7 @@ void display_main_menu(void)
 	LCD_gotoXY(0,4);
 	LCD_writeString_F("4. Set Time");
 	LCD_gotoXY(0,5);
-	LCD_writeString_F("5. Speak Time");
+	LCD_writeString_F("5. Exit");
 }
 
 void display_get_armcode(void)
@@ -281,17 +281,16 @@ void display_armcode(uint8_t code[])
 
 void display_last_five_alarms(void)
 {
-	
 	//read onboard eeprom
 	LCD_clear();
+	LCD_gotoXY(0,0);
+	LCD_writeString_F("Select 1    ");// eeprom 
 	LCD_gotoXY(0,1);
-	LCD_writeString_F("");// eeprom 
+	LCD_writeString_F("Through 5   ");
 	LCD_gotoXY(0,2);
-	LCD_writeString_F("");
+	LCD_writeString_F("To See Last ");
 	LCD_gotoXY(0,3);
-	LCD_writeString_F("");
-	LCD_gotoXY(0,4);
-	LCD_writeString_F("");
+	LCD_writeString_F("5 Alarms    ");
 }
 
 /****************************************
@@ -302,17 +301,16 @@ void display_last_five_alarms(void)
 
 void display_last_five_arm(void)
 {
-	
 	//read onboard eeprom
 	LCD_clear();
+	LCD_gotoXY(0,0);
+	LCD_writeString_F("Select 1    ");
 	LCD_gotoXY(0,1);
-	LCD_writeString_F("");// eeprom 
+	LCD_writeString_F("Through 5   ");
 	LCD_gotoXY(0,2);
-	LCD_writeString_F("");
+	LCD_writeString_F("To See Last ");
 	LCD_gotoXY(0,3);
-	LCD_writeString_F("");
-	LCD_gotoXY(0,4);
-	LCD_writeString_F("");
+	LCD_writeString_F("5 Dis/arms  ");
 }
 
 /*****************************************

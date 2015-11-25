@@ -15,14 +15,16 @@ void rgb_init();
 // Turns on the RGB led to red
 void rgb_red();
 
-// Turns on the RGB led to red
+// Turns on the RGB led to green
 void rgb_green();
 
-// Turns on the RGB led to red
+// Turns on the RGB led to blue
 void rgb_blue();
 
 // Turns off the RGB led
 void rgb_off();
+
+void rgb_white();
 
 
 // ----- FLASHING RED LED FUNCTIONS -----

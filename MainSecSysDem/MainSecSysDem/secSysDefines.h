@@ -88,32 +88,45 @@
 #define IOEXPANDER_ADDR			0b01000000
 
 //status/state defines
-#define STARTUP					0
-#define UNARMED					1
-#define STATUS					2
-#define ARMED					3
-#define READ_MENU_ARM			4
-#define READ_ALARM_CODE			5
-#define LAST_FIVE_ALARMS		6
-#define SET_TIME				7
-#define ALARMED_MOTION			8
-#define ALARMED_FIRE			9	
-#define MENU_UNARMED			10
-#define MENU_ARMED				11			
-#define READ_MENU_DISARM		12	
-#define ALARMED_HALL_D			13
-#define ALARMED_HALL_W			14
-#define CHECK_CODE_AL			15
-#define CHECK_CODE_AR			16
-#define CHECK_CODE_UN			17
-#define ALARM_SOUND				18
-#define LAST_FIVE_ARM			19
-#define SPEAK_TIME				20
-#define DISPLAY_MENU_ARMED		21
-#define DISPLAY_MENU_UNARMED	22
-#define DISPLAY_READ_MENU_DISARM	23
-#define DISPLAY_READ_MENU_ARM		24
-
+enum uint8_t
+{
+	STARTUP,				//0
+	UNARMED,				//1
+	STATUS,					//2
+	ARMED,					//3
+	READ_MENU_ARM,			//4 
+	READ_ALARM_CODE,		//5
+	LAST_FIVE_ALARMS,		//6
+	SET_TIME,				//7
+	ALARMED_MOTION,			//8
+	ALARMED_FIRE,			//9
+	MENU_UNARMED,			//10
+	MENU_ARMED,				//11
+	READ_MENU_DISARM,		//12
+	ALARMED_HALL_D,			//13
+	ALARMED_HALL_W,			//14
+	CHECK_CODE_AL,			//15
+	CHECK_CODE_AR,			//16
+	CHECK_CODE_UN,			//17
+	ALARM_SOUND,			//18
+	LAST_FIVE_ARM,			//19
+	DISPLAY_MENU_ARMED,		//20
+	DISPLAY_MENU_UNARMED,	//21
+	DISPLAY_READ_MENU_DISARM, //22
+	DISPLAY_READ_MENU_ARM,	//23
+	DISPLAY_LAST_FIVE_ALARMS,
+	DISPLAY_LAST_FIVE_ARMS,
+	DISPLAY_ARM_ONE,
+	DISPLAY_ARM_TWO,
+	DISPLAY_ARM_THREE,
+	DISPLAY_ARM_FOUR,
+	DISPLAY_ARM_FIVE,
+	DISPLAY_ALARM_ONE,
+	DISPLAY_ALARM_TWO,
+	DISPLAY_ALARM_THREE,
+	DISPLAY_ALARM_FOUR,
+	DISPLAY_ALARM_FIVE,
+	};
 
 //location of alarm defines
 #define DOOR					1
@@ -121,10 +134,18 @@
 #define MOTION					3
 #define FIRE					4
 
+#define B_ARMED					1
+#define B_UNARMED				0
+#define B_ALARM					2
+
 //dac
 #define DAC_PORT_OUT			PORTB
 #define DAC_CLK					_BV(5)
 #define DAC_IN					_BV(3)
 #define DAC_CS					_BV(2)
+
+//times
+#define MINUTE					1875
+#define TWENTY_SEC				625
 
 #endif /* SECSYSDEFINES_H_ */

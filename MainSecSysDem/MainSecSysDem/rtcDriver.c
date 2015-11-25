@@ -57,8 +57,8 @@
 
 uint8_t EEMEM alarmCtn;
 uint8_t EEMEM armDisCtn;
-const uint8_t EEMEM alarm[5][20];
-const uint8_t EEMEM armDis[5][20];
+const uint8_t EEMEM alarm[5][30];
+const uint8_t EEMEM armDis[5][30];
 
 
 // ---------------------------------------------------------------------------
@@ -236,9 +236,11 @@ void saveAlarmTimeToEeprom()
 	eeprom_write_byte(&alarmCtn, stampNum);
 }
 
-void saveArmDisarmTimeToEeprom()
+
+//saves the arm/disarm times to eeprom takes status as 0 for disarm or 1 for arm
+void saveArmDisarmTimeToEeprom(uint8_t status)
 {
-	char stampStr[20];
+	char stampStr[30];
 	uint8_t stampNum;
 	
 	// Figure out which time was set last
@@ -250,6 +252,15 @@ void saveArmDisarmTimeToEeprom()
 	//Get the current time stamp
 	getStandardTimeStampStr(stampStr);
 	
+	if(status == 0)
+	{
+		sprintf(stampStr, "Disarm %s", stampStr);
+	}
+	else if(status == 1)
+	{
+		sprintf(stampStr, " Armed %s", stampStr);
+	}
+	
 	// Write the new time to the EEPROM
 	eeprom_update_block(stampStr,(void*)&armDis[stampNum][0],20);
 	
@@ -257,7 +268,7 @@ void saveArmDisarmTimeToEeprom()
 	eeprom_write_byte(&armDisCtn, stampNum);
 }
 
-void getFiveAlarmTimes(char timeStamps[5][20])
+void getFiveAlarmTimes(char timeStamps[5][30])
 {
 	uint8_t stampNum, rowNum;
 	
@@ -279,7 +290,7 @@ void getFiveAlarmTimes(char timeStamps[5][20])
 	}	
 }
 
-void getFiveArmDisarmTimes(char timeStamps[5][20])
+void getFiveArmDisarmTimes(char timeStamps[5][30])
 {
 	uint8_t stampNum, rowNum;
 	
