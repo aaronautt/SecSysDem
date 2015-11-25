@@ -189,6 +189,12 @@
     <Compile Include="secSysDefines.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="setTime.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="setTime.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="timers.c">
       <SubType>compile</SubType>
     </Compile>

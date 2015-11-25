@@ -266,7 +266,7 @@ void display_main_menu_two(void)
 
 void display_get_armcode(void)
 {
-	uint8_t i;
+	//uint8_t i;
 	char message[12] = "Enter Code  ";
 	char message_2[12] = "then #      ";
 	LCD_clear();
@@ -349,7 +349,7 @@ void display_last_five_arm(void)
 *****************************************/
 void array_shift(char message[])
 {
-	int j, k, length;
+	int k, length;
 	char swap;
 	length = strlen(message)-1;
 	swap = message[0];
