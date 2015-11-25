@@ -65,6 +65,7 @@ int main(void)
 	LCD_init();
 	pushButton_init();
 	timerTwo_init();
+	timerOne_init();
 	rgb_init();
 	PIR_init();
 	HALL_init();
@@ -77,6 +78,7 @@ int main(void)
 		keyRead = keypadReadPins();
 		push_press = pushButtonRead();
 		movement = PIR_check();
+		bell_UpdateStatus();
 		// Reset the keyRead if it was the same as lastTime
 		if(keyRead == keyReadPrev) keyRead = 0;
 		else keyReadPrev = keyRead;
@@ -328,7 +330,7 @@ int main(void)
 				{
 					state = ARMED;
 					rgb_flash_stop();
-					bell_on();
+					bell_disable();
 				}
 				else
 				{
@@ -588,6 +590,7 @@ int main(void)
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				&& code[3] == master_code[3])
 				{
+					doorlockUnlock();
 					
 					if(armed_state == 0) state = UNARMED;
 					else state = ARMED;
@@ -624,7 +627,7 @@ int main(void)
 			case DISPLAY_ALARM_SOUND:
 				display_status(B_ALARM, location);
 				rgb_flash_start();
-				bell_off();
+				bell_enable();
 				state = ALARM_SOUND;
 			break;
 			
@@ -639,29 +642,12 @@ int main(void)
 	}
 	
 }
-/*
+
 ISR(TIMER1_COMPA_vect)
 {	
-	timer = timer + 1;
-	idle_timer = idle_timer + 1;
-	rgb_flash_32msInterrupt();
-	//once the timer counts up to 12 32 ms interrupts it scrolls the text once (400msec)
-	if(timer > 20)
-	{
-		next_scroll = next_scroll + 1;
-		timer = 0;
-	}	
-	if(idle_timer > TWENTY_SEC)
-	{
-		idle = 1;
-		idle_timer = 0;
-	}
-	if(next_scroll > 23)
-	{
-		next_scroll = 0;
-	}
+	bell_InterruptFunction();
 }
-*/
+
 
 ISR(TIMER2_OVF_vect)
 {
