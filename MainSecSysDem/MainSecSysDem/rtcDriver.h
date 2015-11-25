@@ -26,15 +26,15 @@ void getAndSetTimeStamp();
 //		//Getting the last 5 times that were saved to the EEPROM
 //		getFiveAlarmTimes(&times[0]);
 void getFiveAlarmTimes(char timeStamps[5][20]);
-//----------------------------------------------
+void getFiveArmDisarmTimes(char timeStamps[5][20]);
 
 
 //------------- saveTimeToEeprom ---------------
 // Example code:
 //		// Saving the current time to the oldest time stamp spot in EEPROM
-//		saveTimeToEeeprom();
-//----------------------------------------------
-void saveTimeToEeprom();
+//		saveAlarmTimeToEeeprom();
+void saveAlarmTimeToEeprom();
+void saveArmDisarmTimeToEeprom();
 
 
 #endif /* RTCDRIVER_H_ */
