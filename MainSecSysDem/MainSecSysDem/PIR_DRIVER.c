@@ -27,7 +27,7 @@ void PIR_init()
 uint8_t PIR_check()
 {
 	uint8_t response = 0;
-	if((PINC & (1<<PIR_PIN))) response = 1;
+	if((PINC & (PIR_PIN))) response = 1;
 	else response = 0;
 	return response;
 }

@@ -180,7 +180,7 @@ void display_status(uint8_t status, uint8_t location)
 	else if(location == 2) sprintf(place, "    %s    ", "Window");
 	else if(location == 3) sprintf(place, "    %s    ", "Motion");
 	else if(location == 4) sprintf(place, "    %s      ", "FIRE");
-	if(status == 3)
+	if(status == B_ARMED)
 	{
 		sprintf(message, "%s       ", state1);
 		LCD_clear_row(2);
@@ -190,7 +190,7 @@ void display_status(uint8_t status, uint8_t location)
 			LCD_writeChar(message[j]);
 		}
 	}
-	else if(status == 1)
+	else if(status == B_UNARMED)
 	{
 		sprintf(message, "%s       ", state2);
 		LCD_clear_row(2);
@@ -200,7 +200,7 @@ void display_status(uint8_t status, uint8_t location)
 			LCD_writeChar(message[j]);
 		}
 	}
-	else if(status == 8 || status == 9 || status == 13 || status == 14)
+	else if(status == B_ALARM)
 	{
 		sprintf(message, "%s       ", state3);
 		LCD_clear_row(0);

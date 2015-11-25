@@ -96,6 +96,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bell.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="bell.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Dac.c">
       <SubType>compile</SubType>
     </Compile>

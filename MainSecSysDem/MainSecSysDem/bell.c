@@ -12,7 +12,7 @@
 // Initiates the audible sounding bell by turning it off
 void bell_init()
 {
-	ioExpClrBit(BELL_ALARM_PIN_IOEX);
+	ioExpSetBit(BELL_ALARM_PIN_IOEX);
 }
 
 // Turns on the audible sounding bell

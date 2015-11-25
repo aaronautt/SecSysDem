@@ -64,11 +64,12 @@ int main(void)
 	DAC_spi_init();
 	LCD_init();
 	pushButton_init();
-	timerOne_init();
+	timerTwo_init();
 	rgb_init();
 	PIR_init();
 	HALL_init();
 	doorlockAndLcdBacklight_init();
+	bell_init();
 	sei();
 	while(1)
 	{
@@ -81,12 +82,13 @@ int main(void)
 		else keyReadPrev = keyRead;
 		//hall_window = Hall_Window_check();
 		//hall_door = Hall_Door_check();
-		
 		if(keyRead != 0) new_code = 1;
 		else new_code = 0;
 		if(keyRead != 0 || push_press) idle_timer = 0;
-		//next_scroll = 0;
-		
+		if(next_scroll > 23)
+		{
+			next_scroll = 0;
+		}
 		switch(state)
 		{
 			//basic unarmed state, displays status, scrolling time and temp, exits to menu_unarmed when button is pressed or alarm if fire is detected 
@@ -96,7 +98,7 @@ int main(void)
 				idle_timer = 0;//keep idle timer at 0 unless accessing a menu
 				LCD_clear();
 				rgb_red();
-				display_status(UNARMED, 0);
+				display_status(B_UNARMED, 0);
 				getTemp(&int_temp, &dec_temp);
 				display_temp(int_temp, dec_temp);
 				getStandardTimeStampStr(time);
@@ -115,12 +117,13 @@ int main(void)
 			display_main_menu();
 			state = MENU_UNARMED;
 			break;
+			
 			//unarmed menu, displays the menu and exits to the three menu options on keypad press, returns to unarmed if one minute idle counter is reached
 			//	1. arm
 			//	2. last five alarms
 			//	3. last five dis/arm
 			//	4. set time
-			//	5. Exit
+			//	5. more
 			case MENU_UNARMED:
 				rgb_blue();
 				if(keyRead == 1) state = DISPLAY_READ_MENU_ARM;
@@ -160,7 +163,7 @@ int main(void)
 				idle_timer = 0; //keep idle timer at 0 unless accessing a menu
 				LCD_clear();
 				rgb_green();
-				display_status(ARMED, 0);
+				display_status(B_ARMED, 0);
 				getTemp(&int_temp, &dec_temp);
 				display_temp(int_temp, dec_temp);// to do read temp
 				getStandardTimeStampStr(time);
@@ -325,6 +328,7 @@ int main(void)
 				{
 					state = ARMED;
 					rgb_flash_stop();
+					bell_on();
 				}
 				else
 				{
@@ -620,13 +624,13 @@ int main(void)
 			case DISPLAY_ALARM_SOUND:
 				display_status(B_ALARM, location);
 				rgb_flash_start();
+				bell_off();
 				state = ALARM_SOUND;
 			break;
 			
 			case ALARM_SOUND:
 				idle_timer = 0; //keep idle timer at 0 if not in a menu
 				rgb_flash_check();
-				//bell();
 				if(push_press) state = DISPLAY_READ_ALARM_CODE;
 			break;
 			
@@ -635,14 +639,14 @@ int main(void)
 	}
 	
 }
-
+/*
 ISR(TIMER1_COMPA_vect)
 {	
 	timer = timer + 1;
 	idle_timer = idle_timer + 1;
 	rgb_flash_32msInterrupt();
 	//once the timer counts up to 12 32 ms interrupts it scrolls the text once (400msec)
-	if(timer > 12)
+	if(timer > 20)
 	{
 		next_scroll = next_scroll + 1;
 		timer = 0;
@@ -657,25 +661,23 @@ ISR(TIMER1_COMPA_vect)
 		next_scroll = 0;
 	}
 }
-
+*/
 
 ISR(TIMER2_OVF_vect)
 {
-	/*
-	next_scroll = 0;
 	timer = timer + 1;
 	idle_timer = idle_timer + 1;
+	rgb_flash_32msInterrupt();
+	doorlockInterruptFuction();
 	//once the timer counts up to 12 32 ms interrupts it scrolls the text once (400msec)
-	if(timer > 2)
+	if(timer > 14)
 	{
-		next_scroll = 1;
+		next_scroll = next_scroll + 1;
 		timer = 0;
 	}
-	//once the idle time reaches a minute it sets the idle flag and resets the menuing state
-	if(idle_timer > 1875)
+	if(idle_timer > TWENTY_SEC)
 	{
 		idle = 1;
 		idle_timer = 0;
 	}
-	*/
 }
