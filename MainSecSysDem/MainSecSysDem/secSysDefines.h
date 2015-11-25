@@ -87,8 +87,9 @@
 // IO Expander
 #define IOEXPANDER_ADDR			0b01000000
 
+
 //status/state defines
-enum uint8_t
+enum state
 {
 	STARTUP,				//0
 	UNARMED,				//1
