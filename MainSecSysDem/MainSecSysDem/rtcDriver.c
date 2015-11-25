@@ -230,7 +230,7 @@ void saveAlarmTimeToEeprom()
 	getStandardTimeStampStr(stampStr);
 	
 	// Write the new time to the EEPROM
-	eeprom_update_block(stampStr,(void*)&alarm[stampNum][0],20);
+	eeprom_update_block(stampStr,(void*)&alarm[stampNum][0],30);
 	
 	// Write the new time stamp to the eeprom
 	eeprom_write_byte(&alarmCtn, stampNum);
@@ -240,7 +240,7 @@ void saveAlarmTimeToEeprom()
 //saves the arm/disarm times to eeprom takes status as 0 for disarm or 1 for arm
 void saveArmDisarmTimeToEeprom(uint8_t status)
 {
-	char stampStr[30];
+	char stampStr[20], stampOut[30];
 	uint8_t stampNum;
 	
 	// Figure out which time was set last
@@ -254,21 +254,22 @@ void saveArmDisarmTimeToEeprom(uint8_t status)
 	
 	if(status == 0)
 	{
-		sprintf(stampStr, "Disarm %s", stampStr);
+		sprintf(stampOut, "Disarm %s", stampStr);
 	}
 	else if(status == 1)
 	{
-		sprintf(stampStr, " Armed %s", stampStr);
+		sprintf(stampOut, "Armed  %s", stampStr);
 	}
 	
 	// Write the new time to the EEPROM
-	eeprom_update_block(stampStr,(void*)&armDis[stampNum][0],20);
+	eeprom_update_block(stampOut,(void*)&armDis[stampNum][0],30);
+	
 	
 	// Write the new time stamp to the eeprom
 	eeprom_write_byte(&armDisCtn, stampNum);
 }
 
-void getFiveAlarmTimes(char timeStamps[5][30])
+void getFiveAlarmTimes(char timeStamps[5][20])
 {
 	uint8_t stampNum, rowNum;
 	
@@ -308,6 +309,6 @@ void getFiveArmDisarmTimes(char timeStamps[5][30])
 		// Read the time stamp and store it in the next row.
 		// Since rowNum is decreasing, the temeStamps maxtrix will read
 		// the arrays from newest to oldest.
-		eeprom_read_block(&timeStamps[rowNum][0],&armDis[stampNum][0],20);
+		eeprom_read_block(&timeStamps[rowNum][0],&armDis[stampNum][0],30);
 	}
 }

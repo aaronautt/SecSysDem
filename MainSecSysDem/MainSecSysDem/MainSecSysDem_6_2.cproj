@@ -102,6 +102,12 @@
     <Compile Include="Dac.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="doorlock.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="doorlock.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="eeprom328p.c">
       <SubType>compile</SubType>
     </Compile>

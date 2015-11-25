@@ -242,7 +242,26 @@ void display_main_menu(void)
 	LCD_gotoXY(0,4);
 	LCD_writeString_F("4. Set Time");
 	LCD_gotoXY(0,5);
-	LCD_writeString_F("5. Exit");
+	LCD_writeString_F("5. More");
+}
+
+void display_main_menu_two(void)
+{
+	LCD_clear();
+	LCD_gotoXY(0,0);
+	LCD_writeString_F("MENU        ");
+	LCD_gotoXY(0,1);
+	LCD_writeString_F("6. Lock Door");
+	LCD_gotoXY(0,2);
+	LCD_writeString_F("7. EXIT");
+	/*
+	LCD_gotoXY(0,3);
+	LCD_writeString_F("3. Last 5 DA");
+	LCD_gotoXY(0,4);
+	LCD_writeString_F("4. Set Time");
+	LCD_gotoXY(0,5);
+	LCD_writeString_F("5. More");
+	*/
 }
 
 void display_get_armcode(void)

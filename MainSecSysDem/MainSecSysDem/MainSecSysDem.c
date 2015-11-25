@@ -198,26 +198,27 @@ int main(void)
 	I2C_Init();
 	DAC_spi_init();
 	LCD_init();
-	//LCD_light_init();
 	pushButton_init();
-	//timerTwo_init();
 	timerOne_init();
 	rgb_init();
 	PIR_init();
 	HALL_init();
+	doorlockAndLcdBacklight_init();
 	sei();
 	while(1)
 	{
 		//this start block checks all the sensors and updates their flags
 		keyRead = keypadReadPins();
 		push_press = pushButtonRead();
+		movement = PIR_check();
 		// Reset the keyRead if it was the same as lastTime
 		if(keyRead == keyReadPrev) keyRead = 0;
 		else keyReadPrev = keyRead;
 		//hall_window = Hall_Window_check();
 		//hall_door = Hall_Door_check();
-		//movement = PIR_check();
-		scroll_postion = scroll_postion + next_scroll;
+		
+		if(keyRead != 0) new_code = 1;
+		else new_code = 0;
 		if(keyRead != 0 || push_press) idle_timer = 0;
 		//next_scroll = 0;
 		
@@ -261,15 +262,31 @@ int main(void)
 				else if(keyRead == 2) state = DISPLAY_LAST_FIVE_ALARMS;
 				else if(keyRead == 3) state = DISPLAY_LAST_FIVE_ARMS;
 				else if(keyRead == 4) state = SET_TIME;
-				else if(keyRead == 5) state = UNARMED;
+				else if(keyRead == 5) state = DISPLAY_MENU_UNARMED_2;
 				if(idle)
 					{
 						state = UNARMED;
 						idle = 0;
 						idle_timer = 0;
 					}
-					
-				//else state = MENU_UNARMED;
+			break;
+			
+			case DISPLAY_MENU_UNARMED_2:
+			rgb_blue();
+			display_main_menu_two();
+			state = MENU_UNARMED_2;
+			break;
+			
+			case MENU_UNARMED_2:
+			rgb_blue();
+			if(keyRead == 6) state = DISPLAY_LOCK_SOLENOID;
+			else if(keyRead == 7) state = UNARMED;
+			if(idle)
+			{
+				state = UNARMED;
+				idle = 0;
+				idle_timer = 0;
+			}
 			break;
 			//armed state displays status, temp. and scrolling time. exits to menu on button press.
 			//exits to any of the four alarm states on sensor trip, fire, motion, door, window
@@ -280,17 +297,16 @@ int main(void)
 				rgb_green();
 				display_status(ARMED, 0);
 				getTemp(&int_temp, &dec_temp);
-				display_temp(dec_temp, int_temp);// to do read temp
+				display_temp(int_temp, dec_temp);// to do read temp
 				getStandardTimeStampStr(time);
 				Scrolling_Text_single(&time[0], next_scroll);
 				if(push_press) state = DISPLAY_MENU_ARMED;
+				if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
+				if(movement) state = ALARMED_MOTION; 
 				/*
-				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
-				else if(movement) state = ALARMED_MOTION; 
 				else if(hall_door) state = ALARMED_HALL_D;
 				else if(hall_window) state = ALARMED_HALL_W;
 				*/
-				else state = ARMED;
 			break;
 			case DISPLAY_MENU_ARMED:
 			rgb_blue();
@@ -308,12 +324,10 @@ int main(void)
 			case MENU_ARMED:
 				rgb_blue();
 				if(keyRead == 1) state = DISPLAY_READ_MENU_DISARM;
-				
 				else if(keyRead == 2) state = DISPLAY_LAST_FIVE_ALARMS;
 				else if(keyRead == 3) state = DISPLAY_LAST_FIVE_ARMS;
 				else if(keyRead == 4) state = SET_TIME;
-				else if(keyRead == 5) state = ARMED;
-				
+				else if(keyRead == 5) state = DISPLAY_MENU_ARMED_2;
 				if(idle)
 				{
 					state = ARMED;
@@ -323,6 +337,24 @@ int main(void)
 				//else state = MENU_ARMED;
 			break;
 				
+			case DISPLAY_MENU_ARMED_2:
+			rgb_blue();
+			display_main_menu_two();
+			state = MENU_ARMED_2;
+			break;
+			
+			case MENU_ARMED_2:
+			rgb_blue();
+			if(keyRead == 6) state = DISPLAY_LOCK_SOLENOID;
+			else if(keyRead == 7) state = ARMED;
+			if(idle)
+			{
+				state = ARMED;
+				idle = 0;
+				idle_timer = 0;
+			}
+			break;	
+			
 			case DISPLAY_READ_MENU_DISARM:
 				rgb_green();
 				LCD_clear();
@@ -330,20 +362,18 @@ int main(void)
 				state = READ_MENU_DISARM;
 			break;
 				
-			
-			
 			//to disarm system, reads the keypad presses, stores them in the array code[], exits to check_code_un
 			//to check the inputted code to master after four digits have been collected
 			case READ_MENU_DISARM:
 				rgb_green();
-				if(new_code) 
+				if(new_code && code_position<4)
 				{
-					code[code_position] = keyRead;	
+					code[code_position] = keyRead;
+					LCD_gotoXY((code_position*7),4);
+					LCD_writeChar('*');
 					code_position++;
-					//display_armcode(&code[0]);
-					//state = READ_MENU_DISARM;
 				}
-				if(keyRead == 12)
+				if(keyRead == 12 && code_position==4)
 				{
 					state = CHECK_CODE_UN;
 					code_position = 0;
@@ -368,14 +398,14 @@ int main(void)
 			//to check the inputted code to master after four digits have been collected
 			case READ_MENU_ARM:
 				rgb_green();
-				if(new_code)
+				if(new_code && code_position<4)
 				{
 					code[code_position] = keyRead;
+					LCD_gotoXY((code_position*7),4);
+					LCD_writeChar('*');
 					code_position++;
-					//display_armcode(&code[0]);
-					//state = READ_MENU_ARM;
 				}
-				if(keyRead == 12)
+				if(keyRead == 12 && code_position==4)
 				{
 					state = CHECK_CODE_AR;
 					code_position = 0;
@@ -391,18 +421,25 @@ int main(void)
 			break;
 			//to disarm system when in alarm state, reads the keypad presses, stores them in the array code[], exits to check_code_al
 			//to check the inputted code to master after four digits have been collected
-			case READ_ALARM_CODE:
+			
+			case DISPLAY_READ_ALARM_CODE:
 				//rgb_alarm();
-				//bell();
 				LCD_clear();
 				display_get_armcode();
-				if(new_code)
+				state = READ_ALARM_CODE;
+			break;
+			
+			case READ_ALARM_CODE:
+				rgb_flash_check();
+				//bell();
+				if(new_code && code_position<4)
 				{
 					code[code_position] = keyRead;
+					LCD_gotoXY((code_position*7),4);
+					LCD_writeChar('*');
 					code_position++;
-					//display_armcode(&code[0]);
 				}
-				if(keyRead == 12)
+				if(keyRead == 12 && code_position == 4)
 				{
 					state = CHECK_CODE_AL;
 					code_position = 0;
@@ -418,11 +455,11 @@ int main(void)
 			break;
 			//checks code[] input from read_alarm_code, if it matches it returns to armed state, if it doesn't it stays in alarm_sound state
 			case CHECK_CODE_AL:
-				LCD_clear();
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				 && code[3] == master_code[3])
 				{
 					state = ARMED;
+					rgb_flash_stop();
 				}
 				else
 				{
@@ -431,7 +468,6 @@ int main(void)
 			break;
 			//checks code[] input from read_menu_disarm, if it matches it returns to unarmed state, if it doesn't it stays in armed state
 			case CHECK_CODE_UN:
-				LCD_clear();
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				&& code[3] == master_code[3])
 				{
@@ -516,12 +552,11 @@ int main(void)
 					idle = 0;
 				}
 				if(push_press && armed_state == 0) state = DISPLAY_MENU_UNARMED;
-				else if(push_press && armed_state == 1) state = DISPLAY_MENU_ARMED;
+				if(push_press && armed_state == 1) state = DISPLAY_MENU_ARMED;
 				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
-				else if(movement) state = ALARMED_MOTION; 
+				else if(movement) state = ALARMED_MOTION;
 				else if(hall_door) state = ALARMED_HALL_D;
 				else if(hall_window) state = ALARMED_HALL_W;
-				else state = LAST_FIVE_ARM;
 			break;
 			
 			case DISPLAY_ARM_ONE:
@@ -532,7 +567,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[0][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[0][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[0][i+16]);
 				state = LAST_FIVE_ARM;
 			break;
 			
@@ -544,7 +579,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[1][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[1][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[1][i+16]);
 				state = LAST_FIVE_ARM;
 			break;
 			
@@ -556,7 +591,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[2][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[2][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[2][i+16]);
 				state = LAST_FIVE_ARM;
 			break;
 			
@@ -568,7 +603,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[3][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[3][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[3][i+16]);
 				state = LAST_FIVE_ARM;
 			break;
 			
@@ -580,7 +615,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[4][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[4][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[4][i+16]);
 				state = LAST_FIVE_ARM;
 			break;
 			
@@ -592,7 +627,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[0][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[0][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[0][i+16]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			
@@ -604,7 +639,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[1][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[1][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[1][i+16]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			
@@ -616,7 +651,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[2][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[2][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[2][i+16]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			
@@ -628,7 +663,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[3][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[3][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[3][i+16]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			
@@ -640,7 +675,7 @@ int main(void)
 				LCD_gotoXY(0,1);
 				for(i=0;i<9;i++) LCD_writeChar(time_array[4][i+7]);
 				LCD_gotoXY(0,2);
-				for(i=0;i<6;i++) LCD_writeChar(time_array[4][i+16]);
+				for(i=0;i<5;i++) LCD_writeChar(time_array[4][i+16]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			//this sets the time, Luke's job to write this state
@@ -649,34 +684,84 @@ int main(void)
 				 setTimeStateMach(keyRead, push_press);
 				//state = UNARMED;
 			break;
+			
+			case DISPLAY_LOCK_SOLENOID:
+				LCD_clear();
+				display_get_armcode();
+				state = READ_LOCK_SOLENOID;
+			break;
+			
+			case READ_LOCK_SOLENOID:
+				if(new_code && code_position<4)
+				{
+					code[code_position] = keyRead;
+					LCD_gotoXY((code_position*7),4);
+					LCD_writeChar('*');
+					code_position++;
+				}
+				if(keyRead == 12 && code_position == 4)
+				{
+					state = LOCK_SOLENOID;
+					code_position = 0;
+				}
+				if(idle && armed_state == 0)
+				{
+					state = UNARMED;
+					idle = 0;
+					idle_timer = 0;
+					code_position = 0;
+				}
+				else if(idle && armed_state == 1) state = ARMED;
+			break;
+			
+			case LOCK_SOLENOID:
+				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
+				&& code[3] == master_code[3])
+				{
+					
+					if(armed_state == 0) state = UNARMED;
+					else state = ARMED;
+				}
+				else
+				{
+					LCD_clear();
+					LCD_writeString_F("Wrong Code");
+					if(armed_state == 0) state = UNARMED;
+					else state = ARMED;
+				}
+			break;
 			//alarmed_motion is entered when the PIR is tripped, exits to alarm_sound after setting location
 			case ALARMED_MOTION:
 				location = MOTION;
-				state = ALARM_SOUND;
+				state = DISPLAY_ALARM_SOUND;
 			break;
 			//alarmed_hall_d is entered when the door hall effect sensor is tripped, exits to alarm_sound after setting location
 			case ALARMED_HALL_D:
 				location = DOOR;
-				state = ALARM_SOUND;
+				state = DISPLAY_ALARM_SOUND;
 			break;
 			//alarmed_hall_w is entered when the window hall effect sensor is tripped, exits to alarm_sound after setting location
 			case ALARMED_HALL_W:
 				location = WINDOW;
-				state = ALARM_SOUND;
+				state = DISPLAY_ALARM_SOUND;
 			break;
 			//alarmed_fire is entered when the fire alarm is tripped, it exits to alarm_sound after location is set for status function
 			case ALARMED_FIRE:
 				location = FIRE;
-				state = ALARM_SOUND;
+				state = DISPLAY_ALARM_SOUND;
 			break;
 			//alarm sound state sounds the bell and the flashing LED, it exits only upon push button press to read_alarm state
+			case DISPLAY_ALARM_SOUND:
+				display_status(B_ALARM, location);
+				rgb_flash_start();
+				state = ALARM_SOUND;
+			break;
+			
 			case ALARM_SOUND:
 				idle_timer = 0; //keep idle timer at 0 if not in a menu
-				//rgb_alarm();
+				rgb_flash_check();
 				//bell();
-				display_status(B_ALARM, location);
-				if(push_press) state = READ_ALARM_CODE;
-				else state = ALARM_SOUND;
+				if(push_press) state = DISPLAY_READ_ALARM_CODE;
 			break;
 			
 		}
@@ -689,6 +774,7 @@ ISR(TIMER1_COMPA_vect)
 {	
 	timer = timer + 1;
 	idle_timer = idle_timer + 1;
+	rgb_flash_32msInterrupt();
 	//once the timer counts up to 12 32 ms interrupts it scrolls the text once (400msec)
 	if(timer > 12)
 	{
