@@ -24,6 +24,7 @@ void rgb_blue();
 // Turns off the RGB led
 void rgb_off();
 
+void rgb_white();
 
 // ----- FLASHING RED LED FUNCTIONS -----
 // This function is called to start the LED flashing

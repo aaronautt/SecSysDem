@@ -87,6 +87,7 @@
 // IO Expander
 #define IOEXPANDER_ADDR			0b01000000
 
+
 //status/state defines
 #define STARTUP					0
 #define UNARMED					1
