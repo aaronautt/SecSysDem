@@ -494,11 +494,9 @@ int main(void)
 				getFiveAlarmTimes(time_array);
 				LCD_clear();
 				LCD_gotoXY(0,0);
-				for(i=0;i<7;i++) LCD_writeChar(time_array[0][i]);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[0][i]);
 				LCD_gotoXY(0,1);
-				for(i=0;i<9;i++) LCD_writeChar(time_array[0][i+7]);
-				LCD_gotoXY(0,2);
-				for(i=0;i<5;i++) LCD_writeChar(time_array[0][i+16]);
+				for(i=0;i<8;i++) LCD_writeChar(time_array[0][i+9]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			
@@ -506,11 +504,9 @@ int main(void)
 				getFiveAlarmTimes(time_array);
 				LCD_clear();
 				LCD_gotoXY(0,0);
-				for(i=0;i<7;i++) LCD_writeChar(time_array[1][i]);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[1][i]);
 				LCD_gotoXY(0,1);
-				for(i=0;i<9;i++) LCD_writeChar(time_array[1][i+7]);
-				LCD_gotoXY(0,2);
-				for(i=0;i<5;i++) LCD_writeChar(time_array[1][i+16]);
+				for(i=0;i<8;i++) LCD_writeChar(time_array[1][i+9]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			
@@ -518,11 +514,9 @@ int main(void)
 				getFiveAlarmTimes(time_array);
 				LCD_clear();
 				LCD_gotoXY(0,0);
-				for(i=0;i<7;i++) LCD_writeChar(time_array[2][i]);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[2][i]);
 				LCD_gotoXY(0,1);
-				for(i=0;i<9;i++) LCD_writeChar(time_array[2][i+7]);
-				LCD_gotoXY(0,2);
-				for(i=0;i<5;i++) LCD_writeChar(time_array[2][i+16]);
+				for(i=0;i<8;i++) LCD_writeChar(time_array[2][i+9]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			
@@ -530,11 +524,9 @@ int main(void)
 				getFiveAlarmTimes(time_array);
 				LCD_clear();
 				LCD_gotoXY(0,0);
-				for(i=0;i<7;i++) LCD_writeChar(time_array[3][i]);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[3][i]);
 				LCD_gotoXY(0,1);
-				for(i=0;i<9;i++) LCD_writeChar(time_array[3][i+7]);
-				LCD_gotoXY(0,2);
-				for(i=0;i<5;i++) LCD_writeChar(time_array[3][i+16]);
+				for(i=0;i<8;i++) LCD_writeChar(time_array[3][i+9]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			
@@ -542,11 +534,9 @@ int main(void)
 				getFiveAlarmTimes(time_array);
 				LCD_clear();
 				LCD_gotoXY(0,0);
-				for(i=0;i<7;i++) LCD_writeChar(time_array[4][i]);
+				for(i=0;i<9;i++) LCD_writeChar(time_array[4][i]);
 				LCD_gotoXY(0,1);
-				for(i=0;i<9;i++) LCD_writeChar(time_array[4][i+7]);
-				LCD_gotoXY(0,2);
-				for(i=0;i<5;i++) LCD_writeChar(time_array[4][i+16]);
+				for(i=0;i<8;i++) LCD_writeChar(time_array[4][i+9]);
 				state = LAST_FIVE_ALARMS;
 			break;
 			//this sets the time, Luke's job to write this state
