@@ -59,34 +59,48 @@ int main()
 	uint8_t i, scroll_postion = 0, dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 0, new_code = 0, code_position = 0, armed_state = 0;
 	char time[25], code[4] = "$$$$", master_code[4] = "1234";
+	uint16_t counter=0;
 	// Initialize the UART
+	
+	DAC_spi_init();
+	rgb_init();
+	state = NOTHING_STATE_FOR_TESTING;
 	while(1)
 	{
 		//this start block checks all the sensors and updates their flags
-		keyRead = keypadReadPins();
-		if(keyRead != 0) new_code = 1;
-		else if(keyRead == 0) new_code = 0;
-		else if(keyRead != 0 || push_press) idle_timer = 0;
-		push_press = pushButtonRead();
-		hall_window = Hall_Window_check();
-		hall_door = Hall_Door_check();
-		movement = PIR_check();
-		scroll_postion = scroll_postion + next_scroll;
-		//next_scroll = 0;
-		if(scroll_postion > 23)
-		{
-			 scroll_postion = 0;
-			 next_scroll = 0;
-		}
+// 		keyRead = keypadReadPins();
+// 		if(keyRead != 0) new_code = 1;
+// 		else if(keyRead == 0) new_code = 0;
+// 		else if(keyRead != 0 || push_press) idle_timer = 0;
+// 		push_press = pushButtonRead();
+// 		hall_window = Hall_Window_check();
+// 		hall_door = Hall_Door_check();
+// 		movement = PIR_check();
+// 		scroll_postion = scroll_postion + next_scroll;
+// 		//next_scroll = 0;
+// 		if(scroll_postion > 23)
+// 		{
+// 			 scroll_postion = 0;
+// 			 next_scroll = 0;
+// 		}
 		switch(state)
 		{
 			case NOTHING_STATE_FOR_TESTING:
-				playingSounds = 1;
-				if(updateDAC)
+				DAC_write_byte(starwars[counter]);
+				counter++;
+				_delay_us(100);
+				if(counter>=16000)
 				{
-					updateDAC=0;
-					
+					rgb_green();
+					while(1);
 				}
+				
+// 				playingSounds = 1;
+// 				if(updateDAC)
+// 				{
+// 					updateDAC=0;
+// 					
+// 				}
 			break;
 			case STARTUP:
 				//check WDT, basically just here for initializations
