@@ -13,7 +13,7 @@
 #define SOLENOID_OFF	0
 
 static uint8_t solenoidActiveFlag = 0;
-static uint8_t solenoidActiveCounter = 0;
+static uint16_t solenoidActiveCounter = 0;
 
 void doorlockAndLcdBacklight_init()
 {
@@ -73,6 +73,8 @@ void doorlockInterruptFuction()
 			DOORLOCK_OCR = 30;
 			// Set the flag that the solenoid is in low mode (less current)
 			solenoidActiveFlag = SOLENOID_LOW;
+			
+			solenoidActiveCounter=0;
 		}
 		// If it has not been at least 32ms...
 		else
@@ -80,5 +82,17 @@ void doorlockInterruptFuction()
 			// Increment the counter so next time it will trigger.
 			solenoidActiveCounter++;
 		}		
+	}
+	else if(solenoidActiveFlag == SOLENOID_LOW)
+	{
+		if(solenoidActiveCounter >= 312)
+		{
+			doorlockLock();
+			solenoidActiveFlag = SOLENOID_OFF;
+		}
+		else
+		{
+			solenoidActiveCounter++;
+		}
 	}
 }
