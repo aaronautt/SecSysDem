@@ -80,7 +80,7 @@ void bell_InterruptFunction()
 		{
 			changeBell = TURN_OFF;
 		}
-		else if(counter > 16)
+		else if(counter > 50)
 		{
 			counter = 0;
 		}	

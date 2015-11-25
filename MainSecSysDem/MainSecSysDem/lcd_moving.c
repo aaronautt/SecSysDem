@@ -155,10 +155,7 @@ void display_temp(uint8_t int_temp, uint8_t dec_temp)
 	else if(int_temp >99) sprintf(message, "Temp: %u.%u", int_temp, dec_temp);
 	LCD_clear_row(1);
 	LCD_gotoXY(0,1);
-	for(j=0;j<12;j++)
-	{
-		LCD_writeChar(message[j]);
-	}
+	LCD_writeString_F(message);
 }
 
 

@@ -36,7 +36,7 @@ void timerOne_init(void)
 	TCNT1 = 0;
 	TCCR1A = 0;
 	TCCR1B |= _BV(WGM12) | _BV(CS12) | _BV(CS20);//set to CTC mode with 1024 prescaler
-	OCR1A = 255; //32msec
+	OCR1A = 80; //32msec
 	TIMSK1 |= _BV(OCIE1A);//interrupt on compare with ocr1a
 	//TIFR1 |= _BV(OCF1A);//clear interrupt flag
 	//sei();
