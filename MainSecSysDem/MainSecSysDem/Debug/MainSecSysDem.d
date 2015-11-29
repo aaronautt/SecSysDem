@@ -28,7 +28,7 @@ MainSecSysDem.d MainSecSysDem.o: .././MainSecSysDem.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
  .././Dac.h .././lcd_moving.h .././timers.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\avr\eeprom.h \
- .././doorlock.h .././setTime.h
+ .././doorlock.h .././setTime.h .././photo_sensor.h
 
 .././secSysDefines.h:
 
@@ -113,3 +113,5 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-g
 .././doorlock.h:
 
 .././setTime.h:
+
+.././photo_sensor.h:

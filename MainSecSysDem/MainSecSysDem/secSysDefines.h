@@ -87,6 +87,9 @@
 // IO Expander
 #define IOEXPANDER_ADDR			0b01000000
 
+//ambient light sensor
+#define PHOTOSENSE_PORT			adc
+
 
 //status/state defines
 enum state
@@ -154,8 +157,9 @@ enum state
 #define DAC_IN					_BV(3)
 #define DAC_CS					_BV(2)
 
-//times
+//times for idle timer
 #define MINUTE					1875
 #define TWENTY_SEC				625
+#define TEN_SEC					313
 
 #endif /* SECSYSDEFINES_H_ */

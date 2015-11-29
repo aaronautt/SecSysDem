@@ -35,6 +35,7 @@
 #include <avr/eeprom.h>
 #include "doorlock.h"
 #include "setTime.h"
+#include "photo_sensor.h"
 
 
 //DEFINES
@@ -45,7 +46,7 @@
 
 //globals for interrupts
 
-static uint8_t next_scroll = 0, timer = 0, idle = 0;
+volatile uint8_t next_scroll = 0, timer = 0, idle = 0;
 static uint16_t idle_timer = 0; 
 
 
@@ -53,7 +54,7 @@ int main(void)
 {
 	uint8_t keyRead = 22,keyReadPrev = 0, push_press = 0, hall_window = 0, hall_door = 0, movement = 0;
 	uint8_t i, /*scroll_postion = 0,*/ dec_temp = 0, int_temp = 0, location = 10;
-	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0;
+	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0, ambient = 0;
 	char time[25], time_array[5][30];
 	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
 	// Initialize the UART
@@ -71,6 +72,8 @@ int main(void)
 	HALL_init();
 	doorlockAndLcdBacklight_init();
 	bell_init();
+	photo_sensor_init();
+	printf("getting\n");
 	sei();
 	while(1)
 	{
@@ -173,10 +176,10 @@ int main(void)
 				if(push_press) state = DISPLAY_MENU_ARMED;
 				if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
 				if(movement) state = ALARMED_MOTION; 
-				/*
+				
 				else if(hall_door) state = ALARMED_HALL_D;
 				else if(hall_window) state = ALARMED_HALL_W;
-				*/
+				
 			break;
 			case DISPLAY_MENU_ARMED:
 			rgb_blue();
@@ -639,7 +642,7 @@ ISR(TIMER1_COMPA_vect)
 }
 
 
-ISR(TIMER2_OVF_vect)
+ISR(TIMER2_COMPA_vect)
 {
 	timer = timer + 1;
 	idle_timer = idle_timer + 1;
@@ -651,7 +654,7 @@ ISR(TIMER2_OVF_vect)
 		next_scroll = next_scroll + 1;
 		timer = 0;
 	}
-	if(idle_timer > TWENTY_SEC)
+	if(idle_timer > TEN_SEC)
 	{
 		idle = 1;
 		idle_timer = 0;
