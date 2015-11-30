@@ -73,9 +73,13 @@ int main(void)
 	doorlockAndLcdBacklight_init();
 	bell_init();
 	photo_sensor_init();
+
 	if(get_alarm_state() == 1) state = ARMED;
 	else if(get_alarm_state() == 0) state = UNARMED;
 	else state = UNARMED;
+
+	sirenInit();
+
 	sei();
 	while(1)
 	{
@@ -651,6 +655,7 @@ int main(void)
 	
 }
 
+// 10ms timer
 ISR(TIMER1_COMPA_vect)
 {	
 	press_flag_count++;
@@ -662,7 +667,7 @@ ISR(TIMER1_COMPA_vect)
 	}
 }
 
-
+// 32ms timer
 ISR(TIMER2_OVF_vect)
 {
 	timer = timer + 1;
@@ -681,4 +686,10 @@ ISR(TIMER2_OVF_vect)
 		idle = 1;
 		idle_timer = 0;
 	}
+}
+
+// 63.75us timer
+ISR(TIMER0_OVF_vect)
+{
+	sirenInterruptFunction();
 }
