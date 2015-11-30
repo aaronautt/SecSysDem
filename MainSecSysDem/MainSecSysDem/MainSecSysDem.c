@@ -35,7 +35,7 @@
 #include <avr/eeprom.h>
 #include "doorlock.h"
 #include "setTime.h"
-
+#include "photo_sensor.h"
 
 //DEFINES
 #define BAUD 9600
@@ -45,7 +45,7 @@
 
 //globals for interrupts
 
-static uint8_t next_scroll = 0, timer = 0, idle = 0;
+volatile uint8_t next_scroll = 0, timer = 0, idle = 0, ambient = 0;
 static uint16_t idle_timer = 0; 
 
 
@@ -71,6 +71,7 @@ int main(void)
 	HALL_init();
 	doorlockAndLcdBacklight_init();
 	bell_init();
+	photo_sensor_init();
 	sei();
 	while(1)
 	{
@@ -91,15 +92,19 @@ int main(void)
 		{
 			next_scroll = 0;
 		}
+		if(ambient)
+		{
+			LcdBacklightBrightness(convert_adc_to_DC());
+			ambient = 0;
+		}
 		switch(state)
 		{
 			//basic unarmed state, displays status, scrolling time and temp, exits to menu_unarmed when button is pressed or alarm if fire is detected 
-			
 			case UNARMED:
 				armed_state = 0;
 				idle_timer = 0;//keep idle timer at 0 unless accessing a menu
 				LCD_clear();
-				rgb_red();
+				rgb_green();
 				display_status(B_UNARMED, 0);
 				getTemp(&int_temp, &dec_temp);
 				display_temp(int_temp, dec_temp);
@@ -164,7 +169,7 @@ int main(void)
 				armed_state = 1;
 				idle_timer = 0; //keep idle timer at 0 unless accessing a menu
 				LCD_clear();
-				rgb_green();
+				rgb_red();
 				display_status(B_ARMED, 0);
 				getTemp(&int_temp, &dec_temp);
 				display_temp(int_temp, dec_temp);// to do read temp
@@ -650,6 +655,7 @@ ISR(TIMER2_OVF_vect)
 	{
 		next_scroll = next_scroll + 1;
 		timer = 0;
+		ambient = 1;
 	}
 	if(idle_timer > TWENTY_SEC)
 	{
