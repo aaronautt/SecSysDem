@@ -147,8 +147,6 @@ void Scrolling_Text_single(char input[], uint8_t position)
 
 void display_temp(uint8_t int_temp, uint8_t dec_temp)
 {
-	
-	int j;
 	char message[100];
 	if(int_temp <= 9) sprintf(message, "Temp: %u.%u  ", int_temp, dec_temp);
 	else if(int_temp <= 99) sprintf(message, "Temp: %u.%u ", int_temp, dec_temp);

@@ -72,6 +72,7 @@ int main(void)
 	doorlockAndLcdBacklight_init();
 	bell_init();
 	photo_sensor_init();
+	sirenInit();
 	sei();
 	while(1)
 	{
@@ -638,12 +639,13 @@ int main(void)
 	
 }
 
+// 10ms timer
 ISR(TIMER1_COMPA_vect)
 {	
 	bell_InterruptFunction();
 }
 
-
+// 32ms timer
 ISR(TIMER2_OVF_vect)
 {
 	timer = timer + 1;
@@ -662,4 +664,10 @@ ISR(TIMER2_OVF_vect)
 		idle = 1;
 		idle_timer = 0;
 	}
+}
+
+// 63.75us timer
+ISR(TIMER0_OVF_vect)
+{
+	sirenInterruptFunction();
 }
