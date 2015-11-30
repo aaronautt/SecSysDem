@@ -9,7 +9,7 @@
 
 #include <avr/io.h>
 
-//max of 240, min of 5
+//max of 250, min of 0
 
 void photo_sensor_init()
 {
@@ -34,7 +34,7 @@ uint8_t convert_adc_to_DC()
 	uint16_t adc_read = 0, DC_out = 0;
 	uint8_t output;
 	adc_read = check_photo_sensor();
-	DC_out = 240-adc_read;
+	DC_out = 250-adc_read;
 	output = DC_out*100/DC_out;
 	return output;
 }

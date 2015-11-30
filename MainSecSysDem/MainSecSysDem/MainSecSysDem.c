@@ -46,7 +46,7 @@
 
 //globals for interrupts
 
-volatile uint8_t next_scroll = 0, timer = 0, idle = 0;
+volatile uint8_t next_scroll = 0, timer = 0, idle = 0, ambient = 0;
 static uint16_t idle_timer = 0; 
 
 
@@ -54,13 +54,13 @@ int main(void)
 {
 	uint8_t keyRead = 22,keyReadPrev = 0, push_press = 0, hall_window = 0, hall_door = 0, movement = 0;
 	uint8_t i, /*scroll_postion = 0,*/ dec_temp = 0, int_temp = 0, location = 10;
-	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0, ambient = 0;
+	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0;
 	char time[25], time_array[5][30];
 	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
 	// Initialize the UART
-	USART_Init(MYUBRR);
-	stdout = &uart_output;
-	stdin  = &uart_input;
+	//USART_Init(MYUBRR);
+	//stdout = &uart_output;
+	//stdin  = &uart_input;
 	I2C_Init();
 	DAC_spi_init();
 	LCD_init();
@@ -94,6 +94,12 @@ int main(void)
 		{
 			next_scroll = 0;
 		}
+		if(ambient)
+		{
+			LcdBacklightBrightness(convert_adc_to_DC());
+			ambient = 0;
+		}
+		
 		switch(state)
 		{
 			//basic unarmed state, displays status, scrolling time and temp, exits to menu_unarmed when button is pressed or alarm if fire is detected 
@@ -631,7 +637,7 @@ int main(void)
 			break;
 			
 		}
-		
+	
 	}
 	
 }
@@ -653,6 +659,7 @@ ISR(TIMER2_COMPA_vect)
 	{
 		next_scroll = next_scroll + 1;
 		timer = 0;
+		ambient = 1;
 	}
 	if(idle_timer > TEN_SEC)
 	{
