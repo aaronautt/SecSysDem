@@ -57,6 +57,7 @@
 
 uint8_t EEMEM alarmCtn;
 uint8_t EEMEM armDisCtn;
+uint8_t EEMEM alarmState;
 const uint8_t EEMEM alarm[5][30];
 const uint8_t EEMEM armDis[5][30];
 
@@ -311,4 +312,18 @@ void getFiveArmDisarmTimes(char timeStamps[5][30])
 		// the arrays from newest to oldest.
 		eeprom_read_block(&timeStamps[rowNum][0],&armDis[stampNum][0],30);
 	}
+}
+
+//saves the alarm state so that upon power cycle the state is saved
+void save_alarm_state(uint8_t alarm_state)
+{		
+	eeprom_write_byte(&alarmState, alarm_state);
+}
+
+//gets the alarm state so that upon power cycle the state is saved
+uint8_t get_alarm_state()
+{
+	uint8_t out;
+	out = eeprom_read_byte(&alarmState);
+	return out;
 }

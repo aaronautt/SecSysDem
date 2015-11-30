@@ -36,6 +36,8 @@ uint8_t convert_adc_to_DC()
 	adc_read = check_photo_sensor();
 	DC_out = 250-adc_read;
 	output = DC_out*100/250;
+	if(output>85) output = 100;
+	if(output<25) output = 0;
 	return output;
 }
 

@@ -45,14 +45,15 @@
 
 //globals for interrupts
 
-volatile uint8_t next_scroll = 0, timer = 0, idle = 0, ambient = 0;
+volatile uint8_t next_scroll = 0, timer = 0, idle = 0, ambient = 0, press_flag = 0, press_flag_count = 0;
 static uint16_t idle_timer = 0; 
 
 
 int main(void)
 {
 	uint8_t keyRead = 22,keyReadPrev = 0, push_press = 0, hall_window = 0, hall_door = 0, movement = 0;
-	uint8_t i, /*scroll_postion = 0,*/ dec_temp = 0, int_temp = 0, location = 10;
+	uint8_t i, /*scroll_postion = 0,*/ dec_temp = 0, int_temp = 0, location = 10, button_press = 0;
+	uint8_t prev_position = 0;
 	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0;
 	char time[25], time_array[5][30];
 	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
@@ -72,13 +73,26 @@ int main(void)
 	doorlockAndLcdBacklight_init();
 	bell_init();
 	photo_sensor_init();
+	if(get_alarm_state() == 1) state = ARMED;
+	else if(get_alarm_state() == 0) state = UNARMED;
+	else state = UNARMED;
 	sei();
 	while(1)
 	{
 		//this start block checks all the sensors and updates their flags
 		keyRead = keypadReadPins();
-		push_press = pushButtonRead();
-		movement = PIR_check();
+		button_press = pushButtonRead();
+		if(button_press)
+		{
+			press_flag_count = 0;
+			push_press = 1;
+		}
+		else if(press_flag) 
+		{
+			press_flag = 0;
+			push_press = 0;
+		}
+		//movement = PIR_check();
 		bell_UpdateStatus();
 		// Reset the keyRead if it was the same as lastTime
 		if(keyRead == keyReadPrev) keyRead = 0;
@@ -92,6 +106,7 @@ int main(void)
 		{
 			next_scroll = 0;
 		}
+		
 		if(ambient)
 		{
 			LcdBacklightBrightness(convert_adc_to_DC());
@@ -102,20 +117,17 @@ int main(void)
 			//basic unarmed state, displays status, scrolling time and temp, exits to menu_unarmed when button is pressed or alarm if fire is detected 
 			case UNARMED:
 				armed_state = 0;
+				save_alarm_state(0);
 				idle_timer = 0;//keep idle timer at 0 unless accessing a menu
-				LCD_clear();
+				if(push_press==1) state = DISPLAY_MENU_UNARMED;
+				else if(int_temp > 43) state = ALARMED_FIRE;//43 C is 110F
 				rgb_green();
 				display_status(B_UNARMED, 0);
 				getTemp(&int_temp, &dec_temp);
 				display_temp(int_temp, dec_temp);
-				getStandardTimeStampStr(time);
-				Scrolling_Text_single(&time[0], next_scroll);//need to figure out how to check stuff while scrolling
-				if(push_press) 
-				{
-					state = DISPLAY_MENU_UNARMED;
-				}
-				else if(int_temp > 43) state = ALARMED_FIRE;//43 C is 110F
-				//else state = UNARMED;
+				
+					getStandardTimeStampStr(time);
+					Scrolling_Text_single(&time[0], next_scroll);//need to figure out how to check stuff while scrolling
 			break;
 			
 			//just displays the menu
@@ -167,15 +179,16 @@ int main(void)
 			//exits to any of the four alarm states on sensor trip, fire, motion, door, window
 			case ARMED:
 				armed_state = 1;
+				save_alarm_state(1);
 				idle_timer = 0; //keep idle timer at 0 unless accessing a menu
-				LCD_clear();
+				if(push_press==1) state = DISPLAY_MENU_ARMED;
 				rgb_red();
 				display_status(B_ARMED, 0);
 				getTemp(&int_temp, &dec_temp);
 				display_temp(int_temp, dec_temp);// to do read temp
-				getStandardTimeStampStr(time);
-				Scrolling_Text_single(&time[0], next_scroll);
-				if(push_press) state = DISPLAY_MENU_ARMED;
+				
+					getStandardTimeStampStr(time);
+					Scrolling_Text_single(&time[0], next_scroll);
 				if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
 				if(movement) state = ALARMED_MOTION; 
 				/*
@@ -640,7 +653,13 @@ int main(void)
 
 ISR(TIMER1_COMPA_vect)
 {	
+	press_flag_count++;
 	bell_InterruptFunction();
+	if(press_flag_count >= 3)
+	{
+		press_flag_count = 0;
+		press_flag = 1;
+	}
 }
 
 

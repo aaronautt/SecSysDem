@@ -108,7 +108,10 @@ void Scrolling_Text(char input[])
 void Scrolling_Text_single(char input[], uint8_t position)
 {
 	int i, j, k, l, length;
+	static uint8_t prev_position = 0;
 	char message[35], swap;
+	if(prev_position != position)
+	{
 	sprintf(message, "%s ",&input[0]);
 	if(strlen(input) < 23);
 	{
@@ -132,8 +135,10 @@ void Scrolling_Text_single(char input[], uint8_t position)
 		{
 			LCD_writeChar(message[j]);
 		}
-		_delay_ms(500);
+		_delay_ms(5);
 		LCD_clear_row(0);
+		prev_position = position;
+	}
 }
 
 /**********************************

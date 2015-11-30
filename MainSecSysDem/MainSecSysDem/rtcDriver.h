@@ -37,4 +37,9 @@ void saveAlarmTimeToEeprom();
 void saveArmDisarmTimeToEeprom();
 
 
+//saves the alarm state to eeprom for power cycle reference
+//use the macros ARMED and UNARMED
+void save_alarm_state(uint8_t alarm_state);
+uint8_t get_alarm_state();
+
 #endif /* RTCDRIVER_H_ */
