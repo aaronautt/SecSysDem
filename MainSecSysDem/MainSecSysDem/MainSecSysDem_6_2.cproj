@@ -162,12 +162,6 @@
     <Compile Include="MainSecSysDem.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="photo_sensor.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="photo_sensor.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="PIR_DRIVER.c">
       <SubType>compile</SubType>
     </Compile>
