@@ -58,9 +58,9 @@ int main(void)
 	char time[25], time_array[5][30];
 	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
 	// Initialize the UART
-	USART_Init(MYUBRR);
-	stdout = &uart_output;
-	stdin  = &uart_input;
+	//USART_Init(MYUBRR);
+	//stdout = &uart_output;
+	//stdin  = &uart_input;
 	I2C_Init();
 	DAC_spi_init();
 	LCD_init();
@@ -70,9 +70,10 @@ int main(void)
 	rgb_init();
 	PIR_init();
 	HALL_init();
-	//doorlockAndLcdBacklight_init();
+	doorlockAndLcdBacklight_init();
 	bell_init();
 	photo_sensor_init();
+	printf("getting\n");
 	sei();
 	while(1)
 	{
