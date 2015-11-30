@@ -13,6 +13,9 @@
 //function prototypes
 void DAC_spi_init(void);
 void DAC_write_byte(uint8_t data);
-
+void sirenInterruptFunction();
+void sirenOff();
+void sirenOn();
+void sirenInit();
 
 #endif /* Dac_H_ */

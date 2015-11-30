@@ -9,6 +9,7 @@
 #include "Dac.h"
 #include <inttypes.h>
 
+static uint8_t playSiren = 0;
 
 /********************************************
 This initializes the SPI for use with the DAC at it's highest speed
@@ -40,4 +41,61 @@ void DAC_write_byte(uint8_t data)
 	SPDR = output;
 	while ( !(SPSR & 0x80) );//wait for data
 	DAC_PORT_OUT |= DAC_CS;//set CS high to deactivate SPI
+}
+
+void sirenInit()
+{
+	DDRD |= _BV(0);
+	PORTD &= ~_BV(0);
+}
+
+void sirenOn()
+{
+	playSiren = 1;
+}
+
+void sirenOff()
+{
+	playSiren = 0;
+}
+
+void sirenInterruptFunction()
+{
+	static uint8_t cnt = 0;
+	static uint16_t totCnt = 7843;
+	
+	if(playSiren)
+	{
+		cnt++;
+		totCnt++;
+		
+		if(totCnt < 7843)
+		{
+			if(cnt == 5)
+			{
+				PORTD |= (1<<0);
+			}
+			else if(cnt >= 10)
+			{
+				cnt = 0;
+				PORTD &= ~(1<<0);
+			}
+		}
+		else
+		{
+			if(cnt == 8)
+			{
+				PORTD |= (1<<0);
+			}
+			else if(cnt >= 16)
+			{
+				cnt = 0;
+				if(totCnt > 15686)
+				{
+					totCnt = 0;
+				}
+				PORTD &= ~(1<<0);
+			}
+		}
+	}
 }
