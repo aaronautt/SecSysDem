@@ -45,15 +45,14 @@
 
 //globals for interrupts
 
-volatile uint8_t next_scroll = 0, timer = 0, idle = 0, ambient = 0, press_flag = 0, press_flag_count = 0;
+volatile uint8_t next_scroll = 0, timer = 0, idle = 0, ambient = 0, scroll_flag = 0;
 static uint16_t idle_timer = 0; 
 
 
 int main(void)
 {
 	uint8_t keyRead = 22,keyReadPrev = 0, push_press = 0, hall_window = 0, hall_door = 0, movement = 0;
-	uint8_t i, /*scroll_postion = 0,*/ dec_temp = 0, int_temp = 0, location = 10, button_press = 0;
-	uint8_t prev_position = 0;
+	uint8_t i, /*scroll_postion = 0,*/ dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0;
 	char time[25], time_array[5][30];
 	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
@@ -85,17 +84,7 @@ int main(void)
 	{
 		//this start block checks all the sensors and updates their flags
 		keyRead = keypadReadPins();
-		button_press = pushButtonRead();
-		if(button_press)
-		{
-			press_flag_count = 0;
-			push_press = 1;
-		}
-		else if(press_flag) 
-		{
-			press_flag = 0;
-			push_press = 0;
-		}
+		push_press = pushButtonRead();
 		//movement = PIR_check();
 		bell_UpdateStatus();
 		// Reset the keyRead if it was the same as lastTime
@@ -126,12 +115,15 @@ int main(void)
 				if(push_press==1) state = DISPLAY_MENU_UNARMED;
 				else if(int_temp > 43) state = ALARMED_FIRE;//43 C is 110F
 				rgb_green();
-				display_status(B_UNARMED, 0);
-				getTemp(&int_temp, &dec_temp);
-				display_temp(int_temp, dec_temp);
-				
+				if(scroll_flag)
+				{
+					scroll_flag = 0;
 					getStandardTimeStampStr(time);
 					Scrolling_Text_single(&time[0], next_scroll);//need to figure out how to check stuff while scrolling
+					display_status(B_UNARMED, 0);
+					getTemp(&int_temp, &dec_temp);
+					display_temp(int_temp, dec_temp);
+				}
 			break;
 			
 			//just displays the menu
@@ -187,12 +179,15 @@ int main(void)
 				idle_timer = 0; //keep idle timer at 0 unless accessing a menu
 				if(push_press==1) state = DISPLAY_MENU_ARMED;
 				rgb_red();
-				display_status(B_ARMED, 0);
-				getTemp(&int_temp, &dec_temp);
-				display_temp(int_temp, dec_temp);// to do read temp
-				
+				if(scroll_flag)
+				{
+					scroll_flag = 0;
 					getStandardTimeStampStr(time);
-					Scrolling_Text_single(&time[0], next_scroll);
+					Scrolling_Text_single(&time[0], next_scroll);//need to figure out how to check stuff while scrolling
+					display_status(B_ARMED, 0);
+					getTemp(&int_temp, &dec_temp);
+					display_temp(int_temp, dec_temp);// to do read temp
+				}
 				if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
 				if(movement) state = ALARMED_MOTION; 
 				/*
@@ -350,12 +345,14 @@ int main(void)
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				 && code[3] == master_code[3])
 				{
+					LCD_clear();
 					state = ARMED;
 					rgb_flash_stop();
 					bell_disable();
 				}
 				else
 				{
+					LCD_clear();
 					state = ALARM_SOUND;
 				}
 			break;
@@ -364,11 +361,13 @@ int main(void)
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				&& code[3] == master_code[3])
 				{
+					LCD_clear();
 					state = UNARMED;
 					saveArmDisarmTimeToEeprom(B_UNARMED);
 				}
 				else
 				{
+					LCD_clear();
 					state = ARMED;
 				}
 			break;
@@ -377,11 +376,13 @@ int main(void)
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				&& code[3] == master_code[3])
 				{
+					LCD_clear();
 					state = ARMED;
 					saveArmDisarmTimeToEeprom(B_ARMED);
 				}
 				else
 				{
+					LCD_clear();
 					state = UNARMED;
 				}
 			break;
@@ -658,13 +659,7 @@ int main(void)
 // 10ms timer
 ISR(TIMER1_COMPA_vect)
 {	
-	press_flag_count++;
 	bell_InterruptFunction();
-	if(press_flag_count >= 3)
-	{
-		press_flag_count = 0;
-		press_flag = 1;
-	}
 }
 
 // 32ms timer
@@ -677,6 +672,7 @@ ISR(TIMER2_OVF_vect)
 	//once the timer counts up to 12 32 ms interrupts it scrolls the text once (400msec)
 	if(timer > 14)
 	{
+		scroll_flag = 1;
 		next_scroll = next_scroll + 1;
 		timer = 0;
 		ambient = 1;
