@@ -131,7 +131,7 @@ static const unsigned char smallFont[] PROGMEM =
 	 0x00, 0x06, 0x09, 0x09, 0x06    // º
 };
 
-static const uint8_t twoTurtleGangLogo[504] PROGMEM= {
+static const uint8_t twoTurtleGangLogo[504] PROGMEM ={
 	0x00,
 	0x00,
 	0x00,
@@ -2051,7 +2051,8 @@ void LCD_splashScreen()
 	LCD_clear();
 	
 	for(i=0;i<504;i++)
-		LCD_writeData(twoTurtleGangLogo[i]);
+		LCD_writeData(pgm_read_byte(&(twoTurtleGangLogo [i] )));
+		//LCD_writeData(twoTurtleGangLogo[i]);
 		//LCD_writeData(image_data_logo[i]);
 }
 
