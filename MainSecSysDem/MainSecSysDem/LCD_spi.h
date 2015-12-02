@@ -63,4 +63,6 @@ void spi_init(void);
 void LCD_splashScreen();
 void LCD_lockScreen();
 
+
+
 #endif  //  _LCD_spi_H_

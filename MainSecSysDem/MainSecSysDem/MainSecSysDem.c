@@ -15,7 +15,7 @@
 #include "WATCH_DOG.h"
 #include "PIR_DRIVER.h"
 #include "i2c_driver.h"
-#include "uart.h"
+//#include "uart.h"
 #include "Hall_Sensors.h"
 #include "ioExpander.h"
 #include "keypad.h"
@@ -57,9 +57,9 @@ int main(void)
 	char time[25], time_array[5][30];
 	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
 	// Initialize the UART
-	USART_Init(MYUBRR);
-	stdout = &uart_output;
-	stdin  = &uart_input;
+// 	USART_Init(MYUBRR);
+// 	stdout = &uart_output;
+// 	stdin  = &uart_input;
 	I2C_Init();
 	DAC_spi_init();
 	LCD_init();
@@ -80,6 +80,13 @@ int main(void)
 	sirenInit();
 
 	sei();
+	
+	LCD_clear();
+	LCD_splashScreen();
+	
+	_delay_ms(1000);
+	
+	
 	while(1)
 	{
 		//this start block checks all the sensors and updates their flags
