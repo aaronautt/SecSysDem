@@ -57,6 +57,7 @@ void sirenOn()
 void sirenOff()
 {
 	playSiren = 0;
+	PORTD &= ~_BV(0);
 }
 
 void sirenInterruptFunction()

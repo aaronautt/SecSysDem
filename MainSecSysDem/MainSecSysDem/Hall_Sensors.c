@@ -24,6 +24,8 @@ void HALL_init()
 {
 	HALL_EFF_DOOR_DDR &= ~HALL_EFF_DOOR_PIN;
 	HALL_EFF_WIN_DDR &= ~HALL_EFF_WIN_PIN;
+	HALL_EFF_DOOR_PORT_OUT |= HALL_EFF_DOOR_PIN;
+	HALL_EFF_WIN_PORT_OUT |= HALL_EFF_WIN_PIN; 
 }
 
 
@@ -31,7 +33,7 @@ void HALL_init()
 uint8_t Hall_Window_check()
 {
 	uint8_t response = 0;
-	if((HALL_EFF_WIN_PORT_IN & (1<<HALL_EFF_WIN_PIN))) response = 1;
+	if((HALL_EFF_WIN_PORT_IN & (HALL_EFF_WIN_PIN))) response = 1;
 	else response = 0;
 	return response;
 }
@@ -41,7 +43,7 @@ uint8_t Hall_Window_check()
 uint8_t Hall_Door_check()
 {
 	uint8_t response = 0;
-	if((HALL_EFF_DOOR_PORT_IN & (1<<HALL_EFF_DOOR_PIN))) response = 1;
+	if((HALL_EFF_DOOR_PORT_IN & (HALL_EFF_DOOR_PIN))) response = 1;
 	else response = 0;
 	return response;
 }

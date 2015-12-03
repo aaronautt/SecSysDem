@@ -101,6 +101,29 @@ void rgb_flash_check()
 	}
 }
 
+void rgb_flash_check_white()
+{
+	const uint8_t numberOf32secIntervals = 30;
+	// If the flash flag is set...
+	if(rgbFlashFlag)
+	{
+		// If the interval is over...
+		if(rgbFlashTimer >= (numberOf32secIntervals))
+		{
+			// Clear the flashing timer
+			rgbFlashTimer = 0;
+			// Turn on the red LED
+			rgb_white();
+		}
+		// If the timer is half over...
+		else if(rgbFlashTimer >= (numberOf32secIntervals / 2))
+		{
+			// Turn off the red LED
+			rgb_off();
+		}
+	}
+}
+
 void rgb_flash_32msInterrupt()
 {
 	if(rgbFlashFlag)

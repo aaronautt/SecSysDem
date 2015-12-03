@@ -45,15 +45,15 @@
 
 //globals for interrupts
 
-volatile uint8_t next_scroll = 0, timer = 0, idle = 0, ambient = 0, scroll_flag = 0;
+volatile uint8_t next_scroll = 0, timer = 0, idle = 0, ambient = 0, scroll_flag = 0, arming_flag = 0;
 static uint16_t idle_timer = 0; 
 
 
 int main(void)
 {
-	uint8_t keyRead = 22,keyReadPrev = 0, push_press = 0, hall_window = 0, hall_door = 0, movement = 0;
+	uint8_t keyRead = 22,keyReadPrev = 0, push_press = 0, hall_window = 10, hall_door = 10, movement = 0;
 	uint8_t i, /*scroll_postion = 0,*/ dec_temp = 0, int_temp = 0, location = 10;
-	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0;
+	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0, hall_w_prev = 10;
 	char time[25], time_array[5][30];
 	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
 	// Initialize the UART
@@ -72,19 +72,19 @@ int main(void)
 	doorlockAndLcdBacklight_init();
 	bell_init();
 	photo_sensor_init();
-
+	
 	if(get_alarm_state() == 1) state = ARMED;
 	else if(get_alarm_state() == 0) state = UNARMED;
 	else state = UNARMED;
 
 	sirenInit();
-
-	sei();
-	
+	LcdBacklightBrightness(100);
 	LCD_clear();
 	LCD_splashScreen();
 	
-	_delay_ms(1000);
+	_delay_ms(3000);
+	sei();
+	
 	
 	
 	while(1)
@@ -92,13 +92,20 @@ int main(void)
 		//this start block checks all the sensors and updates their flags
 		keyRead = keypadReadPins();
 		push_press = pushButtonRead();
-		//movement = PIR_check();
+		movement = PIR_check();
 		bell_UpdateStatus();
 		// Reset the keyRead if it was the same as lastTime
 		if(keyRead == keyReadPrev) keyRead = 0;
 		else keyReadPrev = keyRead;
-		//hall_window = Hall_Window_check();
-		//hall_door = Hall_Door_check();
+		hall_window = Hall_Window_check();
+		hall_door = Hall_Door_check();
+		if(hall_w_prev == 10)
+		{
+			if(hall_window == 1)
+				hall_window = 0;
+			else 
+				hall_w_prev = 9;
+		}
 		if(keyRead != 0) new_code = 1;
 		else new_code = 0;
 		if(keyRead != 0 || push_press) idle_timer = 0;
@@ -125,6 +132,7 @@ int main(void)
 				if(scroll_flag)
 				{
 					scroll_flag = 0;
+					LCD_clear();
 					getStandardTimeStampStr(time);
 					Scrolling_Text_single(&time[0], next_scroll);//need to figure out how to check stuff while scrolling
 					display_status(B_UNARMED, 0);
@@ -189,6 +197,7 @@ int main(void)
 				if(scroll_flag)
 				{
 					scroll_flag = 0;
+					LCD_clear();
 					getStandardTimeStampStr(time);
 					Scrolling_Text_single(&time[0], next_scroll);//need to figure out how to check stuff while scrolling
 					display_status(B_ARMED, 0);
@@ -197,10 +206,8 @@ int main(void)
 				}
 				if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
 				if(movement) state = ALARMED_MOTION; 
-				/*
-				else if(hall_door) state = ALARMED_HALL_D;
-				else if(hall_window) state = ALARMED_HALL_W;
-				*/
+				else if(hall_door == 1) state = ALARMED_HALL_D;
+				else if(hall_window == 1) state = ALARMED_HALL_W;
 			break;
 			case DISPLAY_MENU_ARMED:
 			rgb_blue();
@@ -283,6 +290,7 @@ int main(void)
 			break;
 			
 			case DISPLAY_READ_MENU_ARM:
+			LCD_clear();
 			rgb_green();
 			display_get_armcode();
 			state = READ_MENU_ARM;
@@ -353,9 +361,10 @@ int main(void)
 				 && code[3] == master_code[3])
 				{
 					LCD_clear();
-					state = ARMED;
+					state = UNARMED;
 					rgb_flash_stop();
 					bell_disable();
+					sirenOff();
 				}
 				else
 				{
@@ -383,9 +392,14 @@ int main(void)
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				&& code[3] == master_code[3])
 				{
+					idle_timer = TWENTY_SEC;
+					doorlockUnlock();
 					LCD_clear();
-					state = ARMED;
-					saveArmDisarmTimeToEeprom(B_ARMED);
+					rgb_flash_start();
+					LCD_writeString_F("Please Exit");
+					armed_state = B_ARMED;
+					state = CHECK_CODE_AR_HOLD;
+					//state = ARMED;
 				}
 				else
 				{
@@ -395,6 +409,30 @@ int main(void)
 			break;
 			//entered from armed menu or unarmed menu, exited if any alarm is tripped or the push button is pressed to enter the menu again
 			//if the idle flag is set 
+			case CHECK_CODE_AR_HOLD:
+				rgb_flash_check_white();
+				if(arming_flag)
+				{
+					arming_flag = 0;
+					LCD_clear();
+					if(armed_state == 1)
+					{
+						doorlockLock();
+						state = ARMED;
+						saveArmDisarmTimeToEeprom(B_ARMED);
+						rgb_flash_stop();
+						rgb_off();
+					}
+					else if(armed_state == 0)
+					{
+						state = UNARMED;
+						saveArmDisarmTimeToEeprom(B_UNARMED);
+						doorlockLock();
+						rgb_flash_stop();
+						rgb_off();
+					}
+				}
+			break;
 			
 			case DISPLAY_LAST_FIVE_ALARMS:
 				display_last_five_alarms();
@@ -421,9 +459,9 @@ int main(void)
 				if(push_press && armed_state == 0) state = DISPLAY_MENU_UNARMED;
 				if(push_press && armed_state == 1) state = DISPLAY_MENU_ARMED;
 				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
-				else if(movement) state = ALARMED_MOTION; 
-				else if(hall_door) state = ALARMED_HALL_D;
-				else if(hall_window) state = ALARMED_HALL_W;
+				else if(movement && armed_state == 1) state = ALARMED_MOTION; 
+				else if(hall_door == 1 && armed_state == 1) state = ALARMED_HALL_D;
+				else if(hall_window == 1 && armed_state == 1) state = ALARMED_HALL_W;
 				//else state = LAST_FIVE_ALARMS;
 			break;
 			
@@ -455,9 +493,9 @@ int main(void)
 				if(push_press && armed_state == 0) state = DISPLAY_MENU_UNARMED;
 				if(push_press && armed_state == 1) state = DISPLAY_MENU_ARMED;
 				else if(int_temp > 43) state = ALARMED_FIRE;// 43 C is 110F TODO
-				else if(movement) state = ALARMED_MOTION;
-				else if(hall_door) state = ALARMED_HALL_D;
-				else if(hall_window) state = ALARMED_HALL_W;
+				else if(movement && armed_state == 1) state = ALARMED_MOTION;
+				else if(hall_door && armed_state == 1) state = ALARMED_HALL_D;
+				else if(hall_window && armed_state == 1) state = ALARMED_HALL_W;
 			break;
 			
 			case DISPLAY_ARM_ONE:
@@ -611,9 +649,7 @@ int main(void)
 				&& code[3] == master_code[3])
 				{
 					doorlockUnlock();
-					
-					if(armed_state == 0) state = UNARMED;
-					else state = ARMED;
+					state = CHECK_CODE_AR_HOLD;
 				}
 				else
 				{
@@ -654,6 +690,17 @@ int main(void)
 			case ALARM_SOUND:
 				idle_timer = 0; //keep idle timer at 0 if not in a menu
 				rgb_flash_check();
+				sirenOn();
+				if(scroll_flag)
+				{
+					scroll_flag = 0;
+					LCD_clear();
+					getStandardTimeStampStr(time);
+					Scrolling_Text_single(&time[0], next_scroll);//need to figure out how to check stuff while scrolling
+					display_status(B_ALARM, location);
+					getTemp(&int_temp, &dec_temp);
+					display_temp(int_temp, dec_temp);
+				}
 				if(push_press) state = DISPLAY_READ_ALARM_CODE;
 			break;
 			
@@ -686,6 +733,7 @@ ISR(TIMER2_OVF_vect)
 	}
 	if(idle_timer > TWENTY_SEC)
 	{
+		arming_flag = 1;
 		idle = 1;
 		idle_timer = 0;
 	}

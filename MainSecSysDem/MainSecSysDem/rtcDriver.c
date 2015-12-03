@@ -317,7 +317,7 @@ void getFiveArmDisarmTimes(char timeStamps[5][30])
 //saves the alarm state so that upon power cycle the state is saved
 void save_alarm_state(uint8_t alarm_state)
 {		
-	eeprom_write_byte(&alarmState, alarm_state);
+	eeprom_update_byte(&alarmState, alarm_state);
 }
 
 //gets the alarm state so that upon power cycle the state is saved

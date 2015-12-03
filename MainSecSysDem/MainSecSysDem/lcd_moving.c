@@ -199,17 +199,17 @@ void display_status(uint8_t status, uint8_t location)
 	else if(status == B_ALARM)
 	{
 		sprintf(message, "%s       ", state3);
-		LCD_clear_row(0);
-		LCD_gotoXY(0,0);
+		LCD_clear_row(2);
+		LCD_gotoXY(0,2);
 		for(j=0;j<12;j++)
 		{
 			LCD_writeChar(message[j]);
 		}
-		LCD_clear_row(1);
-		LCD_gotoXY(0,1);
+		LCD_clear_row(3);
+		LCD_gotoXY(0,3);
 		LCD_writeString_F("Location:");
-		LCD_clear_row(2);
-		LCD_gotoXY(0,2);
+		LCD_clear_row(4);
+		LCD_gotoXY(0,4);
 		for(i=0;i<12;i++)
 		{
 			LCD_writeChar(place[i]);

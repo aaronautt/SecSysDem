@@ -85,6 +85,7 @@ void doorlockInterruptFuction()
 			solenoidActiveCounter++;
 		}		
 	}
+	/*
 	else if(solenoidActiveFlag == SOLENOID_LOW)
 	{
 		if(solenoidActiveCounter >= 312)
@@ -97,4 +98,5 @@ void doorlockInterruptFuction()
 			solenoidActiveCounter++;
 		}
 	}
+	*/
 }

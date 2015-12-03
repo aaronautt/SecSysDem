@@ -36,6 +36,7 @@ void rgb_flash_stop();
 // This function must be called in the main while loop. This is the 
 // function that actually turns the LED on or off.
 void rgb_flash_check();
+void rgb_flash_check_white();
 // This function must be called in the interrupt that is triggered
 // every 32ms. This function simply increments a variable.
 void rgb_flash_32msInterrupt();

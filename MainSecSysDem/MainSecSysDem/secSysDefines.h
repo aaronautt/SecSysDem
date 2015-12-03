@@ -32,12 +32,12 @@
 #define HALL_EFF_WIN_PORT_OUT   PORTB
 #define HALL_EFF_WIN_PORT_IN    PINB
 #define HALL_EFF_WIN_DDR        DDRB
-#define HALL_EFF_WIN_PIN        PINB0
+#define HALL_EFF_WIN_PIN        _BV(0)
 // Door Hall Effect
 #define HALL_EFF_DOOR_PORT_OUT  PORTB
 #define HALL_EFF_DOOR_PORT_IN   PINB
 #define HALL_EFF_DOOR_DDR       DDRB
-#define HALL_EFF_DOOR_PIN       PINB1
+#define HALL_EFF_DOOR_PIN       _BV(1)
 
 // ----- LCD ------
 // LCD Data/Command
@@ -135,7 +135,8 @@ enum state
 	MENU_ARMED_2,
 	DISPLAY_LOCK_SOLENOID,
 	LOCK_SOLENOID,
-	READ_LOCK_SOLENOID
+	READ_LOCK_SOLENOID,
+	CHECK_CODE_AR_HOLD
 	};
 
 //location of alarm defines
@@ -157,5 +158,6 @@ enum state
 //times
 #define MINUTE					1875
 #define TWENTY_SEC				625
+#define NONE					1
 
 #endif /* SECSYSDEFINES_H_ */
