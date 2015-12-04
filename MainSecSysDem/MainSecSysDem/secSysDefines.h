@@ -91,9 +91,7 @@
 //status/state defines
 enum state
 {
-	STARTUP,				//0
 	UNARMED,				//1
-	STATUS,					//2
 	ARMED,					//3
 	READ_MENU_ARM,			//4 
 	READ_ALARM_CODE,		//5
