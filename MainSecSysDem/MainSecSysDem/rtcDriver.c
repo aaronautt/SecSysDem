@@ -218,7 +218,7 @@ void SetTimeDate()
 
 void saveAlarmTimeToEeprom()
 {
-	char stampStr[20];
+	char stampStr[30];
 	uint8_t stampNum;
 	
 	// Figure out which time was set last
@@ -270,7 +270,7 @@ void saveArmDisarmTimeToEeprom(uint8_t status)
 	eeprom_write_byte(&armDisCtn, stampNum);
 }
 
-void getFiveAlarmTimes(char timeStamps[5][20])
+void getFiveAlarmTimes(char timeStamps[5][30])
 {
 	uint8_t stampNum, rowNum;
 	
@@ -288,7 +288,7 @@ void getFiveAlarmTimes(char timeStamps[5][20])
 		// Read the time stamp and store it in the next row.
 		// Since rowNum is decreasing, the temeStamps maxtrix will read
 		// the arrays from newest to oldest.
-		eeprom_read_block(&timeStamps[rowNum][0],&alarm[stampNum][0],20);
+		eeprom_read_block(&timeStamps[rowNum][0],&alarm[stampNum][0],30);
 	}	
 }
 

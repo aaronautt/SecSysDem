@@ -36,6 +36,7 @@
 #include "doorlock.h"
 #include "setTime.h"
 #include "photo_sensor.h"
+#include <avr/wdt.h>
 
 //DEFINES
 #define BAUD 9600
@@ -84,12 +85,14 @@ int main(void)
 	
 	_delay_ms(3000);
 	sei();
-	
+	//wdt_enable(WDTO_8S);
+	WatchDog_on();
 	
 	
 	while(1)
 	{
 		//this start block checks all the sensors and updates their flags
+		wdt_reset();
 		keyRead = keypadReadPins();
 		push_press = pushButtonRead();
 		movement = PIR_check();
@@ -392,7 +395,7 @@ int main(void)
 				if(code[0] == master_code[0] && code[1] == master_code[1] && code[2] == master_code[2]
 				&& code[3] == master_code[3])
 				{
-					idle_timer = TWENTY_SEC;
+					idle_timer = 0;
 					doorlockUnlock();
 					LCD_clear();
 					rgb_flash_start();
@@ -415,22 +418,11 @@ int main(void)
 				{
 					arming_flag = 0;
 					LCD_clear();
-					if(armed_state == 1)
-					{
-						doorlockLock();
-						state = ARMED;
-						saveArmDisarmTimeToEeprom(B_ARMED);
-						rgb_flash_stop();
-						rgb_off();
-					}
-					else if(armed_state == 0)
-					{
-						state = UNARMED;
-						saveArmDisarmTimeToEeprom(B_UNARMED);
-						doorlockLock();
-						rgb_flash_stop();
-						rgb_off();
-					}
+					doorlockLock();
+					state = ARMED;
+					saveArmDisarmTimeToEeprom(B_ARMED);
+					rgb_flash_stop();
+					rgb_off();
 				}
 			break;
 			
@@ -684,6 +676,7 @@ int main(void)
 				display_status(B_ALARM, location);
 				rgb_flash_start();
 				bell_enable();
+				saveAlarmTimeToEeprom();
 				state = ALARM_SOUND;
 			break;
 			
