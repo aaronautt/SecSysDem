@@ -37,12 +37,14 @@
 #include "setTime.h"
 #include "photo_sensor.h"
 #include <avr/wdt.h>
+#include "ff.h"
 
 //DEFINES
 #define BAUD 9600
 #define MYUBRR F_CPU/8/BAUD-1
 
-
+FATFS FatFs;	/* FatFs work area */
+FIL Fil;		/* File object */
 
 //globals for interrupts
 
@@ -56,11 +58,26 @@ int main(void)
 	uint8_t i, /*scroll_postion = 0,*/ dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0, hall_w_prev = 10;
 	char time[25], time_array[5][30];
-	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
+	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4}, bytesRead;
 	// Initialize the UART
 // 	USART_Init(MYUBRR);
 // 	stdout = &uart_output;
 // 	stdin  = &uart_input;
+	f_mount(0, &FatFs);	
+	
+		if(f_open(&Fil, "README.txt", FA_READ) == FR_OK)
+		{
+			//LED_ON;
+			f_read(&Fil,&time[0],2,&bytesRead);
+			
+			f_close(&Fil);
+			
+			// 		if(bytesRead == 2)
+			// 		{
+			// 			LED_ON;
+			// 		}
+		}
+
 	I2C_Init();
 	DAC_spi_init();
 	LCD_init();
