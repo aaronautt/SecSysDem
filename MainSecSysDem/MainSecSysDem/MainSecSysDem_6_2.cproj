@@ -138,9 +138,6 @@
     <Compile Include="ioExpander.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="ioExpander.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="keypad.c">
       <SubType>compile</SubType>
     </Compile>

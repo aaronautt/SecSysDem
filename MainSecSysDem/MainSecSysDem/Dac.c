@@ -43,6 +43,8 @@ void DAC_write_byte(uint8_t data)
 	DAC_PORT_OUT |= DAC_CS;//set CS high to deactivate SPI
 }
 
+
+
 void sirenInit()
 {
 	DDRD |= _BV(0);
