@@ -249,7 +249,9 @@ void display_main_menu_two(void)
 	LCD_gotoXY(0,1);
 	LCD_writeString_F("6. Lock Door");
 	LCD_gotoXY(0,2);
-	LCD_writeString_F("7. EXIT");
+	LCD_writeString_F("7. Spek Time");
+	LCD_gotoXY(0,3);
+	LCD_writeString_F("8. EXIT MENU");
 	/*
 	LCD_gotoXY(0,3);
 	LCD_writeString_F("3. Last 5 DA");

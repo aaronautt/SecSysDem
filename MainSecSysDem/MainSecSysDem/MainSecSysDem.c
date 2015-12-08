@@ -15,7 +15,7 @@
 #include "WATCH_DOG.h"
 #include "PIR_DRIVER.h"
 #include "i2c_driver.h"
-//#include "uart.h"
+#include "uart.h"
 #include "Hall_Sensors.h"
 #include "ioExpander.h"
 #include "keypad.h"
@@ -49,34 +49,22 @@ FIL Fil;		/* File object */
 //globals for interrupts
 
 volatile uint8_t next_scroll = 0, timer = 0, idle = 0, ambient = 0, scroll_flag = 0, arming_flag = 0;
-static uint16_t idle_timer = 0; 
+volatile uint16_t idle_timer = 0; 
 
 
 int main(void)
 {
 	uint8_t keyRead = 22,keyReadPrev = 0, push_press = 0, hall_window = 10, hall_door = 10, movement = 0;
-	uint8_t i, /*scroll_postion = 0,*/ dec_temp = 0, int_temp = 0, location = 10;
+	uint8_t i, dec_temp = 0, int_temp = 0, location = 10;
 	uint8_t state = 1, new_code = 0, code_position = 0, armed_state = 0, hall_w_prev = 10;
 	char time[25], time_array[5][30];
-	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4}, bytesRead;
+	uint8_t  code[4] = {0 ,0 ,0, 0}, master_code[4] = {1, 2, 3, 4};
+
+
 	// Initialize the UART
-// 	USART_Init(MYUBRR);
-// 	stdout = &uart_output;
-// 	stdin  = &uart_input;
-	f_mount(0, &FatFs);	
-	
-		if(f_open(&Fil, "README.txt", FA_READ) == FR_OK)
-		{
-			//LED_ON;
-			f_read(&Fil,&time[0],2,&bytesRead);
-			
-			f_close(&Fil);
-			
-			// 		if(bytesRead == 2)
-			// 		{
-			// 			LED_ON;
-			// 		}
-		}
+	// 	USART_Init(MYUBRR);
+	// 	stdout = &uart_output;
+	// 	stdin  = &uart_input;
 
 	I2C_Init();
 	DAC_spi_init();
@@ -90,16 +78,13 @@ int main(void)
 	doorlockAndLcdBacklight_init();
 	bell_init();
 	photo_sensor_init();
-	
 	if(get_alarm_state() == 1) state = ARMED;
 	else if(get_alarm_state() == 0) state = UNARMED;
 	else state = UNARMED;
-
 	sirenInit();
 	LcdBacklightBrightness(100);
 	LCD_clear();
 	LCD_splashScreen();
-	
 	_delay_ms(3000);
 	sei();
 	//wdt_enable(WDTO_8S);
@@ -108,6 +93,10 @@ int main(void)
 	
 	while(1)
 	{
+		for(i=0;i<100;i++)
+		{
+			DAC_write_byte(i);
+		}
 		//this start block checks all the sensors and updates their flags
 		wdt_reset();
 		keyRead = keypadReadPins();
@@ -198,7 +187,8 @@ int main(void)
 			case MENU_UNARMED_2:
 			rgb_blue();
 			if(keyRead == 6) state = DISPLAY_LOCK_SOLENOID;
-			else if(keyRead == 7) state = UNARMED;
+			else if(keyRead == 7) state = SPEAK_TIME;
+			else if(keyRead == 8) state = UNARMED;
 			if(idle)
 			{
 				state = UNARMED;
@@ -267,7 +257,8 @@ int main(void)
 			case MENU_ARMED_2:
 			rgb_blue();
 			if(keyRead == 6) state = DISPLAY_LOCK_SOLENOID;
-			else if(keyRead == 7) state = ARMED;
+			else if(keyRead == 7) SPEAK_TIME;
+			else if(keyRead == 8) state = ARMED;
 			if(idle)
 			{
 				state = ARMED;
@@ -712,6 +703,20 @@ int main(void)
 					display_temp(int_temp, dec_temp);
 				}
 				if(push_press) state = DISPLAY_READ_ALARM_CODE;
+			break;
+
+
+			
+			case SPEAK_TIME:
+				/* FOR LUKE*/
+				LCD_clear();
+				LCD_writeString_F("Speech!!");
+				if(idle)
+				{
+					idle = 0;
+					if(armed_state == 0) state = UNARMED;
+					else if(armed_state == 1) state = ARMED;
+				}
 			break;
 			
 		}
