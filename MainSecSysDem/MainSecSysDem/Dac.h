@@ -17,5 +17,6 @@ void sirenInterruptFunction();
 void sirenOff();
 void sirenOn();
 void sirenInit();
+void playIntro();
 
 #endif /* Dac_H_ */

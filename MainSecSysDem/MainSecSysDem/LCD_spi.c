@@ -34,6 +34,8 @@ static unsigned char cursor_row = 0; /* 0-6 */
 static unsigned int cursor_col = 0; /* 0-83 */
 static unsigned char lcd_buffer[6][84];
 
+
+
 //***** Small fonts (5x7) **********
 static const unsigned char smallFont[] PROGMEM =
 {

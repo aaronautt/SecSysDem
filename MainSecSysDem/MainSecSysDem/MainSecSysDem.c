@@ -82,8 +82,9 @@ int main(void)
 	LcdBacklightBrightness(100);
 	LCD_clear();
 	LCD_splashScreen();
-	
-	_delay_ms(3000);
+	_delay_ms(1500);
+	playIntro();
+	_delay_ms(1500);
 	sei();
 	//wdt_enable(WDTO_8S);
 	WatchDog_on();
