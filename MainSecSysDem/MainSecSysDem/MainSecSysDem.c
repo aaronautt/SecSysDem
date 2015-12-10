@@ -397,6 +397,7 @@ int main(void)
 				&& code[3] == master_code[3])
 				{
 					idle_timer = 0;
+					arming_flag = 0;
 					doorlockUnlock();
 					LCD_clear();
 					rgb_flash_start();
@@ -642,12 +643,16 @@ int main(void)
 				&& code[3] == master_code[3])
 				{
 					doorlockUnlock();
-					state = CHECK_CODE_AR_HOLD;
+					if(idle)
+					{
+						if(armed_state == 1) state == ARMED;
+						else state = UNARMED;
+					}
+					
 				}
 				else
 				{
 					LCD_clear();
-					LCD_writeString_F("Wrong Code");
 					if(armed_state == 0) state = UNARMED;
 					else state = ARMED;
 				}
